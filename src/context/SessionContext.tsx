@@ -18,22 +18,30 @@ export const useSession = () => {
 };
 
 type Props = { children: React.ReactNode };
+
 export const SessionProvider = ({ children }: Props) => {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const authStateListener = supabase.auth.onAuthStateChange(
-      async (_, session) => {
-        setSession(session);
-        setIsLoading(false);
+    const fetchInitialSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      setSession(data.session);
+      setIsLoading(false);
+    };
+
+    fetchInitialSession();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_, newSession) => {
+        setSession(newSession);
       }
     );
 
     return () => {
-      authStateListener.data.subscription.unsubscribe();
+      authListener.subscription.unsubscribe();
     };
-  }, [supabase]);
+  }, []);
 
   return (
     <SessionContext.Provider value={{ session }}>

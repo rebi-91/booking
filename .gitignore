@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+echo "node_modules" >> .gitignore
+echo "build" >> .gitignore

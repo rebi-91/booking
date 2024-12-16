@@ -54,7 +54,7 @@ const SignInPage = () => {
           placeholder="Password"
         />
         <button type="submit">Login</button>
-        <Link className="auth-link" to="/auth/sign-up">
+        <Link className="auth-link" to="/sign-up">
           Don't have an account? Sign Up
         </Link>
         {status && <p>{status}</p>}
