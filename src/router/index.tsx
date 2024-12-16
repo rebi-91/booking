@@ -56,7 +56,6 @@ import HomePage from "../pages/HomePage.tsx";
 import SignInPage from "../pages/auth/SignInPage.tsx";
 import SignUpPage from "../pages/auth/SignUpPage.tsx";
 import PickSchoolPage from "../pages/auth/PickSchoolPage.tsx";
-import PickSubjectPage from "../pages/auth/PickSubjectPage.tsx";
 
 import ProtectedPage from "../pages/ProtectedPage.tsx";
 import NotFoundPage from "../pages/404Page.tsx";
@@ -85,21 +84,18 @@ const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: "/sign-in",
+        path: "/auth/sign-in",
         element: <SignInPage />,
       },
       {
-        path: "/sign-up",
+        path: "/auth/sign-up",
         element: <SignUpPage />,
       },
       {
         path: "/pick-school",
         element: <PickSchoolPage />,
       },
-      {
-        path: "/pick-subject",
-        element: <PickSubjectPage />,
-      },
+     
       //ADMIN
       {
         path: "/dashboard",

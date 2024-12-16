@@ -15,20 +15,20 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 function StudentPage() {
   const navigate = useNavigate();
-  const { session } = useSession(); // Assuming SessionContext provides 'session'
+  const { session } = useSession();
 
   const [studentName, setStudentName] = useState("");
   const [studentID, setStudentID] = useState("");
   const [school, setSchool] = useState("");
-  const [classInfo, setClassInfo] = useState([]); // Array of { classTime, attendance: [] }
+  const [classInfo, setClassInfo] = useState<any[]>([]); 
   const [className, setClassName] = useState("");
   const [section, setSection] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const classTimes = ["C1", "C2", "C3", "C4", "C5", "C6"];
+  const classTimes = ["C1", "C2", "C3", "C4", "C5", "C6"] as const;
   const today = new Date();
-  const currentMonth = today.getMonth(); // 0-indexed
+  const currentMonth = today.getMonth(); 
   const currentYear = today.getFullYear();
   const monthNames = [
     "January",
@@ -43,12 +43,11 @@ function StudentPage() {
     "October",
     "November",
     "December",
-  ];
+  ] as const;
   const currentMonthName = monthNames[currentMonth];
-  const numberOfDays = new Date(currentYear, currentMonth + 1, 0).getDate(); // Number of days in current month
+  const numberOfDays = new Date(currentYear, currentMonth + 1, 0).getDate(); 
   const days = Array.from({ length: numberOfDays }, (_, i) => i + 1);
 
-  // States for attendance calculation
   const [presentCount, setPresentCount] = useState(0);
   const [absentCount, setAbsentCount] = useState(0);
   const [attendanceData, setAttendanceData] = useState({
@@ -63,7 +62,6 @@ function StudentPage() {
     ],
   });
 
-  // State for Graduation Cap Button
   const [isHoveredGraduation, setIsHoveredGraduation] = useState<boolean>(false);
   const [isActiveGraduation, setIsActiveGraduation] = useState<boolean>(false);
 
@@ -74,7 +72,6 @@ function StudentPage() {
 
   const fetchStudentData = async () => {
     try {
-      // Get the current user
       const {
         data: { user },
         error: userError,
@@ -87,7 +84,6 @@ function StudentPage() {
         return;
       }
 
-      // Fetch the student's profile
       const { data: profileData, error: profileError } = await supabase
         .from("profiles")
         .select("password, school")
@@ -101,7 +97,7 @@ function StudentPage() {
         return;
       }
 
-      const fetchedStudentID = profileData.password; // Assuming 'password' is used as 'studentID'
+      const fetchedStudentID = profileData.password;
       const fetchedSchool = profileData.school;
 
       if (!fetchedStudentID || !fetchedSchool) {
@@ -113,39 +109,35 @@ function StudentPage() {
       setSchool(fetchedSchool);
 
       let fetchedStudentName = "";
-      const fetchedClassInfo = [];
+      const fetchedClassInfo: any[] = [];
       let fetchedClassName = "";
       let fetchedSection = "";
 
-      // Iterate through C1 to C6 to find matches
       for (const classTime of classTimes) {
         const { data, error } = await supabase
           .from(classTime)
-          .select(
-            `studentName, className, section, ${days.join(", ")}`
-          )
+          .select(`studentName, className, section, ${days.join(", ")}`)
           .eq("studentID", fetchedStudentID)
           .single();
 
         if (error) {
           console.error(`Error fetching data from ${classTime}:`, error.message);
-          continue; // Skip to the next classTime
+          continue;
         }
 
-        if (data) {
-          // If student is found in this classTime
-          fetchedStudentName = data.studentName;
-          const attendance = days.map((day) => data[day] === true); // Convert to boolean array
+        if (data && typeof data === "object") {
+          const row = data as any;
+          fetchedStudentName = row.studentName;
+          const attendance = days.map((day) => row[day] === true);
 
           fetchedClassInfo.push({
             classTime,
             attendance,
           });
 
-          // Assuming className and section are same across classTimes
           if (!fetchedClassName && !fetchedSection) {
-            fetchedClassName = data.className;
-            fetchedSection = data.section;
+            fetchedClassName = row.className;
+            fetchedSection = row.section;
           }
         }
       }
@@ -167,28 +159,23 @@ function StudentPage() {
     }
   };
 
-  const calculateAttendance = (classInfoArray) => {
+  const calculateAttendance = (classInfoArray: any[]) => {
     let present = 0;
     let absent = 0;
 
     classInfoArray.forEach((info) => {
-      // Only consider up to today's date
       const relevantAttendance = info.attendance.slice(0, today.getDate());
-      relevantAttendance.forEach((attended) => {
+      relevantAttendance.forEach((attended: boolean) => {
         if (attended === true) {
           absent += 1;
         } else if (attended === false) {
           present += 1;
         }
-        // If null or undefined, do not count
       });
     });
 
     setPresentCount(present);
     setAbsentCount(absent);
-
-    const total = present + absent;
-    const presentPercentage = total > 0 ? ((present / total) * 100).toFixed(2) : 0;
 
     setAttendanceData({
       labels: ["Present", "Absent"],
@@ -201,17 +188,14 @@ function StudentPage() {
         },
       ],
     });
-
-    // Optionally, display the percentage somewhere if needed
   };
 
-  const renderAttendanceCell = (attendance) => {
+  const renderAttendanceCell = (attendance: boolean | undefined) => {
     if (attendance === true) {
-      // Absent: display checkbox with red cross
       return (
-        <td style={styles.checkboxCell}>
-          <label style={styles.checkboxLabel}>
-            <input type="checkbox" checked={true} disabled style={styles.hiddenCheckbox} />
+        <td style={styles.checkboxCell as React.CSSProperties}>
+          <label style={styles.checkboxLabel as React.CSSProperties}>
+            <input type="checkbox" checked={true} disabled style={styles.hiddenCheckbox as React.CSSProperties} />
             <span style={{ ...styles.customCheckbox, ...styles.redCross }} title="Absent">
               ❌
             </span>
@@ -219,21 +203,19 @@ function StudentPage() {
         </td>
       );
     } else if (attendance === false) {
-      // Present: display normal checkbox, unchecked
       return (
-        <td style={styles.checkboxCell}>
-          <label style={styles.checkboxLabel}>
-            <input type="checkbox" checked={false} disabled style={styles.hiddenCheckbox} />
+        <td style={styles.checkboxCell as React.CSSProperties}>
+          <label style={styles.checkboxLabel as React.CSSProperties}>
+            <input type="checkbox" checked={false} disabled style={styles.hiddenCheckbox as React.CSSProperties} />
             <span style={styles.customCheckbox} title="Present"></span>
           </label>
         </td>
       );
     } else {
-      // No data: display unchecked checkbox
       return (
-        <td style={styles.checkboxCell}>
-          <label style={styles.checkboxLabel}>
-            <input type="checkbox" checked={false} disabled style={styles.hiddenCheckbox} />
+        <td style={styles.checkboxCell as React.CSSProperties}>
+          <label style={styles.checkboxLabel as React.CSSProperties}>
+            <input type="checkbox" checked={false} disabled style={styles.hiddenCheckbox as React.CSSProperties} />
             <span style={styles.customCheckbox} title="No Data"></span>
           </label>
         </td>
@@ -243,8 +225,8 @@ function StudentPage() {
 
   if (loading) {
     return (
-      <div style={styles.loadingContainer}>
-        <div style={styles.spinner}></div>
+      <div style={styles.loadingContainer as React.CSSProperties}>
+        <div style={styles.spinner as React.CSSProperties}></div>
         <p>Loading...</p>
       </div>
     );
@@ -252,23 +234,22 @@ function StudentPage() {
 
   if (error) {
     return (
-      <div style={styles.errorContainer}>
-        <p style={styles.errorMessage}>{error}</p>
+      <div style={styles.errorContainer as React.CSSProperties}>
+        <p style={styles.errorMessage as React.CSSProperties}>{error}</p>
       </div>
     );
   }
 
   return (
-    <div style={styles.pageContainer}>
-      {/* Graduation Cap Button */}
+    <div style={styles.pageContainer as React.CSSProperties}>
       <button
         style={{
           ...styles.graduationCapButton,
           transform: isHoveredGraduation
             ? "translateX(-50%) scale(1.2)"
             : "translateX(-50%) scale(1)",
-          backgroundColor: isActiveGraduation ? "#000000" : "#d3d3d3", // Turns black when active
-        }}
+          backgroundColor: isActiveGraduation ? "#000000" : "#d3d3d3",
+        } as React.CSSProperties}
         onClick={handleGraduationCapClick}
         onMouseEnter={() => setIsHoveredGraduation(true)}
         onMouseLeave={() => setIsHoveredGraduation(false)}
@@ -278,22 +259,19 @@ function StudentPage() {
         🎓
       </button>
 
-      <div style={styles.card}>
-        {/* Student Information and Pie Chart */}
-        <div style={styles.studentInfoContainer}>
-          {/* Student Information */}
-          <div style={styles.studentInfo}>
-            <h2 style={styles.studentName}>
+      <div style={styles.card as React.CSSProperties}>
+        <div style={styles.studentInfoContainer as React.CSSProperties}>
+          <div style={styles.studentInfo as React.CSSProperties}>
+            <h2 style={styles.studentName as React.CSSProperties}>
               {studentName} ({studentID})
             </h2>
-            <p style={styles.schoolName}>{school}</p>
-            <p style={styles.classSection}>
+            <p style={styles.schoolName as React.CSSProperties}>{school}</p>
+            <p style={styles.classSection as React.CSSProperties}>
               Class Name: {className} | Section: {section}
             </p>
           </div>
 
-          {/* Attendance Pie Chart */}
-          <div style={styles.pieChartContainer}>
+          <div style={styles.pieChartContainer as React.CSSProperties}>
             <Pie
               data={attendanceData}
               options={{
@@ -312,9 +290,8 @@ function StudentPage() {
                 },
               }}
             />
-            {/* Overlay percentage text in the center */}
-            <div style={styles.centerPercentage}>
-              <span style={styles.percentageText}>
+            <div style={styles.centerPercentage as React.CSSProperties}>
+              <span style={styles.percentageText as React.CSSProperties}>
                 {presentCount + absentCount > 0
                   ? ((presentCount / (presentCount + absentCount)) * 100).toFixed(2)
                   : 0}
@@ -324,19 +301,17 @@ function StudentPage() {
           </div>
         </div>
 
-        {/* Attendance Title */}
-        <h3 style={styles.attendanceTitle}>
+        <h3 style={styles.attendanceTitle as React.CSSProperties}>
           Attendance for {currentMonthName} {currentYear}
         </h3>
 
-        {/* Attendance Table */}
-        <div style={styles.attendanceTableContainer}>
-          <table style={styles.attendanceTable}>
+        <div style={styles.attendanceTableContainer as React.CSSProperties}>
+          <table style={styles.attendanceTable as React.CSSProperties}>
             <thead>
               <tr>
-                <th style={styles.tableHeader}>Day</th>
+                <th style={styles.tableHeader as React.CSSProperties}>Day</th>
                 {classInfo.map((info, index) => (
-                  <th key={index} style={styles.tableHeader}>
+                  <th key={index} style={styles.tableHeader as React.CSSProperties}>
                     {info.classTime}
                   </th>
                 ))}
@@ -345,7 +320,7 @@ function StudentPage() {
             <tbody>
               {days.map((day) => (
                 <tr key={day}>
-                  <td style={styles.dayCell}>{day}</td>
+                  <td style={styles.dayCell as React.CSSProperties}>{day}</td>
                   {classInfo.map((info, index) => (
                     <React.Fragment key={index}>
                       {renderAttendanceCell(info.attendance[day - 1])}
@@ -360,18 +335,16 @@ function StudentPage() {
     </div>
   );
 
-  // Handle Graduation Cap Button Click
   function handleGraduationCapClick() {
     navigate("/grade");
   }
 }
 
-// Inline styles for the component
-const styles = {
+const styles: { [key: string]: React.CSSProperties } = {
   pageContainer: {
-    position: "relative", // To position absolute elements relative to this container
+    position: "relative" as const,
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "column" as const,
     alignItems: "center",
     padding: "20px",
     backgroundColor: "#f5f5f5",
@@ -391,7 +364,7 @@ const styles = {
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: "20px",
-    flexWrap: "wrap",
+    flexWrap: "wrap" as const,
   },
   studentInfo: {
     marginBottom: "20px",
@@ -413,16 +386,16 @@ const styles = {
     color: "#666",
   },
   pieChartContainer: {
-    position: "relative",
+    position: "relative" as const,
     width: "250px",
     height: "250px",
   },
   centerPercentage: {
-    position: "absolute",
+    position: "absolute" as const,
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    pointerEvents: "none",
+    pointerEvents: "none" as const,
   },
   percentageText: {
     fontSize: "24px",
@@ -433,18 +406,18 @@ const styles = {
     fontSize: "20px",
     fontWeight: "bold",
     marginBottom: "15px",
-    textAlign: "center",
+    textAlign: "center" as const,
   },
   attendanceTableContainer: {
-    overflowX: "auto",
+    overflowX: "auto" as const,
   },
   attendanceTable: {
     width: "100%",
-    borderCollapse: "collapse",
+    borderCollapse: "collapse" as const,
   },
   tableHeader: {
     border: "1px solid #dddddd",
-    textAlign: "center",
+    textAlign: "center" as const,
     padding: "8px",
     backgroundColor: "#007bff",
     color: "white",
@@ -454,29 +427,29 @@ const styles = {
     fontWeight: "bold",
     color: "#777",
     border: "1px solid #dddddd",
-    textAlign: "center",
+    textAlign: "center" as const,
     padding: "8px",
   },
   checkboxCell: {
     border: "1px solid #dddddd",
-    textAlign: "center",
+    textAlign: "center" as const,
     padding: "8px",
     width: "50px",
   },
   checkboxLabel: {
-    position: "relative",
-    display: "inline-block",
+    position: "relative" as const,
+    display: "inline-block" as const,
     width: "20px",
     height: "20px",
-    cursor: "default", // Prevent cursor change since it's disabled
+    cursor: "default",
   },
   hiddenCheckbox: {
-    opacity: 0,
+    opacity: 0 as const,
     width: 0,
     height: 0,
   },
   customCheckbox: {
-    position: "absolute",
+    position: "absolute" as const,
     top: 0,
     left: 0,
     height: "20px",
@@ -484,24 +457,24 @@ const styles = {
     backgroundColor: "#ffffff",
     border: "1px solid #ccc",
     borderRadius: "4px",
-  },
-  redCross: {
-    color: "red",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+  },
+  redCross: {
+    color: "red",
     fontSize: "16px",
   },
   loadingContainer: {
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "column" as const,
     alignItems: "center",
     justifyContent: "center",
     height: "100vh",
   },
   spinner: {
-    border: "8px solid #f3f3f3", // Light grey
-    borderTop: "8px solid #007bff", // Blue
+    border: "8px solid #f3f3f3",
+    borderTop: "8px solid #007bff",
     borderRadius: "50%",
     width: "60px",
     height: "60px",
@@ -510,7 +483,7 @@ const styles = {
   },
   errorContainer: {
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "column" as const,
     alignItems: "center",
     justifyContent: "center",
     height: "100vh",
@@ -520,10 +493,10 @@ const styles = {
     fontSize: "18px",
   },
   graduationCapButton: {
-    position: "absolute",
+    position: "absolute" as const,
     top: "20px",
     left: "50%",
-    backgroundColor: "#d3d3d3", // Light grey
+    backgroundColor: "#d3d3d3",
     color: "#ffffff",
     border: "none",
     borderRadius: "50%",
@@ -536,7 +509,7 @@ const styles = {
     cursor: "pointer",
     transition: "transform 0.3s ease, background-color 0.3s ease",
     zIndex: 1000,
-    transform: "translateX(-50%) scale(1)", // Initial transform
+    transform: "translateX(-50%) scale(1)",
   },
 };
 
@@ -551,7 +524,7 @@ styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
 export default StudentPage;
 
 // import React, { useState, useEffect } from "react";
-// import { useNavigate, Link } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 // import supabase from "../../supabase";
 // import { useSession } from "../../context/SessionContext";
 // import { Pie } from "react-chartjs-2";
@@ -567,6 +540,8 @@ export default StudentPage;
 
 // function StudentPage() {
 //   const navigate = useNavigate();
+//   const { session } = useSession(); // Assuming SessionContext provides 'session'
+
 //   const [studentName, setStudentName] = useState("");
 //   const [studentID, setStudentID] = useState("");
 //   const [school, setSchool] = useState("");
@@ -612,6 +587,10 @@ export default StudentPage;
 //       },
 //     ],
 //   });
+
+//   // State for Graduation Cap Button
+//   const [isHoveredGraduation, setIsHoveredGraduation] = useState<boolean>(false);
+//   const [isActiveGraduation, setIsActiveGraduation] = useState<boolean>(false);
 
 //   useEffect(() => {
 //     fetchStudentData();
@@ -806,6 +785,24 @@ export default StudentPage;
 
 //   return (
 //     <div style={styles.pageContainer}>
+//       {/* Graduation Cap Button */}
+//       <button
+//         style={{
+//           ...styles.graduationCapButton,
+//           transform: isHoveredGraduation
+//             ? "translateX(-50%) scale(1.2)"
+//             : "translateX(-50%) scale(1)",
+//           backgroundColor: isActiveGraduation ? "#000000" : "#d3d3d3", // Turns black when active
+//         }}
+//         onClick={handleGraduationCapClick}
+//         onMouseEnter={() => setIsHoveredGraduation(true)}
+//         onMouseLeave={() => setIsHoveredGraduation(false)}
+//         onMouseDown={() => setIsActiveGraduation(true)}
+//         onMouseUp={() => setIsActiveGraduation(false)}
+//       >
+//         🎓
+//       </button>
+
 //       <div style={styles.card}>
 //         {/* Student Information and Pie Chart */}
 //         <div style={styles.studentInfoContainer}>
@@ -887,13 +884,19 @@ export default StudentPage;
 //       </div>
 //     </div>
 //   );
+
+//   // Handle Graduation Cap Button Click
+//   function handleGraduationCapClick() {
+//     navigate("/grade");
+//   }
 // }
 
 // // Inline styles for the component
 // const styles = {
 //   pageContainer: {
+//     position: "relative", // To position absolute elements relative to this container
 //     display: "flex",
-//     justifyContent: "center",
+//     flexDirection: "column",
 //     alignItems: "center",
 //     padding: "20px",
 //     backgroundColor: "#f5f5f5",
@@ -1040,6 +1043,25 @@ export default StudentPage;
 //   errorMessage: {
 //     color: "red",
 //     fontSize: "18px",
+//   },
+//   graduationCapButton: {
+//     position: "absolute",
+//     top: "20px",
+//     left: "50%",
+//     backgroundColor: "#d3d3d3", // Light grey
+//     color: "#ffffff",
+//     border: "none",
+//     borderRadius: "50%",
+//     width: "40px",
+//     height: "40px",
+//     display: "flex",
+//     alignItems: "center",
+//     justifyContent: "center",
+//     fontSize: "44px",
+//     cursor: "pointer",
+//     transition: "transform 0.3s ease, background-color 0.3s ease",
+//     zIndex: 1000,
+//     transform: "translateX(-50%) scale(1)", // Initial transform
 //   },
 // };
 

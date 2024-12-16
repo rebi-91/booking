@@ -1,7 +1,8 @@
-// import React, { useState, useEffect } from "react";
+
+// import React, { useState, useEffect, useRef } from "react";
 // import { useNavigate } from "react-router-dom";
-// import supabase from "../supabase";
-// import { useSession } from "../context/SessionContext";
+// import supabase from "../../supabase";
+// import { useSession } from "../../context/SessionContext";
 
 // // Define TypeScript interfaces for the data structures
 // interface Profile {
@@ -47,6 +48,7 @@
 
 // interface GradeData {
 //   studentName: string;
+//   id: number; // Assuming there's an 'id' column to sort by
 //   average: string;
 //   examMarks: { [key: string]: number | string };
 // }
@@ -77,6 +79,10 @@
 //   const [grades, setGrades] = useState<GradeData[]>([]);
 //   const [loading, setLoading] = useState<boolean>(true);
 //   const [error, setError] = useState<string>("");
+
+//   // To track which cell is being edited
+//   const [editingCell, setEditingCell] = useState<{ studentId: number; examType: string } | null>(null);
+//   const inputRef = useRef<HTMLInputElement>(null);
 
 //   // List of terms
 //   const terms = ["First Term", "Second Term", "Retakes"];
@@ -181,7 +187,8 @@
 //         const uniqueClasses = Array.from(new Set(classData.map((s) => s.className)));
 //         setClasses(uniqueClasses);
 
-//         // 3. Fetch sections
+//         // 3. Fetch sections based on selectedClass
+//         // Initially, no class is selected, so sections are all unique sections in the school
 //         const { data: sectionData, error: sectionError } = await supabase
 //           .from<Student>("student")
 //           .select("section")
@@ -364,7 +371,8 @@
 //             .from(sheetName)
 //             .select("*")
 //             .eq("className", selectedClass)
-//             .eq("section", selectedSection);
+//             .eq("section", selectedSection)
+//             .order("id", { ascending: true }); // Assuming there's an 'id' column for sorting
 
 //           if (gradesError || !gradesRows) {
 //             throw new Error("Failed to fetch grades data.");
@@ -379,6 +387,7 @@
 //           // 4. For each student, calculate average and collect exam marks
 //           const gradesData: GradeData[] = gradesRows.map((row: any) => {
 //             const studentName = row.studentName || "-";
+//             const studentId = row.id || 0; // Assuming there's an 'id' column
 //             let sumWeightedMarks = 0;
 //             let sumWeights = 0;
 //             let markCount = 0;
@@ -409,7 +418,8 @@
 //                   singleMark = numericMark;
 //                 }
 //               } else {
-//                 examMarks[exam.examType] = mark !== null && mark !== undefined ? mark : "-";
+//                 // If mark is null or empty, show nothing
+//                 examMarks[exam.examType] = mark !== null && mark !== undefined ? mark : "";
 //               }
 //             });
 
@@ -420,15 +430,16 @@
 //                 `Computed average for ${studentName}: ${average} (Sum Weighted Marks: ${sumWeightedMarks}, Sum Weights: ${sumWeights})`
 //               );
 //             } else if (markCount === 1) {
-//               average = singleMark.toString();
+//               average = singleMark.toFixed(1) + "%"; // Always show %
 //               console.log(`Single mark for ${studentName}: ${average}`);
 //             } else {
-//               average = "-";
-//               console.log(`No valid marks for ${studentName}. Setting average to "-".`);
+//               average = "";
+//               console.log(`No valid marks for ${studentName}. Setting average to empty.`);
 //             }
 
 //             return {
 //               studentName,
+//               id: studentId,
 //               average,
 //               examMarks,
 //             };
@@ -451,17 +462,13 @@
 //     }
 //   }, [selectedClass, selectedSection, selectedSubject, selectedTerm, examTypes, school]);
 
-//   // Filter grades based on selectedSubject
-//   // Not needed anymore as grades are already for the selected subject
-//   // Removed the previous filter
-
 //   // Get all exam types to display as columns, sorted by columnNumber ascending
 //   const displayExamTypes = examTypes
 //     .filter((exam) => exam.term === selectedTerm)
 //     .sort((a, b) => a.columnNumber - b.columnNumber) // Ensure sorting
 //     .map((exam) => exam.examType);
 
-//   // Calculate averages
+//   // Calculate averages (already handled during data fetching)
 //   const calculateAverage = (grade: GradeData) => {
 //     if (grade.average === "-") return "-";
 //     if (grade.average.endsWith("%")) {
@@ -469,6 +476,88 @@
 //     }
 //     return grade.average; // Single mark without %
 //   };
+
+//   // Handle double-click to edit a cell
+//   const handleDoubleClick = (studentId: number, examType: string) => {
+//     setEditingCell({ studentId, examType });
+//   };
+
+//   // Handle saving the edited mark
+//   const handleSaveMark = async (studentId: number, examType: string, newMark: number | string) => {
+//     try {
+//       // Find the examType details
+//       const exam = examTypes.find((e) => e.examType === examType);
+//       if (!exam) {
+//         throw new Error("Exam type not found.");
+//       }
+
+//       // Find the sheetName from subjects
+//       const subjectData = await supabase
+//         .from<Subject>("subjects")
+//         .select("sheetName")
+//         .eq("school", school)
+//         .eq("subjectName", selectedSubject)
+//         .single();
+
+//       if (subjectData.error || !subjectData.data) {
+//         throw new Error("Failed to fetch sheet name for the selected subject.");
+//       }
+
+//       const sheetName = subjectData.data.sheetName;
+
+//       // Update the mark in the sheet
+//       const { error } = await supabase
+//         .from(sheetName)
+//         .update({ [mapColumnNumberToColumnName(exam.columnNumber)]: newMark })
+//         .eq("id", studentId); // Assuming 'id' is the unique identifier
+
+//       if (error) {
+//         throw new Error("Failed to update the mark.");
+//       }
+
+//       // Update the local state
+//       setGrades((prevGrades) =>
+//         prevGrades.map((grade) => {
+//           if (grade.id === studentId) {
+//             return {
+//               ...grade,
+//               examMarks: {
+//                 ...grade.examMarks,
+//                 [examType]: newMark,
+//               },
+//             };
+//           }
+//           return grade;
+//         })
+//       );
+//     } catch (err: any) {
+//       console.error("Error saving mark:", err);
+//       alert(err.message || "Failed to save the mark.");
+//     } finally {
+//       setEditingCell(null);
+//     }
+//   };
+
+//   // Handle key press (ENTER) in the input field
+//   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>, studentId: number, examType: string) => {
+//     if (e.key === "Enter") {
+//       const target = e.target as HTMLInputElement;
+//       const value = target.value;
+//       const parsedValue = parseFloat(value);
+//       if (!isNaN(parsedValue)) {
+//         handleSaveMark(studentId, examType, parsedValue);
+//       } else {
+//         alert("Please enter a valid number.");
+//       }
+//     }
+//   };
+
+//   // Focus on the input field when it appears
+//   useEffect(() => {
+//     if (editingCell && inputRef.current) {
+//       inputRef.current.focus();
+//     }
+//   }, [editingCell]);
 
 //   if (loading) {
 //     return (
@@ -583,7 +672,7 @@
 //           <table style={styles.table}>
 //             <thead>
 //               <tr>
-//                 <th style={styles.th}>Student Name</th>
+//                 <th style={{ ...styles.th, textAlign: "right" }}>Student Name</th>
 //                 <th style={styles.th}>Average %</th>
 //                 {displayExamTypes.map((exam) => (
 //                   <th key={exam} style={styles.th}>
@@ -595,14 +684,41 @@
 //             <tbody>
 //               {grades.length > 0 ? (
 //                 grades.map((grade) => (
-//                   <tr key={grade.studentName}>
-//                     <td style={styles.td}>{grade.studentName}</td>
+//                   <tr key={grade.id}>
+//                     <td style={{ ...styles.td, textAlign: "right" }}>{grade.studentName}</td>
 //                     <td style={styles.td}>{calculateAverage(grade)}</td>
 //                     {displayExamTypes.map((exam) => (
-//                       <td key={exam} style={styles.td}>
-//                         {grade.examMarks[exam] !== undefined
-//                           ? grade.examMarks[exam]
-//                           : "-"}
+//                       <td
+//                         key={exam}
+//                         style={styles.td}
+//                         onDoubleClick={() => {
+//                           const studentId = grade.id;
+//                           setEditingCell({ studentId, examType: exam });
+//                         }}
+//                       >
+//                         {editingCell &&
+//                         editingCell.studentId === grade.id &&
+//                         editingCell.examType === exam ? (
+//                           <input
+//                             type="number"
+//                             ref={inputRef}
+//                             defaultValue={grade.examMarks[exam] !== "" ? grade.examMarks[exam] : ""}
+//                             onBlur={(e) => {
+//                               const value = e.target.value;
+//                               const parsedValue = parseFloat(value);
+//                               if (!isNaN(parsedValue)) {
+//                                 handleSaveMark(grade.id, exam, parsedValue);
+//                               } else {
+//                                 alert("Please enter a valid number.");
+//                                 setEditingCell(null);
+//                               }
+//                             }}
+//                             onKeyPress={(e) => handleKeyPress(e, grade.id, exam)}
+//                             style={styles.input}
+//                           />
+//                         ) : (
+//                           grade.examMarks[exam] !== "" ? grade.examMarks[exam] : ""
+//                         )}
 //                       </td>
 //                     ))}
 //                   </tr>
@@ -610,7 +726,7 @@
 //               ) : (
 //                 <tr>
 //                   <td style={styles.td} colSpan={2 + displayExamTypes.length}>
-//                     No grades available for the selected filters.
+                    
 //                   </td>
 //                 </tr>
 //               )}
@@ -657,6 +773,7 @@
 //     alignItems: "center",
 //     justifyContent: "center",
 //     marginBottom: "20px",
+//     flexWrap: "wrap",
 //   },
 //   label: {
 //     marginRight: "10px",
@@ -671,6 +788,8 @@
 //     border: "1px solid #ccc",
 //     flex: "1",
 //     minWidth: "200px",
+//     marginRight: "10px",
+//     marginBottom: "10px",
 //   },
 //   tableContainer: {
 //     overflowX: "auto",
@@ -691,6 +810,7 @@
 //     padding: "12px",
 //     textAlign: "left",
 //     color: "black", // Set table cell text color to black
+//     cursor: "pointer",
 //   },
 //   loadingContainer: {
 //     display: "flex",
@@ -721,6 +841,14 @@
 //     color: "red",
 //     fontSize: "18px",
 //   },
+//   input: {
+//     width: "100%",
+//     padding: "6px",
+//     fontSize: "16px",
+//     borderRadius: "4px",
+//     border: "1px solid #ccc",
+//     boxSizing: "border-box",
+//   },
 // };
 
 // // Keyframes for spinner animation
@@ -732,12 +860,11 @@
 // styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
 
 // export default GradeDashboard;
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, CSSProperties } from "react";
 import { useNavigate } from "react-router-dom";
 import supabase from "../../supabase";
 import { useSession } from "../../context/SessionContext";
 
-// Define TypeScript interfaces for the data structures
 interface Profile {
   school: string;
   role: string; // Added role for access control
@@ -749,7 +876,7 @@ interface Student {
 }
 
 interface ClassData {
-  class: string; // Ensure this matches your Supabase 'class' column
+  class: string;
   sub1?: string;
   sub2?: string;
   sub3?: string;
@@ -770,7 +897,6 @@ interface ClassData {
 interface Exam {
   subjectName: string;
   examType: string;
-  // Removed 'weight' as weight is embedded in 'examType'
   columnNumber: number;
 }
 
@@ -781,24 +907,23 @@ interface Subject {
 
 interface GradeData {
   studentName: string;
-  id: number; // Assuming there's an 'id' column to sort by
+  id: number;
   average: string;
   examMarks: { [key: string]: number | string };
 }
 
 interface ExamType {
-  subjectName: string; // Included subjectName
+  subjectName: string;
   examType: string;
   columnNumber: number;
   term: string;
-  weight: number; // Added weight parsed from examType name
+  weight: number;
 }
 
 const GradeDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const { session } = useSession(); // Assuming SessionContext provides 'session'
+  const { session } = useSession();
 
-  // State variables
   const [school, setSchool] = useState<string>("");
   const [role, setRole] = useState<string>("");
   const [classes, setClasses] = useState<string[]>([]);
@@ -808,68 +933,58 @@ const GradeDashboard: React.FC = () => {
   const [subjects, setSubjects] = useState<string[]>([]);
   const [selectedSubject, setSelectedSubject] = useState<string>("");
   const [examTypes, setExamTypes] = useState<ExamType[]>([]);
-  const [selectedTerm, setSelectedTerm] = useState<string>("First Term"); // Default to "First Term"
+  const [selectedTerm, setSelectedTerm] = useState<string>("First Term");
   const [grades, setGrades] = useState<GradeData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
 
-  // To track which cell is being edited
   const [editingCell, setEditingCell] = useState<{ studentId: number; examType: string } | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // List of terms
   const terms = ["First Term", "Second Term", "Retakes"];
 
-  // Helper function to extract term from examType name
   const extractTerm = (examTypeName: string): string | null => {
     const termRegex = /(First Term|Second Term|Retakes)/i;
     const match = examTypeName.match(termRegex);
     return match ? match[1] : null;
   };
 
-  // Helper function to extract weight from examType name
   const extractWeight = (examTypeName: string): number | null => {
     const weightRegex = /\((\d+)\s*pts?\)/i;
     const match = examTypeName.match(weightRegex);
     return match ? parseInt(match[1], 10) : null;
   };
 
-  // Helper function to map columnNumber to column name in the sheet
   const mapColumnNumberToColumnName = (columnNumber: number): string => {
     return `${columnNumber}`;
   };
 
-  // Handle Class Selection
   const handleClassChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedClass(e.target.value);
-    setSelectedSection(""); // Reset section when class changes
-    setSelectedSubject(""); // Reset subject when class changes
-    setExamTypes([]); // Reset exam types when class changes
-    setGrades([]); // Reset grades when class changes
+    setSelectedSection("");
+    setSelectedSubject("");
+    setExamTypes([]);
+    setGrades([]);
   };
 
-  // Handle Section Selection
   const handleSectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedSection(e.target.value);
-    setSelectedSubject(""); // Reset subject when section changes
-    setExamTypes([]); // Reset exam types when section changes
-    setGrades([]); // Reset grades when section changes
+    setSelectedSubject("");
+    setExamTypes([]);
+    setGrades([]);
   };
 
-  // Handle Subject Selection
   const handleSubjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedSubject(e.target.value);
-    setExamTypes([]); // Reset exam types when subject changes
-    setGrades([]); // Reset grades when subject changes
+    setExamTypes([]);
+    setGrades([]);
   };
 
-  // Handle Term Selection
   const handleTermChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedTerm(e.target.value);
-    setGrades([]); // Reset grades when term changes
+    setGrades([]);
   };
 
-  // Initial Data Fetching: Profile, Classes, and Sections
   useEffect(() => {
     if (!session) {
       navigate("/login");
@@ -883,17 +998,17 @@ const GradeDashboard: React.FC = () => {
         const userId = session.user.id;
         console.log("Fetching profile for user ID:", userId);
 
-        // 1. Fetch profile
-        const { data: profile, error: profileError } = await supabase
-          .from<Profile>("profiles")
+        const { data: profileData, error: profileError } = await supabase
+          .from("profiles")
           .select("school, role")
           .eq("id", userId)
           .single();
 
-        if (profileError || !profile) {
+        if (profileError || !profileData) {
           throw new Error("Failed to fetch profile.");
         }
 
+        const profile = profileData as Profile;
         if (profile.role !== "ADMIN") {
           navigate("/grades");
           return;
@@ -905,9 +1020,8 @@ const GradeDashboard: React.FC = () => {
         setSchool(userSchool);
         setRole(profile.role);
 
-        // 2. Fetch classes
         const { data: classData, error: classError } = await supabase
-          .from<Student>("student")
+          .from("student")
           .select("className")
           .eq("school", userSchool)
           .neq("className", "")
@@ -917,13 +1031,11 @@ const GradeDashboard: React.FC = () => {
           throw new Error("Failed to fetch classes.");
         }
 
-        const uniqueClasses = Array.from(new Set(classData.map((s) => s.className)));
+        const uniqueClasses = Array.from(new Set(classData.map((s: Student) => s.className)));
         setClasses(uniqueClasses);
 
-        // 3. Fetch sections based on selectedClass
-        // Initially, no class is selected, so sections are all unique sections in the school
         const { data: sectionData, error: sectionError } = await supabase
-          .from<Student>("student")
+          .from("student")
           .select("section")
           .eq("school", userSchool)
           .neq("section", "")
@@ -933,7 +1045,7 @@ const GradeDashboard: React.FC = () => {
           throw new Error("Failed to fetch sections.");
         }
 
-        const uniqueSections = Array.from(new Set(sectionData.map((s) => s.section)));
+        const uniqueSections = Array.from(new Set(sectionData.map((s: Student) => s.section)));
         setSections(uniqueSections);
       } catch (err: any) {
         console.error("Error during initial data fetching:", err);
@@ -946,14 +1058,13 @@ const GradeDashboard: React.FC = () => {
     fetchInitialData();
   }, [session, navigate]);
 
-  // Fetch Subjects based on Selected Class
   useEffect(() => {
     if (selectedClass) {
       const fetchSubjects = async () => {
         try {
           setLoading(true);
           const { data: classSubjects, error: classSubjectsError } = await supabase
-            .from<ClassData>("class")
+            .from("class")
             .select(
               "sub1, sub2, sub3, sub4, sub5, sub6, sub7, sub8, sub9, sub10, sub11, sub12, sub13, sub14, sub15"
             )
@@ -967,7 +1078,7 @@ const GradeDashboard: React.FC = () => {
 
           const fetchedSubjects: string[] = [];
           for (let i = 1; i <= 15; i++) {
-            const sub = classSubjects[`sub${i}` as keyof ClassData];
+            const sub = classSubjects[`sub${i}` as keyof ClassData] as string | undefined;
             if (sub && sub.trim() !== "") {
               fetchedSubjects.push(sub.trim());
             }
@@ -988,7 +1099,6 @@ const GradeDashboard: React.FC = () => {
     }
   }, [selectedClass, school]);
 
-  // Fetch Exam Types based on Selected Subject
   useEffect(() => {
     if (selectedSubject) {
       const fetchExamTypes = async () => {
@@ -996,7 +1106,7 @@ const GradeDashboard: React.FC = () => {
           setLoading(true);
 
           const { data: examData, error: examError } = await supabase
-            .from<Exam>("exam")
+            .from("exam")
             .select("subjectName, examType, columnNumber")
             .eq("school", school)
             .eq("subjectName", selectedSubject);
@@ -1007,30 +1117,28 @@ const GradeDashboard: React.FC = () => {
 
           console.log("Exam data:", examData);
 
-          // Extract exam types with term and weight information
           const examTypeList: ExamType[] = examData
-            .map((exam) => {
+            .map((exam: Exam) => {
               const term = extractTerm(exam.examType);
               if (!term) {
                 console.warn(`Term not found in examType name: ${exam.examType}`);
-                return null; // Exclude examTypes without a term
+                return null;
               }
               const weight = extractWeight(exam.examType);
               if (weight === null) {
                 console.warn(`Weight not found or invalid in examType name: ${exam.examType}`);
-                return null; // Exclude examTypes without a valid weight
+                return null;
               }
               return {
-                subjectName: exam.subjectName, // Include subjectName
+                subjectName: exam.subjectName,
                 examType: exam.examType,
                 columnNumber: exam.columnNumber,
                 term: term,
-                weight: weight, // Assign parsed weight
+                weight: weight,
               };
             })
             .filter((examType): examType is ExamType => examType !== null);
 
-          // Validate that for each term, weights sum to 100
           const termWeightMap: { [key: string]: number } = {};
           examTypeList.forEach((examType) => {
             if (termWeightMap[examType.term]) {
@@ -1040,7 +1148,6 @@ const GradeDashboard: React.FC = () => {
             }
           });
 
-          // Check if any term's total weight does not sum to 100
           const invalidTerms = Object.entries(termWeightMap).filter(
             ([, totalWeight]) => totalWeight !== 100
           );
@@ -1055,7 +1162,6 @@ const GradeDashboard: React.FC = () => {
             );
           }
 
-          // Sort examTypes within each term by columnNumber ascending
           examTypeList.sort((a, b) => a.columnNumber - b.columnNumber);
 
           setExamTypes(examTypeList);
@@ -1073,16 +1179,14 @@ const GradeDashboard: React.FC = () => {
     }
   }, [selectedSubject, school]);
 
-  // Fetch Grades based on Selected Class, Section, Subject, and Term
   useEffect(() => {
     if (selectedClass && selectedSection && selectedSubject && selectedTerm && examTypes.length > 0) {
       const fetchGrades = async () => {
         try {
           setLoading(true);
 
-          // 1. Fetch sheetName from subjects table
           const { data: subjectData, error: subjectError } = await supabase
-            .from<Subject>("subjects")
+            .from("subjects")
             .select("sheetName")
             .eq("school", school)
             .eq("subjectName", selectedSubject)
@@ -1092,20 +1196,20 @@ const GradeDashboard: React.FC = () => {
             throw new Error("Failed to fetch sheet name for the selected subject.");
           }
 
-          const sheetName = subjectData.sheetName;
+          const sheetData = subjectData as Subject;
+          const sheetName = sheetData.sheetName;
           console.log(`Fetched sheetName: ${sheetName}`);
 
           if (!sheetName) {
             throw new Error("Sheet name is missing for the selected subject.");
           }
 
-          // 2. Fetch all students' grades from the sheetName table matching class and section
           const { data: gradesRows, error: gradesError } = await supabase
             .from(sheetName)
             .select("*")
             .eq("className", selectedClass)
             .eq("section", selectedSection)
-            .order("id", { ascending: true }); // Assuming there's an 'id' column for sorting
+            .order("id", { ascending: true });
 
           if (gradesError || !gradesRows) {
             throw new Error("Failed to fetch grades data.");
@@ -1113,14 +1217,12 @@ const GradeDashboard: React.FC = () => {
 
           console.log(`Fetched grades rows:`, gradesRows);
 
-          // 3. Prepare examTypes for the selected term
           const filteredExamTypes = examTypes.filter((exam) => exam.term === selectedTerm);
           console.log(`Filtered exam types for term "${selectedTerm}":`, filteredExamTypes);
 
-          // 4. For each student, calculate average and collect exam marks
           const gradesData: GradeData[] = gradesRows.map((row: any) => {
             const studentName = row.studentName || "-";
-            const studentId = row.id || 0; // Assuming there's an 'id' column
+            const studentId = row.id || 0;
             let sumWeightedMarks = 0;
             let sumWeights = 0;
             let markCount = 0;
@@ -1131,7 +1233,6 @@ const GradeDashboard: React.FC = () => {
               const columnName = mapColumnNumberToColumnName(exam.columnNumber);
               const mark = row[columnName];
 
-              // Attempt to parse mark as a number
               let numericMark: number | null = null;
               if (typeof mark === "number") {
                 numericMark = mark;
@@ -1151,7 +1252,6 @@ const GradeDashboard: React.FC = () => {
                   singleMark = numericMark;
                 }
               } else {
-                // If mark is null or empty, show nothing
                 examMarks[exam.examType] = mark !== null && mark !== undefined ? mark : "";
               }
             });
@@ -1159,15 +1259,10 @@ const GradeDashboard: React.FC = () => {
             let average: string;
             if (markCount >= 2 && sumWeights > 0) {
               average = (sumWeightedMarks / sumWeights).toFixed(1) + "%";
-              console.log(
-                `Computed average for ${studentName}: ${average} (Sum Weighted Marks: ${sumWeightedMarks}, Sum Weights: ${sumWeights})`
-              );
             } else if (markCount === 1) {
-              average = singleMark.toFixed(1) + "%"; // Always show %
-              console.log(`Single mark for ${studentName}: ${average}`);
+              average = singleMark.toFixed(1) + "%";
             } else {
               average = "";
-              console.log(`No valid marks for ${studentName}. Setting average to empty.`);
             }
 
             return {
@@ -1195,38 +1290,32 @@ const GradeDashboard: React.FC = () => {
     }
   }, [selectedClass, selectedSection, selectedSubject, selectedTerm, examTypes, school]);
 
-  // Get all exam types to display as columns, sorted by columnNumber ascending
   const displayExamTypes = examTypes
     .filter((exam) => exam.term === selectedTerm)
-    .sort((a, b) => a.columnNumber - b.columnNumber) // Ensure sorting
+    .sort((a, b) => a.columnNumber - b.columnNumber)
     .map((exam) => exam.examType);
 
-  // Calculate averages (already handled during data fetching)
   const calculateAverage = (grade: GradeData) => {
     if (grade.average === "-") return "-";
     if (grade.average.endsWith("%")) {
       return grade.average;
     }
-    return grade.average; // Single mark without %
+    return grade.average;
   };
 
-  // Handle double-click to edit a cell
   const handleDoubleClick = (studentId: number, examType: string) => {
     setEditingCell({ studentId, examType });
   };
 
-  // Handle saving the edited mark
   const handleSaveMark = async (studentId: number, examType: string, newMark: number | string) => {
     try {
-      // Find the examType details
       const exam = examTypes.find((e) => e.examType === examType);
       if (!exam) {
         throw new Error("Exam type not found.");
       }
 
-      // Find the sheetName from subjects
       const subjectData = await supabase
-        .from<Subject>("subjects")
+        .from("subjects")
         .select("sheetName")
         .eq("school", school)
         .eq("subjectName", selectedSubject)
@@ -1236,19 +1325,17 @@ const GradeDashboard: React.FC = () => {
         throw new Error("Failed to fetch sheet name for the selected subject.");
       }
 
-      const sheetName = subjectData.data.sheetName;
+      const sheetName = (subjectData.data as Subject).sheetName;
 
-      // Update the mark in the sheet
       const { error } = await supabase
         .from(sheetName)
         .update({ [mapColumnNumberToColumnName(exam.columnNumber)]: newMark })
-        .eq("id", studentId); // Assuming 'id' is the unique identifier
+        .eq("id", studentId);
 
       if (error) {
         throw new Error("Failed to update the mark.");
       }
 
-      // Update the local state
       setGrades((prevGrades) =>
         prevGrades.map((grade) => {
           if (grade.id === studentId) {
@@ -1271,7 +1358,6 @@ const GradeDashboard: React.FC = () => {
     }
   };
 
-  // Handle key press (ENTER) in the input field
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>, studentId: number, examType: string) => {
     if (e.key === "Enter") {
       const target = e.target as HTMLInputElement;
@@ -1285,7 +1371,6 @@ const GradeDashboard: React.FC = () => {
     }
   };
 
-  // Focus on the input field when it appears
   useEffect(() => {
     if (editingCell && inputRef.current) {
       inputRef.current.focus();
@@ -1312,13 +1397,9 @@ const GradeDashboard: React.FC = () => {
   return (
     <div style={styles.pageContainer}>
       <div style={styles.card}>
-        {/* Title and Subheading */}
         <h1 style={styles.title}>Grade Dashboard</h1>
-        <h3 style={styles.subheading}>
-          School: {school}
-        </h3>
+        <h3 style={styles.subheading}>School: {school}</h3>
 
-        {/* Class Dropdown */}
         <div style={styles.dropdownContainer}>
           <label htmlFor="class-select" style={styles.label}>
             Select Class:
@@ -1338,7 +1419,6 @@ const GradeDashboard: React.FC = () => {
           </select>
         </div>
 
-        {/* Section Dropdown */}
         <div style={styles.dropdownContainer}>
           <label htmlFor="section-select" style={styles.label}>
             Select Section:
@@ -1359,7 +1439,6 @@ const GradeDashboard: React.FC = () => {
           </select>
         </div>
 
-        {/* Subject Dropdown */}
         <div style={styles.dropdownContainer}>
           <label htmlFor="subject-select" style={styles.label}>
             Select Subject:
@@ -1380,7 +1459,6 @@ const GradeDashboard: React.FC = () => {
           </select>
         </div>
 
-        {/* Term Dropdown */}
         <div style={styles.dropdownContainer}>
           <label htmlFor="term-select" style={styles.label}>
             Select Term:
@@ -1400,7 +1478,6 @@ const GradeDashboard: React.FC = () => {
           </select>
         </div>
 
-        {/* Grades Table */}
         <div style={styles.tableContainer}>
           <table style={styles.table}>
             <thead>
@@ -1435,7 +1512,7 @@ const GradeDashboard: React.FC = () => {
                           <input
                             type="number"
                             ref={inputRef}
-                            defaultValue={grade.examMarks[exam] !== "" ? grade.examMarks[exam] : ""}
+                            defaultValue={grade.examMarks[exam] !== "" ? (grade.examMarks[exam] as string) : ""}
                             onBlur={(e) => {
                               const value = e.target.value;
                               const parsedValue = parseFloat(value);
@@ -1458,9 +1535,7 @@ const GradeDashboard: React.FC = () => {
                 ))
               ) : (
                 <tr>
-                  <td style={styles.td} colSpan={2 + displayExamTypes.length}>
-                    
-                  </td>
+                  <td style={styles.td} colSpan={2 + displayExamTypes.length}></td>
                 </tr>
               )}
             </tbody>
@@ -1471,8 +1546,7 @@ const GradeDashboard: React.FC = () => {
   );
 };
 
-// Inline styles for the component
-const styles: { [key: string]: React.CSSProperties } = {
+const styles: { [key: string]: CSSProperties } = {
   pageContainer: {
     display: "flex",
     justifyContent: "center",
@@ -1494,7 +1568,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   title: {
     fontSize: "32px",
     marginBottom: "10px",
-    color: "black", // Set title color to black
+    color: "black",
   },
   subheading: {
     fontSize: "20px",
@@ -1512,7 +1586,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     marginRight: "10px",
     fontSize: "16px",
     fontWeight: "bold",
-    color: "black", // Ensure labels are black
+    color: "black",
   },
   select: {
     padding: "8px",
@@ -1542,7 +1616,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     border: "1px solid #dddddd",
     padding: "12px",
     textAlign: "left",
-    color: "black", // Set table cell text color to black
+    color: "black",
     cursor: "pointer",
   },
   loadingContainer: {
@@ -1554,8 +1628,8 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontFamily: "Arial, sans-serif",
   },
   spinner: {
-    border: "8px solid #f3f3f3", // Light grey
-    borderTop: "8px solid #007bff", // Blue
+    border: "8px solid #f3f3f3",
+    borderTop: "8px solid #007bff",
     borderRadius: "50%",
     width: "60px",
     height: "60px",
@@ -1584,7 +1658,6 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
 };
 
-// Keyframes for spinner animation
 const styleSheet = document.styleSheets[0];
 const keyframes = `
 @keyframes spin {

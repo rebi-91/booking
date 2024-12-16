@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import supabase from "../../supabase";
 import { useNavigate } from "react-router-dom";
@@ -6,11 +5,11 @@ import { useNavigate } from "react-router-dom";
 function AttendancePage() {
   const [userSchool, setUserSchool] = useState("");
   const [classTime, setClassTime] = useState("");
-  const [classNames, setClassNames] = useState([]);
-  const [sections, setSections] = useState([]);
+  const [classNames, setClassNames] = useState<string[]>([]);
+  const [sections, setSections] = useState<string[]>([]);
   const [selectedClassName, setSelectedClassName] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
-  const [students, setStudents] = useState([]);
+  const [students, setStudents] = useState<{id:number;name:string;checked:boolean}[]>([]);
   const [day, setDay] = useState(new Date().getDate());
   const [selectAll, setSelectAll] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -25,6 +24,7 @@ function AttendancePage() {
 
   useEffect(() => {
     checkUserSchool();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const checkUserSchool = async () => {
@@ -40,7 +40,7 @@ function AttendancePage() {
           .eq("id", user.id)
           .single();
 
-        if (!error) {
+        if (!error && profileData) {
           setUserSchool(profileData?.school || "Unknown School");
           if (profileData?.school) await fetchClassNames(profileData.school);
         }
@@ -50,22 +50,22 @@ function AttendancePage() {
     }
   };
 
-  const fetchClassNames = async (school) => {
+  const fetchClassNames = async (school: string) => {
     try {
       const { data, error } = await supabase
         .from("student")
         .select("className")
         .eq("school", school);
 
-      if (!error) {
-        setClassNames([...new Set(data.map((item) => item.className))]);
+      if (!error && data) {
+        setClassNames([...new Set((data as any[]).map((item) => item.className))]);
       }
     } catch (error) {
       console.error("Error fetching class names:", error);
     }
   };
 
-  const fetchSections = async (className) => {
+  const fetchSections = async (className: string) => {
     try {
       const { data, error } = await supabase
         .from("student")
@@ -73,8 +73,8 @@ function AttendancePage() {
         .eq("school", userSchool)
         .eq("className", className);
 
-      if (!error) {
-        setSections([...new Set(data.map((item) => item.section))]);
+      if (!error && data) {
+        setSections([...new Set((data as any[]).map((item) => item.section))]);
       }
     } catch (error) {
       console.error("Error fetching sections:", error);
@@ -92,18 +92,20 @@ function AttendancePage() {
         .eq("className", selectedClassName)
         .eq("section", selectedSection);
 
-      const studentIds = studentData.map((item) => item.id);
+      if (!studentData) return;
+
+      const ids = (studentData as any[]).map((item) => item.id);
       const { data: attendanceData } = await supabase
         .from(classTime)
         .select(`${day}, id`)
-        .in("id", studentIds);
+        .in("id", ids);
 
-      const combinedData = studentData.map((student) => {
-        const attendance = attendanceData.find((a) => a.id === student.id);
+      const combinedData = (studentData as any[]).map((student) => {
+        const attendance = (attendanceData as any[]).find((a) => a.id === student.id);
         return {
           id: student.id,
           name: student.studentName,
-          checked: attendance ? attendance[day] : false,
+          checked: attendance ? attendance[day] === true : false,
         };
       });
 
@@ -132,7 +134,7 @@ function AttendancePage() {
     }
   };
 
-  const toggleStudentCheckbox = (id) => {
+  const toggleStudentCheckbox = (id: number) => {
     setStudents((prev) =>
       prev.map((student) =>
         student.id === id ? { ...student, checked: !student.checked } : student
@@ -156,27 +158,33 @@ function AttendancePage() {
     navigate("/teacherdashboard");
   };
 
+  const handleMouseEnterGraduation = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const target = e.currentTarget as HTMLButtonElement;
+    target.style.transform = "scale(1.2)";
+  };
+
+  const handleMouseLeaveGraduation = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const target = e.currentTarget as HTMLButtonElement;
+    target.style.transform = "scale(1)";
+  };
+
   return (
-    <div style={pageStyle}>
-      <h1 style={headingStyle}>Student Attendance</h1>
-      {userSchool && <h2 style={subHeadingStyle}>{userSchool}</h2>}
-        <button
-          onClick={handleGraduationCapClick}
-          style={graduationCapButtonStyle}
-          onMouseEnter={(e) => {
-            e.target.style.transform = "scale(1.2)";
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.transform = "scale(1)";
-          }}
-        >
-          🎓
-        </button>
-      <div style={formContainerStyle(isMinimized)}>
+    <div style={pageStyle as React.CSSProperties}>
+      <h1 style={headingStyle as React.CSSProperties}>Student Attendance</h1>
+      {userSchool && <h2 style={subHeadingStyle as React.CSSProperties}>{userSchool}</h2>}
+      <button
+        onClick={handleGraduationCapClick}
+        style={graduationCapButtonStyle as React.CSSProperties}
+        onMouseEnter={handleMouseEnterGraduation}
+        onMouseLeave={handleMouseLeaveGraduation}
+      >
+        🎓
+      </button>
+      <div style={formContainerStyle(isMinimized) as React.CSSProperties}>
         {!isMinimized && (
           <>
-            <div style={formGroupStyle}>
-              <label style={labelStyle}>Class Time</label>
+            <div style={formGroupStyle as React.CSSProperties}>
+              <label style={labelStyle as React.CSSProperties}>Class Time</label>
               <select
                 value={classTime}
                 onChange={(e) => {
@@ -185,7 +193,7 @@ function AttendancePage() {
                   setSections([]);
                   setStudents([]);
                 }}
-                style={selectStyle}
+                style={selectStyle as React.CSSProperties}
               >
                 <option value="">Select Class Time</option>
                 {["C1", "C2", "C3", "C4", "C5", "C6"].map((time) => (
@@ -195,15 +203,15 @@ function AttendancePage() {
                 ))}
               </select>
             </div>
-            <div style={formGroupStyle}>
-              <label style={labelStyle}>Class Name</label>
+            <div style={formGroupStyle as React.CSSProperties}>
+              <label style={labelStyle as React.CSSProperties}>Class Name</label>
               <select
                 value={selectedClassName}
                 onChange={(e) => {
                   setSelectedClassName(e.target.value);
                   fetchSections(e.target.value);
                 }}
-                style={selectStyle}
+                style={selectStyle as React.CSSProperties}
               >
                 <option value="">Select Class Name</option>
                 {classNames.map((name) => (
@@ -213,12 +221,12 @@ function AttendancePage() {
                 ))}
               </select>
             </div>
-            <div style={formGroupStyle}>
-              <label style={labelStyle}>Section</label>
+            <div style={formGroupStyle as React.CSSProperties}>
+              <label style={labelStyle as React.CSSProperties}>Section</label>
               <select
                 value={selectedSection}
                 onChange={(e) => setSelectedSection(e.target.value)}
-                style={selectStyle}
+                style={selectStyle as React.CSSProperties}
               >
                 <option value="">Select Section</option>
                 {sections.map((section) => (
@@ -228,12 +236,12 @@ function AttendancePage() {
                 ))}
               </select>
             </div>
-            <div style={formGroupStyle}>
-              <label style={labelStyle}>Day of the Month</label>
+            <div style={formGroupStyle as React.CSSProperties}>
+              <label style={labelStyle as React.CSSProperties}>Day of the Month</label>
               <select
                 value={day}
                 onChange={(e) => setDay(parseInt(e.target.value))}
-                style={selectStyle}
+                style={selectStyle as React.CSSProperties}
               >
                 {Array.from({ length: currentMonthDays }, (_, i) => i + 1).map((d) => (
                   <option key={d} value={d}>
@@ -242,24 +250,24 @@ function AttendancePage() {
                 ))}
               </select>
             </div>
-            <button onClick={fetchStudents} style={buttonStyle}>
+            <button onClick={fetchStudents} style={buttonStyle as React.CSSProperties}>
               Fetch Students
             </button>
           </>
         )}
-        <button onClick={toggleContainerSize} style={chevronButtonStyle(isMinimized)}>
+        <button onClick={toggleContainerSize} style={chevronButtonStyle(isMinimized) as React.CSSProperties}>
           {isMinimized ? "\u25BC" : "\u25B2"}
         </button>
       </div>
 
-      <div style={studentListContainerStyle(isMinimized)}>
+      <div style={studentListContainerStyle(isMinimized) as React.CSSProperties}>
         <div>
-          <label style={checkboxLabelStyle}>
+          <label style={checkboxLabelStyle as React.CSSProperties}>
             <input
               type="checkbox"
               checked={selectAll}
               onChange={handleSelectAll}
-              style={checkboxStyle}
+              style={checkboxStyle as React.CSSProperties}
             />
             Select All
           </label>
@@ -270,19 +278,20 @@ function AttendancePage() {
             style={{
               ...studentContainerStyle,
               border: student.checked ? "2px solid blue" : "2px solid transparent",
-            }}
+            } as React.CSSProperties}
             onClick={() => toggleStudentCheckbox(student.id)}
           >
-            <label style={studentLabelStyle}>
+            <label style={studentLabelStyle as React.CSSProperties}>
               <input
                 type="checkbox"
                 checked={student.checked}
                 onChange={() => toggleStudentCheckbox(student.id)}
                 style={{
                   ...checkboxStyle,
+                  appearance: "none" as const,
                   backgroundColor: student.checked ? "#0056b3" : "#1e1e1e",
                   color: student.checked ? "#ffffff" : "#000000",
-                }}
+                } as React.CSSProperties}
               />
               {student.name}
             </label>
@@ -290,7 +299,7 @@ function AttendancePage() {
         ))}
       </div>
 
-      <button onClick={saveAttendance} style={saveButtonStyle}>
+      <button onClick={saveAttendance} style={saveButtonStyle as React.CSSProperties}>
         Save Attendance
       </button>
     </div>
@@ -303,7 +312,7 @@ const pageStyle = {
   minHeight: "100vh",
   color: "#ffffff",
   display: "flex",
-  flexDirection: "column",
+  flexDirection: "column" as const,
   alignItems: "center",
   justifyContent: "center",
   fontFamily: "'Roboto', sans-serif",
@@ -315,19 +324,19 @@ const headingStyle = {
   fontWeight: "bold",
   marginBottom: "15px",
   marginTop: "-5px",
-  textAlign: "center",
+  textAlign: "center" as const,
   color: "#e0e0e0",
 };
 
 const subHeadingStyle = {
   fontSize: "25px",
   marginBottom: "10px",
-  textAlign: "center",
+  textAlign: "center" as const,
   color: "#b0b0b0",
 };
 
 const graduationCapButtonStyle = {
-  position: "absolute",
+  position: "absolute" as const,
   right: "560px",
   top: "-20px",
   backgroundColor: "#2a2a2a",
@@ -345,7 +354,7 @@ const graduationCapButtonStyle = {
   zIndex: 1000,
 };
 
-const formContainerStyle = (minimized) => ({
+const formContainerStyle = (minimized: boolean) => ({
   backgroundColor: "#1e1e1e",
   padding: minimized ? "10px" : "25px",
   borderRadius: "12px",
@@ -355,7 +364,7 @@ const formContainerStyle = (minimized) => ({
   maxWidth: "600px",
   overflow: "visible",
   height: minimized ? "60px" : "auto",
-  position: "relative",
+  position: "relative" as const,
   transition: "height 0.3s ease, padding 0.3s ease",
 });
 
@@ -382,7 +391,7 @@ const selectStyle = {
   outline: "none",
   transition: "border-color 0.3s",
   boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.2)",
-};
+} as React.CSSProperties;
 
 const buttonStyle = {
   width: "100%",
@@ -394,24 +403,24 @@ const buttonStyle = {
   cursor: "pointer",
   fontSize: "22px",
   fontWeight: "bold",
-  textAlign: "center",
+  textAlign: "center" as const,
   transition: "transform 0.2s ease, opacity 0.3s ease",
-};
+} as React.CSSProperties;
 
 const saveButtonStyle = {
   ...buttonStyle,
   marginTop: "0px",
   width: "590px",
-};
+} as React.CSSProperties;
 
-const studentListContainerStyle = (expanded) => ({
+const studentListContainerStyle = (expanded: boolean) => ({
   backgroundColor: "#1e1e1e",
   borderRadius: "12px",
   padding: "20px",
   width: "100%",
   maxWidth: "600px",
   maxHeight: expanded ? "600px" : "300px",
-  overflowY: "auto",
+  overflowY: "auto" as const,
   marginBottom: "25px",
   boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
   transition: "max-height 0.3s ease",
@@ -427,7 +436,7 @@ const studentContainerStyle = {
   backgroundColor: "#2a2a2a",
   cursor: "pointer",
   transition: "border 0.3s ease, background-color 0.3s ease",
-};
+} as React.CSSProperties;
 
 const studentLabelStyle = {
   display: "flex",
@@ -435,23 +444,23 @@ const studentLabelStyle = {
   fontSize: "23px",
   fontWeight: "500",
   color: "#ffffff",
-};
+} as React.CSSProperties;
 
 const checkboxStyle = {
   width: "24px",
   height: "24px",
   marginRight: "10px",
-  appearance: "none",
+  appearance: "none" as const,
   backgroundColor: "#1e1e1e",
   border: "2px solid #444",
   borderRadius: "4px",
   cursor: "pointer",
-  position: "relative",
+  position: "relative" as const,
   transition: "all 0.3s ease",
-};
+} as React.CSSProperties;
 
-const chevronButtonStyle = (expanded) => ({
-  position: "absolute",
+const chevronButtonStyle = (expanded: boolean) => ({
+  position: "absolute" as const,
   bottom: "-29px",
   left: "50%",
   transform: "translateX(-50%)",
@@ -469,21 +478,19 @@ const chevronButtonStyle = (expanded) => ({
   zIndex: 1000,
 });
 
-
-
 const checkboxLabelStyle = {
   display: "flex",
   alignItems: "center",
   marginBottom: "15px",
   fontSize: "18px",
   color: "#ffffff",
-};
+} as React.CSSProperties;
 
 export default AttendancePage;
 
-
 // import React, { useState, useEffect } from "react";
-// import supabase from "../supabase";
+// import supabase from "../../supabase";
+// import { useNavigate } from "react-router-dom";
 
 // function AttendancePage() {
 //   const [userSchool, setUserSchool] = useState("");
@@ -496,6 +503,8 @@ export default AttendancePage;
 //   const [day, setDay] = useState(new Date().getDate());
 //   const [selectAll, setSelectAll] = useState(false);
 //   const [isMinimized, setIsMinimized] = useState(false);
+
+//   const navigate = useNavigate();
 
 //   const currentMonthDays = new Date(
 //     new Date().getFullYear(),
@@ -623,19 +632,36 @@ export default AttendancePage;
 //   const handleSelectAll = () => {
 //     const newSelectAll = !selectAll;
 //     setSelectAll(newSelectAll);
-//     setStudents((prev) => prev.map((student) => ({ ...student, checked: newSelectAll })));
+//     setStudents((prev) =>
+//       prev.map((student) => ({ ...student, checked: newSelectAll }))
+//     );
 //   };
 
 //   const toggleContainerSize = () => {
 //     setIsMinimized((prev) => !prev);
 //   };
 
+//   const handleGraduationCapClick = () => {
+//     navigate("/teacherdashboard");
+//   };
+
 //   return (
 //     <div style={pageStyle}>
 //       <h1 style={headingStyle}>Student Attendance</h1>
-//       {userSchool && <h2 style={subHeadingStyle}>School: {userSchool}</h2>}
-
-//       <div style={{ ...formContainerStyle, height: isMinimized ? "50px" : "auto" }}>
+//       {userSchool && <h2 style={subHeadingStyle}>{userSchool}</h2>}
+//         <button
+//           onClick={handleGraduationCapClick}
+//           style={graduationCapButtonStyle}
+//           onMouseEnter={(e) => {
+//             e.target.style.transform = "scale(1.2)";
+//           }}
+//           onMouseLeave={(e) => {
+//             e.target.style.transform = "scale(1)";
+//           }}
+//         >
+//           🎓
+//         </button>
+//       <div style={formContainerStyle(isMinimized)}>
 //         {!isMinimized && (
 //           <>
 //             <div style={formGroupStyle}>
@@ -710,20 +736,12 @@ export default AttendancePage;
 //             </button>
 //           </>
 //         )}
-//         <button
-//           onClick={toggleContainerSize}
-//           style={chevronButtonStyle}
-//         >
+//         <button onClick={toggleContainerSize} style={chevronButtonStyle(isMinimized)}>
 //           {isMinimized ? "\u25BC" : "\u25B2"}
 //         </button>
 //       </div>
 
-//       <div
-//         style={{
-//           ...studentListContainerStyle,
-//           height: isMinimized ? "400px" : "300px",
-//         }}
-//       >
+//       <div style={studentListContainerStyle(isMinimized)}>
 //         <div>
 //           <label style={checkboxLabelStyle}>
 //             <input
@@ -768,6 +786,7 @@ export default AttendancePage;
 //   );
 // }
 
+// /* Styles */
 // const pageStyle = {
 //   backgroundColor: "#121212",
 //   minHeight: "100vh",
@@ -781,33 +800,56 @@ export default AttendancePage;
 // };
 
 // const headingStyle = {
-//   fontSize: "32px",
+//   fontSize: "36px",
 //   fontWeight: "bold",
 //   marginBottom: "15px",
+//   marginTop: "-5px",
 //   textAlign: "center",
 //   color: "#e0e0e0",
 // };
 
 // const subHeadingStyle = {
-//   fontSize: "20px",
-//   marginBottom: "25px",
+//   fontSize: "25px",
+//   marginBottom: "10px",
 //   textAlign: "center",
 //   color: "#b0b0b0",
 // };
 
-// const formContainerStyle = {
-//   backgroundColor: "#1e1e1e",
-//   padding: "25px",
-//   borderRadius: "12px",
-//   boxShadow: "0 4px 15px rgba(0, 0, 0, 0.5)",
-//   marginBottom: "25px",
-//   width: "100%",
-//   maxWidth: "600px",
-//   position: "relative",
+// const graduationCapButtonStyle = {
+//   position: "absolute",
+//   right: "560px",
+//   top: "-20px",
+//   backgroundColor: "#2a2a2a",
+//   color: "#ffffff",
+//   border: "none",
+//   borderRadius: "50%",
+//   width: "55px",
+//   height: "55px",
+//   display: "flex",
+//   alignItems: "center",
+//   justifyContent: "center",
+//   fontSize: "45px",
+//   cursor: "pointer",
+//   transition: "transform 0.3s ease, background-color 0.3s ease",
+//   zIndex: 1000,
 // };
 
+// const formContainerStyle = (minimized) => ({
+//   backgroundColor: "#1e1e1e",
+//   padding: minimized ? "10px" : "25px",
+//   borderRadius: "12px",
+//   boxShadow: "0 4px 15px rgba(0, 0, 0, 0.5)",
+//   marginBottom: minimized ? "20px" : "20px",
+//   width: "100%",
+//   maxWidth: "600px",
+//   overflow: "visible",
+//   height: minimized ? "60px" : "auto",
+//   position: "relative",
+//   transition: "height 0.3s ease, padding 0.3s ease",
+// });
+
 // const formGroupStyle = {
-//   marginBottom: "15px",
+//   marginBottom: "10px",
 // };
 
 // const labelStyle = {
@@ -820,64 +862,49 @@ export default AttendancePage;
 
 // const selectStyle = {
 //   width: "100%",
-//   padding: "12px",
-//   fontSize: "18px",
+//   padding: "35px",
+//   fontSize: "22px",
 //   borderRadius: "8px",
 //   backgroundColor: "#2a2a2a",
 //   color: "#ffffff",
 //   border: "1px solid #444",
 //   outline: "none",
+//   transition: "border-color 0.3s",
+//   boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.2)",
 // };
 
 // const buttonStyle = {
 //   width: "100%",
-//   padding: "14px",
+//   padding: "28px",
 //   backgroundColor: "#28a745",
 //   color: "#ffffff",
 //   border: "none",
 //   borderRadius: "8px",
 //   cursor: "pointer",
-//   fontSize: "16px",
+//   fontSize: "22px",
 //   fontWeight: "bold",
 //   textAlign: "center",
 //   transition: "transform 0.2s ease, opacity 0.3s ease",
 // };
 
-// const chevronButtonStyle = {
-//   position: "absolute",
-//   bottom: "-20px",
-//   left: "50%",
-//   transform: "translateX(-50%)",
-//   backgroundColor: "#2a2a2a",
-//   color: "#ffffff",
-//   borderRadius: "50%",
-//   width: "40px",
-//   height: "40px",
-//   display: "flex",
-//   alignItems: "center",
-//   justifyContent: "center",
-//   fontSize: "20px",
-//   cursor: "pointer",
-//   transition: "transform 0.3s ease, background-color 0.3s ease",
-// };
-
 // const saveButtonStyle = {
 //   ...buttonStyle,
-//   marginTop: "15px",
-//   maxWidth: "600px",
+//   marginTop: "0px",
+//   width: "590px",
 // };
 
-// const studentListContainerStyle = {
+// const studentListContainerStyle = (expanded) => ({
 //   backgroundColor: "#1e1e1e",
 //   borderRadius: "12px",
 //   padding: "20px",
 //   width: "100%",
 //   maxWidth: "600px",
-//   maxHeight: "300px",
+//   maxHeight: expanded ? "600px" : "300px",
 //   overflowY: "auto",
 //   marginBottom: "25px",
 //   boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
-// };
+//   transition: "max-height 0.3s ease",
+// });
 
 // const studentContainerStyle = {
 //   display: "flex",
@@ -894,7 +921,7 @@ export default AttendancePage;
 // const studentLabelStyle = {
 //   display: "flex",
 //   alignItems: "center",
-//   fontSize: "20px",
+//   fontSize: "23px",
 //   fontWeight: "500",
 //   color: "#ffffff",
 // };
@@ -911,6 +938,28 @@ export default AttendancePage;
 //   position: "relative",
 //   transition: "all 0.3s ease",
 // };
+
+// const chevronButtonStyle = (expanded) => ({
+//   position: "absolute",
+//   bottom: "-29px",
+//   left: "50%",
+//   transform: "translateX(-50%)",
+//   backgroundColor: "#2a2a2a",
+//   color: "#ffffff",
+//   borderRadius: "50%",
+//   width: "50px",
+//   height: "50px",
+//   display: "flex",
+//   alignItems: "center",
+//   justifyContent: "center",
+//   fontSize: "20px",
+//   cursor: "pointer",
+//   transition: "transform 0.3s ease, background-color 0.3s ease",
+//   zIndex: 1000,
+// });
+
+
+
 // const checkboxLabelStyle = {
 //   display: "flex",
 //   alignItems: "center",
@@ -920,3 +969,4 @@ export default AttendancePage;
 // };
 
 // export default AttendancePage;
+
