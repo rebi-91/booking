@@ -14,8 +14,8 @@ const HomePage = () => {
         ) : (
           <Link to="/sign-in">Sign In</Link>
         )}
-        {/* <Link to="/student">Attendance</Link>
-        <Link to="/grade">Exam Results</Link> */}
+        <Link to="/student">Attendance</Link>
+        <Link to="/grade">Exam Results</Link>
         <div id="divider"></div>
       </section>
     </main>
