@@ -860,6 +860,7 @@
 // styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
 
 // export default GradeDashboard;
+
 import React, { useState, useEffect, useRef, CSSProperties } from "react";
 import { useNavigate } from "react-router-dom";
 import supabase from "../../supabase";
@@ -1307,35 +1308,85 @@ const GradeDashboard: React.FC = () => {
     setEditingCell({ studentId, examType });
   };
 
-  const handleSaveMark = async (studentId: number, examType: string, newMark: number | string) => {
+  // const handleSaveMark = async (studentId: number, examType: string, newMark: number | string) => {
+  //   try {
+  //     const exam = examTypes.find((e) => e.examType === examType);
+  //     if (!exam) {
+  //       throw new Error("Exam type not found.");
+  //     }
+
+  //     const subjectData = await supabase
+  //       .from("subjects")
+  //       .select("sheetName")
+  //       .eq("school", school)
+  //       .eq("subjectName", selectedSubject)
+  //       .single();
+
+  //     if (subjectData.error || !subjectData.data) {
+  //       throw new Error("Failed to fetch sheet name for the selected subject.");
+  //     }
+
+  //     const sheetName = (subjectData.data as Subject).sheetName;
+
+  //     const { error } = await supabase
+  //       .from(sheetName)
+  //       .update({ [mapColumnNumberToColumnName(exam.columnNumber)]: newMark })
+  //       .eq("id", studentId);
+
+  //     if (error) {
+  //       throw new Error("Failed to update the mark.");
+  //     }
+
+  //     setGrades((prevGrades) =>
+  //       prevGrades.map((grade) => {
+  //         if (grade.id === studentId) {
+  //           return {
+  //             ...grade,
+  //             examMarks: {
+  //               ...grade.examMarks,
+  //               [examType]: newMark,
+  //             },
+  //           };
+  //         }
+  //         return grade;
+  //       })
+  //     );
+  //   } catch (err: any) {
+  //     console.error("Error saving mark:", err);
+  //     alert(err.message || "Failed to save the mark.");
+  //   } finally {
+  //     setEditingCell(null);
+  //   }
+  // };
+  const handleSaveMark = async (studentId: number, examType: string, newMark: number | string | null) => {
     try {
       const exam = examTypes.find((e) => e.examType === examType);
       if (!exam) {
         throw new Error("Exam type not found.");
       }
-
+  
       const subjectData = await supabase
         .from("subjects")
         .select("sheetName")
         .eq("school", school)
         .eq("subjectName", selectedSubject)
         .single();
-
+  
       if (subjectData.error || !subjectData.data) {
         throw new Error("Failed to fetch sheet name for the selected subject.");
       }
-
+  
       const sheetName = (subjectData.data as Subject).sheetName;
-
+  
       const { error } = await supabase
         .from(sheetName)
-        .update({ [mapColumnNumberToColumnName(exam.columnNumber)]: newMark })
+        .update({ [mapColumnNumberToColumnName(exam.columnNumber)]: newMark === "" ? null : newMark })
         .eq("id", studentId);
-
+  
       if (error) {
         throw new Error("Failed to update the mark.");
       }
-
+  
       setGrades((prevGrades) =>
         prevGrades.map((grade) => {
           if (grade.id === studentId) {
@@ -1343,7 +1394,7 @@ const GradeDashboard: React.FC = () => {
               ...grade,
               examMarks: {
                 ...grade.examMarks,
-                [examType]: newMark,
+                [examType]: newMark === "" ? null : newMark,
               },
             };
           }
@@ -1357,20 +1408,45 @@ const GradeDashboard: React.FC = () => {
       setEditingCell(null);
     }
   };
-
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>, studentId: number, examType: string) => {
+  
+  
+  // const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>, studentId: number, examType: string) => {
+  //   if (e.key === "Enter") {
+  //     const target = e.target as HTMLInputElement;
+  //     const value = target.value;
+  //     const parsedValue = parseFloat(value);
+  //     if (!isNaN(parsedValue)) {
+  //       handleSaveMark(studentId, examType, parsedValue);
+  //     } else {
+  //       alert("Please enter a valid number.");
+  //     }
+  //   }
+  // };
+  const handleKeyPress = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    studentId: number,
+    examType: string
+  ) => {
     if (e.key === "Enter") {
       const target = e.target as HTMLInputElement;
       const value = target.value;
-      const parsedValue = parseFloat(value);
-      if (!isNaN(parsedValue)) {
-        handleSaveMark(studentId, examType, parsedValue);
+  
+      if (value === "") {
+        handleSaveMark(studentId, examType, null);
+      } else if (value === "-") {
+        handleSaveMark(studentId, examType, value);
       } else {
-        alert("Please enter a valid number.");
+        const parsedValue = parseFloat(value);
+        if (!isNaN(parsedValue)) {
+          handleSaveMark(studentId, examType, parsedValue);
+        } else {
+          alert("Please enter a valid number, leave empty, or enter '-'.");
+        }
       }
     }
   };
-
+  
+  
   useEffect(() => {
     if (editingCell && inputRef.current) {
       inputRef.current.focus();
@@ -1396,6 +1472,33 @@ const GradeDashboard: React.FC = () => {
 
   return (
     <div style={styles.pageContainer}>
+      <div style={styles.floatingContainer}>
+  <button
+    style={{...styles.iconButton, backgroundColor: "#007BA7"}}
+    onClick={() => navigate("/dashboard")}
+    onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+    onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+  >
+    📅
+  </button>
+  <button
+    style={{ ...styles.iconButton, backgroundColor: "#50B755" }}
+    onClick={() => navigate("/dashboard3")}
+    onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+    onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+  >
+    +
+  </button>
+  <button
+    style={styles.iconButton}
+    onClick={() => navigate("/")}
+    onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+    onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+  >
+    👤
+  </button>
+</div>
+
       <div style={styles.card}>
         <h1 style={styles.title}>Grade Dashboard</h1>
         <h3 style={styles.subheading}>School: {school}</h3>
@@ -1482,8 +1585,8 @@ const GradeDashboard: React.FC = () => {
           <table style={styles.table}>
             <thead>
               <tr>
-                <th style={{ ...styles.th, textAlign: "right" }}>Student Name</th>
-                <th style={styles.th}>Average %</th>
+                <th style={{ ...styles.th2, textAlign: "left" }}>Student Name</th>
+                <th style={{ ...styles.th}}>Average %</th>
                 {displayExamTypes.map((exam) => (
                   <th key={exam} style={styles.th}>
                     {exam}
@@ -1495,7 +1598,7 @@ const GradeDashboard: React.FC = () => {
               {grades.length > 0 ? (
                 grades.map((grade) => (
                   <tr key={grade.id}>
-                    <td style={{ ...styles.td, textAlign: "right" }}>{grade.studentName}</td>
+                    <td style={{ ...styles.td2, textAlign: "right" }}>{grade.studentName}</td>
                     <td style={styles.td}>{calculateAverage(grade)}</td>
                     {displayExamTypes.map((exam) => (
                       <td
@@ -1510,24 +1613,31 @@ const GradeDashboard: React.FC = () => {
                         editingCell.studentId === grade.id &&
                         editingCell.examType === exam ? (
                           <input
-                            type="number"
+                            type="text"
                             ref={inputRef}
-                            defaultValue={grade.examMarks[exam] !== "" ? (grade.examMarks[exam] as string) : ""}
+                            defaultValue={grade.examMarks[exam] !== null ? (grade.examMarks[exam] as string) : ""}
                             onBlur={(e) => {
                               const value = e.target.value;
-                              const parsedValue = parseFloat(value);
-                              if (!isNaN(parsedValue)) {
-                                handleSaveMark(grade.id, exam, parsedValue);
+                              if (value === "") {
+                                handleSaveMark(grade.id, exam, null);
+                              } else if (value === "-") {
+                                handleSaveMark(grade.id, exam, value);
                               } else {
-                                alert("Please enter a valid number.");
-                                setEditingCell(null);
+                                const parsedValue = parseFloat(value);
+                                if (!isNaN(parsedValue)) {
+                                  handleSaveMark(grade.id, exam, parsedValue);
+                                } else {
+                                  alert("Please enter a valid number, leave empty, or enter '-'.");
+                                  setEditingCell(null);
+                                }
                               }
                             }}
+                            
                             onKeyPress={(e) => handleKeyPress(e, grade.id, exam)}
                             style={styles.input}
                           />
                         ) : (
-                          grade.examMarks[exam] !== "" ? grade.examMarks[exam] : ""
+                          grade.examMarks[exam] !== null ? grade.examMarks[exam] : ""
                         )}
                       </td>
                     ))}
@@ -1547,24 +1657,86 @@ const GradeDashboard: React.FC = () => {
 };
 
 const styles: { [key: string]: CSSProperties } = {
-  pageContainer: {
+ 
+  iconButton: {
+    width: "60px", // Increased button size
+    height: "60px", // Increased button size
+    margin: "12px 0",
+    fontSize: "28px", // Larger font size for icons
     display: "flex",
+    alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "#Dfff", // Slightly brighter grey for buttons
+    color: "#fff", // Darker text color for contrast
+    border: "3px solid #Dfff", // Border for button definition
+    borderRadius: "10px", // Slightly rounded edges for a modern look
+    cursor: "pointer",
+    transition: "transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease",
+    boxShadow: "0 4px 4px rgba(0, 0, 0, 0.5)", // Subtle shadow for button depth
+  },
+  iconButton2: {
+    width: "60px", // Increased button size
+    height: "60px", // Increased button size
+    margin: "12px 0",
+    fontSize: "34px", // Larger font size for icons
+    padding: "20px",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#Dfff", // Slightly brighter grey for buttons
+    color: "#fff", // Darker text color for contrast
+    border: "1px solid #Dfff", // Border for button definition
+    borderRadius: "10px", // Slightly rounded edges for a modern look
+    cursor: "pointer",
+    transition: "transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease",
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.3)", // Subtle shadow for button depth
+  },
+  iconButtonHover: {
+    transform: "translateY(-2px)", // Button "lifts" slightly on hover
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.6)", // Enhanced shadow for hover
+    backgroundColor: "#e8e8e8", // Slightly brighter grey on hover
+  },
+  pageContainer: {
+    display: "flex", // Flexbox layout
+    flexDirection: "row", // Row layout to position elements side-by-side
     alignItems: "flex-start",
+    justifyContent: "center",
     padding: "20px",
     backgroundColor: "#f5f5f5",
     minHeight: "100vh",
     fontFamily: "Arial, sans-serif",
   },
+  
+  floatingContainer: {
+    position: "fixed", // Keep it fixed so it does not grow/shrink
+    top: "20px",
+    left: "210px", // Adjust for 10px spacing
+    width: "82px", // Fixed width
+    height: "auto", // Allow content height
+    backgroundColor: "#f2f2f2", // Light grey background
+    borderRadius: "20px",
+    boxShadow: `
+       0 2px 10px rgba(0, 0, 0, 0.3), 
+      0 1px 0px rgba(0, 0, 0, 0.1)
+    `,
+    padding: "5px 10px",
+    zIndex: 1000,
+    flexShrink: 0, // Prevent shrinking or growing
+    border: "1px solid #D6D6D6",
+  },
+  
+  
   card: {
+    flex: 1, // Take up the remaining space
+    maxWidth: "1200px",
     backgroundColor: "#ffffff",
     padding: "30px",
     borderRadius: "10px",
-    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-    width: "100%",
-    maxWidth: "1200px",
+    boxShadow: "0 5px 3px rgba(0, 0, 0, 0.4)",
     textAlign: "center",
+    
+    marginLeft: "20px", // Fixed 10px gap between float container and card
   },
+  
   title: {
     fontSize: "32px",
     marginBottom: "10px",
@@ -1607,10 +1779,19 @@ const styles: { [key: string]: CSSProperties } = {
   },
   th: {
     border: "1px solid #dddddd",
-    padding: "12px",
+    padding: "10px 15px",
     backgroundColor: "#007bff",
     color: "white",
+    fontSize: "15px",
     textAlign: "left",
+  },
+  th2: {
+    border: "1px solid #dddddd",
+    padding: "10px 70px",
+    backgroundColor: "#007bff",
+    color: "white",
+    fontSize: "16px",
+    textAlign: "center",
   },
   td: {
     border: "1px solid #dddddd",
@@ -1618,6 +1799,15 @@ const styles: { [key: string]: CSSProperties } = {
     textAlign: "left",
     color: "black",
     cursor: "pointer",
+    fontSize: "17px",
+  },
+  td2: {
+    border: "1px solid #dddddd",
+    padding: "12px",
+    textAlign: "left",
+    color: "black",
+    cursor: "pointer",
+    fontSize: "22px",
   },
   loadingContainer: {
     display: "flex",

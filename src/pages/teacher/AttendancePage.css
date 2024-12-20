@@ -1,0 +1,510 @@
+/* AttendancePage.css */
+
+/* CSS Variables for Consistency */
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --info-color: #17a2b8;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+  
+    --font-family: 'Roboto', sans-serif;
+  
+    /* Font Sizes */
+    --font-size-heading: 36px;
+    --font-size-subheading: 25px;
+    --font-size-label: 18px;
+    --font-size-select: 22px;
+    --font-size-button: 22px;
+    --font-size-error: 18px;
+    --font-size-table-header: 14px;
+    --font-size-table-data: 12px;
+    --font-size-graduation: 24px;
+  }
+  
+  /* General Styles */
+  .page-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #121212;
+    min-height: 100vh;
+    font-family: var(--font-family);
+    color: #ffffff;
+  }
+  
+  .heading {
+    font-size: var(--font-size-heading);
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+    color: #e0e0e0;
+  }
+  
+  .subheading {
+    font-size: var(--font-size-subheading);
+    margin-bottom: 20px;
+    text-align: center;
+    color: #b0b0b0;
+  }
+  
+  .graduation-cap-button {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    background-color: #2a2a2a;
+    color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    z-index: 1000;
+  }
+  
+  .graduation-cap-button:hover {
+    transform: scale(1.1);
+  }
+  
+  .form-container {
+    background-color: #1e1e1e;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 600px;
+    position: relative;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: var(--font-size-label);
+    font-weight: 500;
+    color: #c0c0c0;
+  }
+  
+  .form-group select {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: var(--font-size-select);
+    border-radius: 8px;
+    background-color: #2a2a2a;
+    color: #ffffff;
+    border: 1px solid #444;
+    outline: none;
+    transition: border-color 0.3s;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .form-group select:focus {
+    border-color: var(--primary-color);
+  }
+  
+  .fetch-button {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--success-color);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: var(--font-size-button);
+    font-weight: bold;
+    text-align: center;
+    transition: transform 0.2s ease, opacity 0.3s ease;
+  }
+  
+  .fetch-button:hover {
+    opacity: 0.9;
+  }
+  
+  .chevron-button {
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #2a2a2a;
+    color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    z-index: 1000;
+  }
+  
+  .chevron-button:hover {
+    transform: translateX(-50%) scale(1.1);
+  }
+  
+  .student-list-container {
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    padding: 20px;
+    width: 100%;
+    max-width: 600px;
+    max-height: 600px;
+    overflow-y: auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    transition: max-height 0.3s ease;
+  }
+  
+  .student-list-container.minimized {
+    max-height: 300px;
+  }
+  
+  .select-all-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .select-all-container input {
+    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+  
+  .student-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    background-color: #2a2a2a;
+    cursor: pointer;
+    transition: border 0.3s ease, background-color 0.3s ease;
+  }
+  
+  .student-item.checked {
+    border: 2px solid var(--primary-color);
+  }
+  
+  .student-item:hover {
+    background-color: #3a3a3a;
+  }
+  
+  .student-label {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 500;
+    color: #ffffff;
+  }
+  
+  .student-label input {
+    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    appearance: none;
+    background-color: #1e1e1e;
+    border: 2px solid #444;
+    border-radius: 4px;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+  
+  .student-label input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+  
+  .student-label input:checked::after {
+    content: "✔";
+    color: #ffffff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .save-attendance-button {
+    padding: 15px 30px;
+    background-color: var(--info-color);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: var(--font-size-button);
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .save-attendance-button:hover {
+    background-color: #138496;
+    transform: scale(1.05);
+  }
+  
+  .loading-container,
+  .error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  .spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid var(--primary-color);
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+  }
+  
+  .error-message {
+    color: var(--danger-color);
+    font-size: var(--font-size-error);
+  }
+  
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Responsive Styles */
+  
+  /* Extra Small Devices (Phones, <576px) */
+  @media (max-width: 575.98px) {
+    .heading {
+      font-size: 28px;
+    }
+  
+    .subheading {
+      font-size: 20px;
+    }
+  
+    .graduation-cap-button {
+      right: 10px;
+      top: 10px;
+      width: 45px;
+      height: 45px;
+      font-size: 20px;
+    }
+  
+    .form-container {
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+  
+    .form-group label {
+      font-size: 16px;
+    }
+  
+    .form-group select {
+      font-size: 18px;
+      padding: 8px 12px;
+    }
+  
+    .fetch-button {
+      font-size: 18px;
+      padding: 12px;
+    }
+  
+    .chevron-button {
+      bottom: -25px;
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+    }
+  
+    .student-list-container {
+      max-height: 400px;
+    }
+  
+    .student-item {
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+  
+    .student-label {
+      font-size: 16px;
+    }
+  
+    .student-label input {
+      width: 18px;
+      height: 18px;
+    }
+  
+    .save-attendance-button {
+      font-size: 18px;
+      padding: 12px 25px;
+    }
+  }
+  
+  /* Small Devices (Large Phones, ≥576px) */
+  @media (min-width: 576px) and (max-width: 767.98px) {
+    .heading {
+      font-size: 32px;
+    }
+  
+    .subheading {
+      font-size: 22px;
+    }
+  
+    .graduation-cap-button {
+      right: 15px;
+      top: 15px;
+      width: 50px;
+      height: 50px;
+      font-size: 22px;
+    }
+  
+    .form-container {
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+  
+    .form-group label {
+      font-size: 17px;
+    }
+  
+    .form-group select {
+      font-size: 19px;
+      padding: 9px 14px;
+    }
+  
+    .fetch-button {
+      font-size: 20px;
+      padding: 14px;
+    }
+  
+    .chevron-button {
+      bottom: -28px;
+      width: 45px;
+      height: 45px;
+      font-size: 19px;
+    }
+  
+    .student-list-container {
+      max-height: 450px;
+    }
+  
+    .student-item {
+      padding: 11px;
+      margin-bottom: 11px;
+    }
+  
+    .student-label {
+      font-size: 17px;
+    }
+  
+    .student-label input {
+      width: 19px;
+      height: 19px;
+    }
+  
+    .save-attendance-button {
+      font-size: 19px;
+      padding: 14px 28px;
+    }
+  }
+  
+  /* Medium Devices (Tablets, ≥768px) */
+  @media (min-width: 768px) and (max-width: 991.98px) {
+    .heading {
+      font-size: 36px;
+    }
+  
+    .subheading {
+      font-size: 25px;
+    }
+  
+    .graduation-cap-button {
+      right: 20px;
+      top: 20px;
+      width: 55px;
+      height: 55px;
+      font-size: 24px;
+    }
+  
+    .form-container {
+      padding: 25px;
+      margin-bottom: 20px;
+    }
+  
+    .form-group label {
+      font-size: 18px;
+    }
+  
+    .form-group select {
+      font-size: 22px;
+      padding: 10px 15px;
+    }
+  
+    .fetch-button {
+      font-size: 22px;
+      padding: 15px;
+    }
+  
+    .chevron-button {
+      bottom: -30px;
+      width: 50px;
+      height: 50px;
+      font-size: 20px;
+    }
+  
+    .student-list-container {
+      max-height: 600px;
+    }
+  
+    .student-item {
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+  
+    .student-label {
+      font-size: 18px;
+    }
+  
+    .student-label input {
+      width: 20px;
+      height: 20px;
+    }
+  
+    .save-attendance-button {
+      font-size: 22px;
+      padding: 15px 30px;
+    }
+  }
+  
+  /* Large Devices (Desktops, ≥992px) */
+  @media (min-width: 992px) and (max-width: 1199.98px) {
+    /* No changes needed; use general styles */
+  }
+  
+  /* Extra Large Devices (Large Desktops, ≥1200px) */
+  @media (min-width: 1200px) {
+    /* No changes needed; use general styles */
+  }
+  

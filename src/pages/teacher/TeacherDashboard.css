@@ -1,0 +1,626 @@
+/* TeacherDashboard.css */
+
+/* CSS Variables for Consistency */
+:root {
+    --primary-color: #0D2F7A;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --info-color: #17a2b8;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+  
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  
+    /* Font Sizes */
+    --font-size-heading: 36px;
+    --font-size-subheading: 25px;
+    --font-size-label: 18px;
+    --font-size-select: 22px;
+    --font-size-button: 1.2rem;
+    --font-size-error: 18px;
+    --font-size-graduation: 24px;
+    --font-size-validation: 0.9rem;
+  }
+  
+  /* General Styles */
+  body {
+    font-family: var(--font-family);
+    background-color: #f4f6f9;
+    margin: 0;
+    padding: 0;
+    color: #333;
+  }
+  
+  header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 20px 40px;
+    text-align: center;
+    font-size: var(--font-size-heading);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .header-content {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+  }
+  
+  .icon-button {
+    position: absolute;
+    bottom: 14px; /* Positioned at the bottom center */
+    left: 65%;
+    transform: translateX(-10%);
+    width: 50px;
+    height: 50px;
+    background-color: #16a085;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, transform 0.3s, border 0.3s;
+    text-decoration: none;
+    color: white;
+    font-size: 1.5rem;
+    user-select: none;
+    border: 2px solid transparent; /* Initial border */
+  }
+  
+  .icon-button:hover {
+    background-color: #1abc9c;
+    transform: scale(1.1);
+  }
+  
+  .container {
+    padding: 120px 60px 60px 60px; /* Adjusted padding to account for fixed header and chevron */
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    min-height: calc(100vh - 180px); /* Adjust based on header and footer height */
+  }
+  
+  /* Dropdowns Container Styles */
+  .dropdown-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+    margin-top: -15px;
+    background-color: #ffffff;
+    padding: 30px; /* Increased padding */
+    border: 1px solid #bdc3c7;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    max-height: 500px;
+    overflow: hidden; /* Hide dropdowns when minimized */
+    transition: max-height 0.3s ease;
+  }
+  
+  .dropdown-container.minimized {
+    max-height: 40px;
+  }
+  
+  /* Toggle Chevron Styles */
+  .toggle-chevron {
+    position: absolute;
+    bottom: -10px; /* Positioned partially outside */
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    transition: transform 0.3s;
+    border: 2px solid transparent; /* Initial border */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff; /* Optional: background to enhance visibility */
+    z-index: 1000;
+  }
+  
+  .toggle-chevron:hover {
+    border: 2px solid var(--primary-color); /* Blue border on hover */
+    transform: translateX(-50%) scale(1.1); /* Slightly enlarge on hover */
+  }
+  
+  /* Dropdown Label and Select Styles */
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: var(--font-size-label);
+    font-weight: bold;
+    color: #c0c0c0;
+  }
+  
+  .form-group select {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: var(--font-size-select);
+    border-radius: 8px;
+    background-color: #ecf0f1;
+    border: 1px solid #bdc3c7;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    box-sizing: border-box;
+  }
+  
+  .form-group select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 8px rgba(13, 47, 122, 0.5);
+  }
+  
+  /* Students List Styles */
+  .student-list {
+    max-height: 500px;
+    overflow-y: auto;
+    background-color: white;
+    padding: 18px;
+    padding-right: 40px; /* Increased padding on the right */
+    border: 1px solid #bdc3c7;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 90px;
+    transition: max-height 0.3s ease;
+  
+    /* Alignment */
+    width: 100%; /* Adjust as needed */
+    max-width: 790px; /* Ensure it doesn't exceed container's max-width */
+    margin-left: auto; /* Aligns the student-list to the right */
+  }
+  
+  .student-list.minimized {
+    max-height: 600px;
+  }
+  
+  .student-container {
+    display: flex;
+    justify-content: space-between; /* Distribute space between name and mark */
+    align-items: center;
+    padding: 8px 0px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ecf0f1;
+    width: 100%; /* Ensures the container spans the full width of its parent */
+    box-sizing: border-box; /* Ensures padding is included in the width */
+  }
+  
+  .student-container:last-child {
+    margin-bottom: 30px;
+  }
+  
+  .student-name {
+    flex: 0 0 80%;
+    font-size: 1.5rem;
+    color: #2c3e50;
+    text-align: right;
+    padding-right: 20px;
+  }
+  
+  .mark-field {
+    flex: 0 0 30%;
+    padding: 8px 15px; /* Adjusted padding for smaller height */
+    margin-right: 20px; /* Adjusted padding for smaller height */
+    border: 1px solid #bdc3c7;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1rem;
+    color: grey; /* Changed font color to grey */
+    box-sizing: border-box; /* Includes padding in width */
+    transition: border-color 0.3s, box-shadow 0.3s;
+    background-color: #ecf0f1;
+    height: 40px; /* Reduced height */
+  }
+  
+  .mark-field.invalid {
+    border-color: var(--danger-color);
+    box-shadow: 0 0 8px rgba(231, 76, 60, 0.5);
+  }
+  
+  .mark-field:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 8px rgba(13, 47, 122, 0.5);
+    outline: none;
+  }
+  
+  .validation-error {
+    color: var(--danger-color);
+    font-size: var(--font-size-validation);
+    margin-top: 5px;
+    text-align: left;
+  }
+  
+  /* Select All Container */
+  .select-all-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .select-all-container input {
+    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+  
+  /* Student Item Styles */
+  .student-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    background-color: #2a2a2a;
+    cursor: pointer;
+    transition: border 0.3s ease, background-color 0.3s ease;
+  }
+  
+  .student-item.checked {
+    border: 2px solid var(--primary-color);
+  }
+  
+  .student-item:hover {
+    background-color: #3a3a3a;
+  }
+  
+  .student-label {
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #ffffff;
+  }
+  
+  .student-label input {
+    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    appearance: none;
+    background-color: #1e1e1e;
+    border: 2px solid #444;
+    border-radius: 4px;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+  
+  .student-label input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+  
+  .student-label input:checked::after {
+    content: "✔";
+    color: #ffffff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Save Marks Button Styles */
+  .save-attendance-button {
+    width: 90%;
+    max-width: 790px;
+    padding: 15px 30px;
+    background-color: var(--info-color);
+    color: #ffffff;
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+    position: fixed;
+    bottom: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+  }
+  
+  .save-attendance-button:hover:not(:disabled) {
+    background-color: #138496;
+    border-color: #138496;
+  }
+  
+  .save-attendance-button:disabled {
+    background-color: #a6c8ff;
+    border-color: #92b7ff;
+    cursor: not-allowed;
+  }
+  
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #ecf0f1;
+    color: #7f8c8d;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Modal Styles */
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+  }
+  
+  .modal.open {
+    display: block;
+  }
+  
+  .modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 30px;
+    border: 1px solid #ddd;
+    width: 80%;
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .close-modal {
+    color: #aaa;
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  
+  .close-modal:hover,
+  .close-modal:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  /* Weights Inputs Styles */
+  .weights-inputs-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    width: 100%;
+  }
+  
+  .weights-input-item {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+    width: 100%;
+    max-width: 700px;
+  }
+  
+  .weights-input-item label {
+    flex: 1;
+    text-align: left;
+    font-weight: bold;
+    margin-right: 15px;
+    font-size: 1.1rem;
+  }
+  
+  .weights-input-item input {
+    flex: 3;
+    padding: 8px 12px;
+    border: 1px solid #bdc3c7;
+    border-radius: 8px;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  
+  .weights-input-item input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 8px rgba(13, 47, 122, 0.5);
+    outline: none;
+  }
+  
+  /* Adjust Ratios Button */
+  .adjust-ratios-button {
+    margin-left: 10px;
+    border: none;
+    background: #16a085;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+  
+  .adjust-ratios-button:hover {
+    background-color: #1abc9c;
+    transform: scale(1.1);
+  }
+  
+  /* Bar Chart Container */
+  #weightsChartContainer {
+    width: 100%;
+    max-width: 700px;
+  }
+  
+  #weightsLegendContainer {
+    margin-left: 20px;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 1024px) {
+    .container {
+      padding: 80px 40px 60px 40px;
+    }
+  
+    .modal-content {
+      width: 90%;
+    }
+  
+    #weightsChartContainer {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    #weightsChartWrapper {
+      width: 80%;
+    }
+  
+    #weightsLegendContainer {
+      margin-left: 0;
+      margin-top: 20px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .dropdown-container .form-group select {
+      font-size: 1rem;
+      padding: 10px 18px; /* Adjusted padding for smaller height */
+      height: 45px; /* Adjusted height */
+    }
+  
+    .dropdown-container .form-group label {
+      font-size: 1rem;
+    }
+  
+    .dropdown-container {
+      padding: 20px;
+    }
+  
+    .form-group {
+      margin-bottom: 25px;
+    }
+  
+    .student-list {
+      max-height: 60vh;
+    }
+  
+    .student-name {
+      font-size: 1.4rem;
+    }
+  
+    .mark-field {
+      font-size: 1.1rem;
+    }
+  
+    /* Adjust icon position on smaller screens */
+    .icon-button {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  
+    /* Specific Button Styles for Small Screens */
+    .save-attendance-button, #saveRatiosButton {
+      width: 100%; /* Full width on small screens */
+      padding: 12px 20px; /* Adjust padding */
+      font-size: 1rem; /* Adjust font size */
+    }
+  }
+  
+  @media (max-width: 575.98px) {
+    .heading {
+      font-size: 28px;
+    }
+  
+    .subheading {
+      font-size: 20px;
+    }
+  
+    .graduation-cap-button {
+      right: 10px;
+      top: 10px;
+      width: 45px;
+      height: 45px;
+      font-size: 20px;
+    }
+  
+    .form-group label {
+      font-size: 16px;
+    }
+  
+    .form-group select {
+      font-size: 18px;
+      padding: 8px 12px;
+    }
+  
+    .fetch-button {
+      font-size: 18px;
+      padding: 12px;
+    }
+  
+    .chevron-button {
+      bottom: -25px;
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+    }
+  
+    .student-list {
+      width: 100%; /* Full width on small screens */
+      max-width: 100%; /* Remove max-width restriction */
+      padding-right: 30px; /* Adjusted padding for smaller screens */
+    }
+  
+    .student-item {
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+  
+    .student-label {
+      font-size: 16px;
+    }
+  
+    .student-label input {
+      width: 18px;
+      height: 18px;
+    }
+  
+    .save-attendance-button {
+      font-size: 18px;
+      padding: 12px 25px;
+    }
+  }
+  
+  /* Focus States for Accessibility */
+  button:focus,
+  select:focus,
+  input[type="text"]:focus,
+  input[type="password"]:focus {
+    outline: 3px solid #2980b9;
+    outline-offset: 2px;
+  }
+  
