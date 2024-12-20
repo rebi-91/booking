@@ -33,7 +33,6 @@ function AttendancePage() {
     try {
       const {
         data: { user },
-        error: userError,
       } = await supabase.auth.getUser();
 
       if (user) {
@@ -61,8 +60,7 @@ function AttendancePage() {
         .eq("school", school);
 
       if (!error && data) {
-        const uniqueClassNames = [...new Set((data as any[]).map((item) => item.className))];
-        setClassNames(uniqueClassNames);
+        setClassNames([...new Set((data as any[]).map((item) => item.className))]);
       }
     } catch (error) {
       console.error("Error fetching class names:", error);
@@ -78,8 +76,7 @@ function AttendancePage() {
         .eq("className", className);
 
       if (!error && data) {
-        const uniqueSections = [...new Set((data as any[]).map((item) => item.section))];
-        setSections(uniqueSections);
+        setSections([...new Set((data as any[]).map((item) => item.section))]);
       }
     } catch (error) {
       console.error("Error fetching sections:", error);
@@ -91,7 +88,7 @@ function AttendancePage() {
 
     try {
       const { data: studentData } = await supabase
-        .from(classTime)
+        .from("student")
         .select("id, studentName")
         .eq("school", userSchool)
         .eq("className", selectedClassName)
@@ -163,25 +160,15 @@ function AttendancePage() {
     navigate("/teacherdashboard");
   };
 
-  const handleMouseEnterGraduation = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const target = e.currentTarget as HTMLButtonElement;
-    target.style.transform = "scale(1.2)";
-  };
-
-  const handleMouseLeaveGraduation = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const target = e.currentTarget as HTMLButtonElement;
-    target.style.transform = "scale(1)";
-  };
+  // Removed inline event handlers for hover effects as they are now handled by CSS
 
   return (
-    <div className="page-container">
+    <div className={`page-container ${isMinimized ? "minimized" : ""}`}>
       <h1 className="heading">Student Attendance</h1>
       {userSchool && <h2 className="subheading">{userSchool}</h2>}
       <button
         onClick={handleGraduationCapClick}
-        className="graduation-cap-button"
-        onMouseEnter={handleMouseEnterGraduation}
-        onMouseLeave={handleMouseLeaveGraduation}
+        className={`graduation-cap-button ${isMinimized ? "minimized" : ""}`}
         aria-label="Navigate to Teacher Dashboard"
       >
         🎓
@@ -190,9 +177,8 @@ function AttendancePage() {
         {!isMinimized && (
           <>
             <div className="form-group">
-              <label htmlFor="class-time-select">Class Time</label>
+              <label>Class Time</label>
               <select
-                id="class-time-select"
                 value={classTime}
                 onChange={(e) => {
                   setClassTime(e.target.value);
@@ -210,9 +196,8 @@ function AttendancePage() {
               </select>
             </div>
             <div className="form-group">
-              <label htmlFor="class-name-select">Class Name</label>
+              <label>Class Name</label>
               <select
-                id="class-name-select"
                 value={selectedClassName}
                 onChange={(e) => {
                   setSelectedClassName(e.target.value);
@@ -228,9 +213,8 @@ function AttendancePage() {
               </select>
             </div>
             <div className="form-group">
-              <label htmlFor="section-select">Section</label>
+              <label>Section</label>
               <select
-                id="section-select"
                 value={selectedSection}
                 onChange={(e) => setSelectedSection(e.target.value)}
               >
@@ -243,9 +227,8 @@ function AttendancePage() {
               </select>
             </div>
             <div className="form-group">
-              <label htmlFor="day-select">Day of the Month</label>
+              <label>Day of the Month</label>
               <select
-                id="day-select"
                 value={day}
                 onChange={(e) => setDay(parseInt(e.target.value))}
               >
@@ -261,7 +244,7 @@ function AttendancePage() {
             </button>
           </>
         )}
-        <button onClick={toggleContainerSize} className="chevron-button">
+        <button onClick={toggleContainerSize} className="chevron-button" aria-label="Toggle Form Size">
           {isMinimized ? "\u25BC" : "\u25B2"}
         </button>
       </div>
