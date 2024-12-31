@@ -1,22 +1,32 @@
+/* Reset and Base Styles */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: "Inter", sans-serif !important;
 }
+
 body {
-  background-color: #1c1c1c; /* Darker background, closer to Supabase style */
+  background-color: #000 !important; /* Changed from #1c1c1c to pure black */
   color: white;
+  height: 100vh; /* Ensures full viewport height */
+  width: 100%;/* Ensures default text color is white */
+  padding: 10px
 }
+
 main {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 10vh;
 }
+
 a {
   text-decoration: none;
+  color: white; /* Ensure links inherit white color */
 }
+
+/* Header Text Styling */
 .header-text {
   display: flex;
   gap: 0.5em;
@@ -25,22 +35,24 @@ a {
   font-weight: bold;
   background: none;
   text-align: center;
+  color: white; /* Ensures header text is white */
 }
+
+/* Main Container Styling */
 .main-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #2a2a2a; /* Slightly lighter than body, but still dark */
-  padding: 2em 2em;
+  background-color: #2a2a2a; /* Slightly lighter than body for contrast */
+  padding: 2em;
   width: 100%;
   max-width: 500px;
-  border-radius: 4px; /* Slightly rounded corners */
+  border-radius: 4px; /* Rounded corners */
   box-shadow: 0 0 60px rgba(0, 0, 0, 0.2);
-  border-top: 5px;
-  border-width: 10px 0px 0px 0px;
-  border-style: solid;
-  border-color: #3ecf8e; /* Supabase green */
+  border-top: 10px solid #3ecf8e; /* Supabase green border */
 }
+
+/* GitHub Repo Link Styling (if applicable) */
 #github-repo-link {
   display: flex;
   gap: 0.5em;
@@ -52,14 +64,12 @@ a {
   cursor: pointer;
   color: #3ecf8e; /* Supabase green */
 }
+
 #github-repo-link:hover {
-  background-color: rgba(
-    62,
-    207,
-    142,
-    0.1
-  ); /* Supabase green with low opacity */
+  background-color: rgba(62, 207, 142, 0.1); /* Supabase green with low opacity */
 }
+
+/* Input Fields Styling */
 input {
   padding: 1rem;
   border-radius: 4px;
@@ -68,17 +78,18 @@ input {
   background-color: #3a3a3a; /* Slightly lighter than container background */
   border: 1px solid #4a4a4a;
   font-size: 1rem;
-  color: white;
+  color: white; /* Ensures input text is white */
   margin-top: 7px;
   width: 300px;
 }
+
+/* Button and Link Styling */
 button,
-a {
+a.auth-button {
   font-size: 16px;
   padding: 1em;
-  background: none;
   cursor: pointer;
-  color: white;
+  color: white; /* Ensures button text is white */
   background: #229f65; /* Supabase green */
   border: none;
   border-radius: 4px;
@@ -94,24 +105,42 @@ a {
   border: 1px solid #33b379; /* Supabase green */
 }
 
+a.auth-button {
+  background: #229f65; /* Ensures Link styled as button has same background */
+}
+
+a.auth-button:hover,
+button:hover {
+  background: #2ebd80; /* Slightly darker Supabase green for hover */
+}
+
+/* Remove Border from Links */
 a {
   border: none;
 }
-button:hover,
-a:hover {
-  background: #2ebd80; /* Slightly darker Supabase green for hover */
-}
+
+/* Home Link Styling */
 .home-link {
   margin-bottom: 1em;
+  color: #3ecf8e; /* Supabase green */
 }
+
+.home-link:hover {
+  text-decoration: underline;
+}
+
+/* Auth Link Styling */
 .auth-link {
   background: transparent;
   color: #3ecf8e; /* Supabase green */
 }
+
 .auth-link:hover {
   background: transparent;
   text-decoration: underline;
 }
+
+/* Divider Styling */
 #divider {
   width: 70%;
   height: 2px;
@@ -119,3 +148,14 @@ a:hover {
   margin: 1em 0;
   border-radius: 100%;
 }
+
+/* Sub-header Styling */
+.sub-text {
+  color: #ccc; /* Changed from #d3d3d3 to #ccc */
+  margin-bottom: 20px;
+}
+
+
+
+
+

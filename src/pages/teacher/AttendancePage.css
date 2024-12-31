@@ -1,159 +1,116 @@
 /* AttendancePage.css */
 
-/* CSS Variables for Consistency */
-:root {
-  --primary-color: #28a745; /* Green */
-  --secondary-color: #1e1e1e; /* Dark Gray */
-  --background-color: #121212; /* Near-Black */
-  --text-color: #ffffff; /* White */
-  --accent-color: #2a2a2a; /* Dark Gray */
-  --border-color: #444; /* Dark Gray */
-  --font-family: 'Roboto', sans-serif;
-
-  /* Font Sizes */
-  --font-size-heading: 36px;
-  --font-size-subheading: 25px;
-  --font-size-label: 18px;
-  --font-size-select: 22px;
-  --font-size-button: 22px;
-  --font-size-error: 18px;
-}
-
-/* General Container Styles */
-.page-container {
-  background-color: var(--background-color);
+/* Page Background */
+.attendance-page {
+  background-color: black;
   min-height: 100vh;
-  color: var(--text-color);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-family);
+  color: #ffffff;
+  font-family: 'Roboto', sans-serif;
   padding: 10px;
   position: relative;
 }
 
 /* Heading Styles */
-.heading {
-  font-size: var(--font-size-heading);
+.attendance-page h1 {
+  font-size: 24px;
   font-weight: bold;
-  margin-bottom: 15px;
-  margin-top: -5px;
+  margin: 5px 0;
   text-align: center;
   color: #e0e0e0;
 }
 
-.subheading {
-  font-size: var(--font-size-subheading);
-  margin-bottom: 10px;
+.attendance-page h2 {
+  font-size: 16px;
+  margin-bottom: 15px;
   text-align: center;
   color: #b0b0b0;
 }
 
 /* Graduation Cap Button */
-.graduation-cap-button {
+.graduation-cap-btn {
   position: absolute;
-  right: 560px;
-  top: -20px;
-  background-color: var(--accent-color);
-  color: var(--text-color);
+  right: 15px;
+  top: 30px;
+  background-color: #2a2a2a;
+  color: #ffffff;
   border: none;
   border-radius: 50%;
-  width: 55px;
-  height: 55px;
+  width: 35px;
+  height: 35px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 45px;
+  font-size: 26px;
   cursor: pointer;
   transition: transform 0.3s ease, background-color 0.3s ease;
   z-index: 1000;
 }
 
-.graduation-cap-button:hover {
-  transform: scale(1.2);
+.graduation-cap-btn:hover {
   background-color: #3a3a3a;
+  transform: scale(1.1);
 }
 
-/* Form Container */
-.form-container {
-  background-color: var(--secondary-color);
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-  margin-bottom: 20px;
-  width: 100%;
-  max-width: 600px;
-  overflow: visible;
-  height: auto;
-  position: relative;
-  transition: height 0.3s ease, padding 0.3s ease;
-}
-
-.form-container.minimized {
-  height: 60px;
-  padding: 10px;
-}
-
-/* Form Group */
-.form-group {
-  margin-bottom: 10px;
-}
-
-/* Label Styles */
-.form-group label {
-  display: block;
-  margin-bottom: 6px;
-  font-size: var(--font-size-label);
-  font-weight: 500;
-  color: #c0c0c0;
-}
-
-/* Select Styles */
-.form-group select {
-  width: 100%;
-  padding: 35px;
-  font-size: var(--font-size-select);
-  border-radius: 8px;
-  background-color: #ccc;
-  color: #000;
-  border: 1px solid #444;
-  outline: none;
-  transition: border-color 0.3s;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.form-group select:focus {
-  border-color: var(--primary-color);
-}
-
-/* Fetch Students Button */
-.fetch-button {
-  width: 100%;
-  padding: 28px;
-  background-color: var(--primary-color);
-  color: var(--text-color);
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: var(--font-size-button);
-  font-weight: bold;
-  text-align: center;
-  transition: transform 0.2s ease, opacity 0.3s ease;
-}
-
-.fetch-button:hover {
-  opacity: 0.9;
-}
-
-/* Chevron Toggle Button */
-.chevron-button {
-  position: absolute;
-  bottom: -29px;
+/* Save Attendance Button */
+.save-attendance-btn {
+  position: fixed;
+  font-size: 18px !important;
+  font-weight: bold !important;
+  bottom: 0px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: var(--accent-color);
-  color: var(--text-color);
+  width: 100%;
+  height: 9%;
+  z-index: 1000;
+}
+
+/* Student Container */
+.student-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 19px;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  background-color: #2a2a2a;
+  color: white;
+  cursor: pointer;
+  transition: border 0.3s ease, background-color 0.3s ease;
+}
+
+.student-container.checked {
+  border: 2px solid blue;
+}
+
+/* Checkbox Styles */
+.custom-checkbox {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  appearance: none;
+  background-color: #1e1e1e;
+  border: 2px solid #444;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.custom-checkbox:checked {
+  background-color: #0056b3;
+  color: #ffffff;
+}
+
+/* Chevron Button */
+.chevron-btn {
+  position: absolute;
+  bottom: -55px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #2a2a2a;
+  color: #ffffff;
+  border: none;
   border-radius: 50%;
   width: 50px;
   height: 50px;
@@ -166,284 +123,74 @@
   z-index: 1000;
 }
 
-.chevron-button:hover {
-  transform: translateX(-50%) scale(1.1);
+.chevron-btn:hover {
+  background-color: #3a3a3a;
 }
 
-/* Student List Container */
-.student-list-container {
-  background-color: var(--secondary-color);
-  border-radius: 12px;
-  padding: 20px;
-  width: 100%;
-  height: 80%;
-  max-width: 600px;
-  max-height: 700px;
-  overflow-y: auto;
-  margin-bottom: 5px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-  transition: max-height 0.3s ease;
+/* AttendancePage.css */
+
+/* Existing Styles */
+
+/* ... (other existing styles) ... */
+
+/* Custom Select Styles */
+.custom-select-bright  {
+  background-color: #2a2a2a !important ; /* Slightly brighter than #1e1e1e */
+  color: #ffffff !important;            /* White text */
+  border: 1px solid #2a2a2a !important;    /* Visible border with a slightly lighter shade */
+  border-radius: 4px;        /* Rounded corners for better aesthetics */
 }
 
-.student-list-container.minimized {
-  max-height: 300px;
+.custom-select-bright::placeholder {
+  color: #ffffff;            /* White placeholder text */
 }
 
-/* Select All Container */
-.select-all-container {
-  display: flex;
-  align-items: center;
-  margin-bottom: 15px;
+.custom-select-bright:focus {
+  background-color: #2a2a2a; /* Maintain background color on focus */
+  color: #ffffff;            /* Maintain white text on focus */
+  border-color: #0056b3;     /* Change border color on focus */
+  box-shadow: 0 0 0 0.2rem rgba(0, 86, 179, 0.25); /* Add shadow on focus */
 }
 
-.select-all-container input {
-  margin-right: 10px;
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
+/* Adjust the dropdown arrow color */
+.custom-select-bright option {
+  background-color: #2a2a2a; /* Ensure options have the same background */
+  color: #ffffff;            /* White text for options */
 }
+/* AttendancePage.css */
 
-/* Student Item Styles */
-.student-item {
+/* Existing Styles */
+/* ... (other existing styles) ... */
+
+/* Student Container Base Styles */
+.student-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px;
   margin-bottom: 12px;
   border-radius: 10px;
   background-color: #2a2a2a;
   cursor: pointer;
-  transition: border 0.3s ease, background-color 0.3s ease;
+  transition: border 0.3s ease, background-color 0.3s ease, padding 0.3s ease, font-size 0.3s ease;
 }
 
-.student-item.checked {
-  border: 3px solid blue !important;
+/* Checked State */
+.student-container.checked {
+  border: 2px solid blue;
 }
 
-.student-item:hover {
-  background-color: #3a3a3a;
+/* Minimized State */
+.student-container-minimized {
+  padding: 8px 10px;
+  font-size: 20px;
 }
 
-/* Student Label */
-.student-label {
-  display: flex;
-  align-items: center;
-  font-size: 23px;
-  font-weight: 500;
-  color: #ffffff;
- 
+/* Maximized State */
+.student-container-maximized {
+  padding: 8px 10px;
+  font-size: 18px;
 }
-
-.student-label input {
-  width: 24px;
-  height: 24px;
-  margin-right: 10px;
-  padding: "20px";
-  appearance: none;
-  background-color: #1e1e1e;
-  border: 2px solid #444;
-  border-radius: 4px;
-  cursor: pointer;
-  position: relative;
-  transition: all 0.3s ease;
+.footer {
+  color: #d3d3d3; /* Very faint grey */
+    font-size: 0.7rem; 
 }
-
-.student-label input:checked {
-  background-color: rgba(19, 229, 248, 0.981) !important;
-  border-color: #0056b3;
-}
-
-.student-label input:checked::after {
-  content: "" !important;
-  color: red !important;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Save Attendance Button */
-.save-attendance-button {
-  width: 590px;
-  padding: 28px;
-  background-color: var(--primary-color);
-  color: var(--text-color);
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: var(--font-size-button);
-  font-weight: bold;
-  text-align: center;
-  transition: transform 0.2s ease, opacity 0.3s ease;
-}
-
-.save-attendance-button:hover {
-  opacity: 0.9;
-}
-
-/* Responsive Styles */
-
-/* Extra Small Devices (Phones, <576px) */
-@media (max-width: 575.98px) {
-  .heading {
-    font-size: 28px;
-  }
-
-  .subheading {
-    font-size: 20px;
-  }
-
-  .graduation-cap-button {
-    right: 10px;
-    top: -20px;
-    width: 45px;
-    height: 45px;
-    font-size: 40px;
-  }
-
-  .form-container {
-    padding: 10px;
-    max-height: 60px;
-  }
-
-  .form-group label {
-    font-size: 16px;
-  }
-
-  .form-group select {
-    font-size: 18px;
-    padding: 8px 12px;
-  }
-
-  .fetch-button {
-    font-size: 18px;
-    padding: 12px;
-    width: 100%;
-  }
-
-  .chevron-button {
-    bottom: -25px;
-    width: 40px;
-    height: 40px;
-    font-size: 18px;
-  }
-
-  .student-list-container {
-    max-height: 400px;
-    padding: 15px;
-  }
-
-  .save-attendance-button {
-    width: 100%;
-    padding: 20px;
-    font-size: 18px;
-  }
-}
-
-/* Small Devices (Large Phones, ≥576px and <768px) */
-@media (min-width: 576px) and (max-width: 767.98px) {
-  .graduation-cap-button {
-    right: 20px;
-    top: -20px;
-    width: 50px;
-    height: 50px;
-    font-size: 42px;
-  }
-
-  .form-container {
-    padding: 15px;
-    max-height: 80px;
-  }
-
-  .form-group label {
-    font-size: 17px;
-  }
-
-  .form-group select {
-    font-size: 19px;
-    padding: 9px 14px;
-  }
-
-  .fetch-button {
-    font-size: 20px;
-    padding: 14px;
-    width: 100%;
-  }
-
-  .chevron-button {
-    bottom: -28px;
-    width: 45px;
-    height: 45px;
-    font-size: 19px;
-  }
-
-  .student-list-container {
-    max-height: 450px;
-    padding: 18px;
-  }
-
-  .save-attendance-button {
-    width: 100%;
-    padding: 22px;
-    font-size: 19px;
-  }
-}
-
-/* Medium Devices (Tablets, ≥768px and <992px) */
-@media (min-width: 768px) and (max-width: 991.98px) {
-  .graduation-cap-button {
-    right: 30px;
-    top: -25px;
-    width: 55px;
-    height: 55px;
-    font-size: 44px;
-  }
-
-  .form-container {
-    padding: 20px;
-    max-height: 100px;
-  }
-
-  .form-group label {
-    font-size: 18px;
-  }
-
-  .form-group select {
-    font-size: 22px;
-    padding: 10px 15px;
-  }
-
-  .fetch-button {
-    font-size: 22px;
-    padding: 15px;
-    width: 100%;
-  }
-
-  .chevron-button {
-    bottom: -30px;
-    width: 50px;
-    height: 50px;
-    font-size: 20px;
-  }
-
-  .student-list-container {
-    max-height: 500px;
-    padding: 20px;
-  }
-
-  .save-attendance-button {
-    width: 590px;
-    padding: 25px;
-    font-size: 22px;
-  }
-}
-
-/* Large Devices (Desktops, ≥992px) */
-/* No additional styles needed; use general styles */
-
-/* Extra Large Devices (Large Desktops, ≥1200px) */
-/* No additional styles needed; use general styles */

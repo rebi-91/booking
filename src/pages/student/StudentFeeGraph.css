@@ -1,0 +1,79 @@
+.student-fee-graph-container {
+  width: 95%;
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #121212;
+  box-shadow: 0 4px 20px 1px #007BA7;
+  border-radius: 10px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #ffffff;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+.class-section {
+  font-size: 18px;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.fee-summary {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 16px;
+}
+
+.fee-summary .discount-amount {
+  color: #3ecf8e;
+}
+
+.fee-summary .amount-left {
+  color: red;
+}
+
+.section-heading {
+  margin-bottom: 15px;
+  color: #fff;
+  font-size: 20px;
+  border-bottom: 2px solid #3ecf8e;
+  display: inline-block;
+  padding-bottom: 3px;
+}
+
+.modal-table-container {
+  background-color: #1e1e1e;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.modal-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.modal-th,
+.modal-td {
+  border: 1px solid #555;
+  padding: 8px;
+  text-align: center;
+  color: #fff;
+}
+
+.modal-th {
+  background-color: #3ecf8e;
+  color: #000;
+  font-weight: 600;
+}
+
+.amount-to-pay-section {
+  margin: 20px 0;
+  text-align: center;
+}

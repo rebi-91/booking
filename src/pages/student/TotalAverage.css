@@ -1,0 +1,334 @@
+/* TotalAverage.css */
+
+/* Container Styling */
+.total-average-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensure it takes at least the full viewport height */
+  width: 100%;
+  background-color: #000; /* Black background for contrast */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Back Button Styling */
+.mb-3 {
+  margin-bottom: 1rem !important;
+}
+
+/* Title Styling */
+.total-average-title {
+  font-size: 2rem;
+  text-align: center;
+  color: #c3c3c3; /* Light gray color */
+  padding: 10px;
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+  display: inline-block;
+}
+
+/* Subtitle Styling */
+.text-muted {
+  font-size: 1.2rem;
+  color: #a3a3a3 !important; /* Slightly darker gray */
+  margin-top: 10px;
+}
+
+/* Chart and Y-Axis Container */
+.chart-yaxis-container {
+  position: relative; /* Establish a containing block for absolutely positioned elements */
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  background-color: #fff; /* White background for the chart area */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  overflow: visible; /* Allow overflow for better visibility */
+  height: 500px; /* Increased height for better visibility */
+}
+
+/* Fixed Y-Axis Labels Styling */
+.yaxis-labels {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 60px; /* Fixed width for y-axis labels */
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+  display: grid;
+  grid-template-rows: repeat(11, 1fr); /* 11 labels: 100, 90, ..., 0 */
+  align-items: center; /* Center labels vertically within each grid row */
+  padding: 0 10px; /* Horizontal padding for labels */
+  box-sizing: border-box;
+  z-index: 3; /* Above the chart */
+}
+
+.yaxis-label {
+  text-align: right;
+  color: #c3c3c3; /* Light gray color */
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Scrollable Chart Container */
+.chart-scroll-container {
+  margin-left: 60px; /* Space for the overlaid y-axis labels */
+  overflow-x: auto;
+  overflow-y: visible; /* Allow vertical overflow */
+  height: 100%; /* Full height to match container */
+  flex-grow: 1;
+  position: relative;
+}
+
+.chart-scroll-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.chart-scroll-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.chart-scroll-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.chart-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Chart Wrapper Styling */
+.chart-wrapper {
+  padding: 20px;
+  background-color: #fff; /* White background */
+  min-width: 1200px; /* Increased minimum width for more subjects */
+  height: 100%; /* Full height to match container */
+}
+
+/* Custom Legend Styling */
+.custom-legend {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: #1e1e1e; /* Dark gray background */
+  padding: 20px;
+  border-radius: 8px;
+  color: #ffffff; /* White text for contrast */
+}
+
+.legend-item {
+  margin-bottom: 10px;
+}
+
+.legend-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+}
+
+.subjects-legend {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+/* Responsive Adjustments */
+
+/* For tablets and small desktops */
+@media (max-width: 992px) {
+  .chart-yaxis-container {
+    height: 400px; /* Adjusted height for smaller screens */
+  }
+
+  .total-average-title {
+    font-size: 1.8rem;
+  }
+
+  .text-muted {
+    font-size: 1rem;
+  }
+
+  .legend-title {
+    font-size: 1rem;
+  }
+
+  .yaxis-labels {
+    padding: 0 8px; /* Adjusted padding */
+  }
+
+  .yaxis-label {
+    font-size: 0.85rem; /* Smaller font size */
+  }
+
+  .chart-wrapper {
+    min-width: 1000px; /* Adjusted min-width */
+  }
+}
+
+/* For mobile devices */
+@media (max-width: 768px) {
+  .chart-yaxis-container {
+    height: 350px; /* Further adjusted height */
+  }
+
+  .total-average-title {
+    font-size: 1.5rem;
+  }
+
+  .text-muted {
+    font-size: 0.9rem;
+  }
+
+  .legend-title {
+    font-size: 0.95rem;
+  }
+
+  .yaxis-labels {
+    padding: 0 6px; /* Further adjusted padding */
+  }
+
+  .yaxis-label {
+    font-size: 0.8rem; /* Smaller font size */
+  }
+
+  .chart-wrapper {
+    min-width: 900px; /* Adjusted min-width */
+  }
+}
+
+@media (max-width: 576px) {
+  .chart-yaxis-container {
+    height: 300px; /* Further adjusted height */
+  }
+
+  .total-average-title {
+    font-size: 1.2rem;
+  }
+
+  .text-muted {
+    font-size: 0.85rem;
+  }
+
+  .legend-title {
+    font-size: 0.9rem;
+  }
+
+  .custom-legend {
+    padding: 15px;
+  }
+
+  .yaxis-labels {
+    padding: 0 4px; /* Further adjusted padding */
+  }
+
+  .yaxis-label {
+    font-size: 0.75rem; /* Smaller font size */
+  }
+
+  .chart-wrapper {
+    min-width: 800px; /* Adjusted min-width */
+  }
+}
+
+/* Grades Table Styling (If applicable) */
+.table-custom {
+  background-color: #1e1e1e; /* Dark background */
+  color: #ffffff; /* White text */
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table-custom th,
+.table-custom td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 10px;
+  position: relative;
+}
+
+/* Add faint lines every 10 units */
+.table-custom tbody tr td::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.1); /* Light faint line */
+}
+
+.table-custom tbody tr:nth-child(10n) td::after {
+  background-color: rgba(255, 255, 255, 0.3); /* Slightly darker for every 10th row */
+}
+
+/* Tooltip Styling (Optional Enhancements) */
+.subject-button:hover {
+  opacity: 0.8;
+  transition: opacity 0.3s;
+}
+
+/* Subject Buttons Styling */
+.subject-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  z-index: 2;
+  position: relative;
+  background: #1e1e1e; /* Dark gray background */
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.subject-button {
+  position: relative;
+  z-index: 3; /* Higher than the chart */
+  margin: 5px;
+}
+
+/* Color Boxes for Legends (If used) */
+.subject-color-box,
+.class-average-color-box {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 8px;
+  border-radius: 2px;
+}
+
+/* Rotated Chart Styling (If applicable) */
+.chart-wrapper.rotated canvas {
+  margin-top: 70px !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Chevron Button Styling (If applicable) */
+.chevron-button-container {
+  position: absolute;
+  top: 610px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.chevron-button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  background-color: #ffffff;
+  transition: background-color 0.3s;
+}
+
+.chevron-button:hover {
+  background-color: #f8f9fa;
+}

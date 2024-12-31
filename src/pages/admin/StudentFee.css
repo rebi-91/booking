@@ -1,0 +1,305 @@
+/* StudentFee.css */
+
+/* Container Styles */
+.container {
+    width: 95%;
+    max-width: 1400px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #121212;
+    box-shadow: 0 4px 20px 1px #007ba7;
+    border-radius: 10px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #ffffff;
+  }
+  
+  /* Header Styles */
+  .header {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #e0e0e0;
+    text-align: center;
+  }
+  
+  .schoolName {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #b0b0b0;
+    text-align: center;
+  }
+  
+  /* Top Section */
+  .topSection {
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  /* Filter Container */
+  .filterContainer {
+    background-color: #2a2a2a;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px 1px #000;
+    flex: 1;
+    min-width: 280px;
+  }
+  
+  .subHeader {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #fff;
+    text-align: center;
+  }
+  
+  .formGroup {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .label {
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #fff;
+  }
+  
+  .dropdown {
+    background-color: #555;
+    color: #fff;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  
+  /* Custom Message Container */
+  .customMessageContainer {
+    background-color: #2a2a2a;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px 1px #000;
+    flex: 1;
+    min-width: 280px;
+  }
+  
+  /* Submit Button */
+  .submitButton {
+    background-color: #3ecf8e;
+    color: #000;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Table Container */
+  .tableContainer {
+    margin-top: 50px;
+    overflow-x: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #1e1e1e;
+    padding: 12px;
+    position: relative;
+  }
+  
+  /* Main Table */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+    color: #fff;
+    font-size: 16px;
+  }
+  
+  .th {
+    border: 1px solid #555;
+    text-align: center;
+    padding: 10px;
+    background-color: #3ecf8e;
+    color: #000;
+    font-size: 18px;
+  }
+  
+  .td {
+    border: 1px solid #555;
+    text-align: center;
+    padding: 10px;
+    color: #fff;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .editSelect,
+  .editInput {
+    background-color: #555;
+    color: #fff;
+    border: 1px solid #555;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 16px;
+    outline: none;
+    width: 100%;
+  }
+  
+  .deleteButton {
+    background-color: #ff4d4d;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: background-color 0.3s;
+    align-self: flex-start;
+    opacity: 1;
+  }
+  
+  .checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+  
+  /* Modal Table Container */
+  .modalTableContainer {
+    margin-top: 20px;
+    overflow-x: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #1e1e1e;
+    padding: 12px;
+    margin-bottom: 20px;
+  }
+  
+  /* Modal Tables */
+  .modalTable {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+    color: #fff;
+    font-size: 16px;
+  }
+  
+  .modalTh {
+    border: 1px solid #555;
+    text-align: center;
+    padding: 8px;
+    background-color: #3ecf8e;
+    color: #000;
+    font-size: 16px;
+  }
+  
+  .modalTd {
+    border: 1px solid #555;
+    text-align: center;
+    padding: 8px;
+    color: #fff;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .modalEditInput,
+  .modalEditSelect {
+    background-color: #555;
+    color: #fff;
+    border: 1px solid #555;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 14px;
+    outline: none;
+    width: 100%;
+  }
+  
+  .modalSubmitButton {
+    background-color: #3ecf8e;
+    color: #000;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+  }
+  
+  .modalDeleteButton {
+    background-color: #ff4d4d;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+    margin-right: 10px;
+  }
+  
+  .modalCloseButton {
+    background-color: #2a2a2a;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+    margin-right: 10px;
+  }
+  
+  /* Input Styles */
+  .form-control {
+    background-color: #555 !important;
+    color: #fff !important;
+    border: 1px solid #555 !important;
+    border-radius: 5px !important;
+    padding: 10px !important;
+    resize: vertical !important;
+  }
+  
+  /* Chart Container */
+  .chartContainer {
+    margin-top: 20px;
+    height: 400px;
+  }
+  
+  /* Sum Display */
+  .sumDisplay {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    color: #fff;
+  }
+  
+  .sumDisplay .totalDiscount {
+    color: #3ecf8e; /* Same color as table header */
+    margin-left: 20px;
+  }
+  
+  .sumDisplay .totalPaymentsDiscount {
+    margin-left: 20px;
+  }
+  
+  .sumDisplay .amountLeft {
+    color: #ff4500; /* Radiant Red */
+    margin-left: 20px;
+    font-weight: bold;
+  }
+  

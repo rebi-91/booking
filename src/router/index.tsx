@@ -66,12 +66,17 @@ import StudentForm from "../pages/admin/StudentForm.tsx";
 import StudentFee from "../pages/admin/StudentFee.tsx";
 import DashBoard from "../pages/admin/DashBoard.tsx";
 import GradeDashboard from "../pages/admin/GradeDashboard.tsx";
+import StaffAttendance from "../pages/admin/StaffAttendance.tsx";
 //STUDENT
 import StudentPage from "../pages/student/StudentPage.tsx";
 import StudentGrade from "../pages/student/StudentGrade.tsx";
 //TEACHER
 import AttendancePage from "../pages/teacher/AttendancePage.tsx";
 import TeacherDashboard from "../pages/teacher/TeacherDashboard.tsx";
+import ProgressGraph from "../pages/student/ProgressGraph.tsx";
+import TotalAverage from "../pages/student/TotalAverage.tsx";
+import StudentFeeGraph from "../pages/student/StudentFeeGraph.tsx";
+import StaffPage from "../pages/teacher/StaffPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -113,6 +118,10 @@ const router = createBrowserRouter([
         path: "/dashboard4",
         element: <StudentFee />,
       },
+      {
+        path: "/dash5",
+        element: <StaffAttendance />,
+      },
       //STUDENT
       {
         path: "/student",
@@ -122,6 +131,18 @@ const router = createBrowserRouter([
         path: "/grade",
         element: <StudentGrade />,
       },
+      {
+        path: "/progress-graph",
+        element: <ProgressGraph />,
+      },
+      {
+        path: "/total-average",
+        element: <TotalAverage />,
+      },
+      {
+        path: "/student-fee",
+        element: <StudentFeeGraph />,
+      },
       //TEACHER
       {
         path: "/attendance",
@@ -130,6 +151,10 @@ const router = createBrowserRouter([
       {
         path: "/teacherdashboard",
         element: <TeacherDashboard />,
+      },
+      {
+        path: "/my-attendance",
+        element: <StaffPage />,
       },
       
       // Auth Protected routes

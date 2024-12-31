@@ -1,8 +1,356 @@
-// AttendancePage.tsx
+
+
+// import React, { useState, useEffect } from "react";
+// import supabase from "../../supabase";
+// import { useNavigate } from "react-router-dom";
+// import './AttendancePage.css'; // Import the custom CSS
+
+// function AttendancePage() {
+//   const [userSchool, setUserSchool] = useState("");
+//   const [classTime, setClassTime] = useState("");
+//   const [classNames, setClassNames] = useState<string[]>([]);
+//   const [sections, setSections] = useState<string[]>([]);
+//   const [selectedClassName, setSelectedClassName] = useState("");
+//   const [selectedSection, setSelectedSection] = useState("");
+//   const [students, setStudents] = useState<{id:number;name:string;checked:boolean}[]>([]);
+//   const [day, setDay] = useState(new Date().getDate());
+//   const [selectAll, setSelectAll] = useState(false);
+//   const [isMinimized, setIsMinimized] = useState(false);
+
+//   const navigate = useNavigate();
+
+//   const currentMonthDays = new Date(
+//     new Date().getFullYear(),
+//     new Date().getMonth() + 1,
+//     0
+//   ).getDate();
+
+//   useEffect(() => {
+//     checkUserSchool();
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, []);
+
+//   const checkUserSchool = async () => {
+//     try {
+//       const {
+//         data: { user },
+//       } = await supabase.auth.getUser();
+
+//       if (user) {
+//         const { data: profileData, error } = await supabase
+//           .from("profiles")
+//           .select("school")
+//           .eq("id", user.id)
+//           .single();
+
+//         if (!error && profileData) {
+//           setUserSchool(profileData?.school || "Unknown School");
+//           if (profileData?.school) await fetchClassNames(profileData.school);
+//         }
+//       }
+//     } catch (error) {
+//       console.error("Error checking user school:", error);
+//     }
+//   };
+
+//   const fetchClassNames = async (school: string) => {
+//     try {
+//       const { data, error } = await supabase
+//         .from("student")
+//         .select("className")
+//         .eq("school", school);
+
+//       if (!error && data) {
+//         setClassNames([...new Set((data as any[]).map((item) => item.className))]);
+//       }
+//     } catch (error) {
+//       console.error("Error fetching class names:", error);
+//     }
+//   };
+
+//   const fetchSections = async (className: string) => {
+//     try {
+//       const { data, error } = await supabase
+//         .from("student")
+//         .select("section")
+//         .eq("school", userSchool)
+//         .eq("className", className);
+
+//       if (!error && data) {
+//         setSections([...new Set((data as any[]).map((item) => item.section))]);
+//       }
+//     } catch (error) {
+//       console.error("Error fetching sections:", error);
+//     }
+//   };
+
+//   const fetchStudents = async () => {
+//     if (!classTime || !selectedClassName || !selectedSection) return;
+
+//     try {
+//       const { data: studentData } = await supabase
+//         .from("student")
+//         .select("id, studentName")
+//         .eq("school", userSchool)
+//         .eq("className", selectedClassName)
+//         .eq("section", selectedSection);
+
+//       if (!studentData) return;
+
+//       const ids = (studentData as any[]).map((item) => item.id);
+//       const { data: attendanceData } = await supabase
+//         .from(classTime)
+//         .select(`${day}, id`)
+//         .in("id", ids);
+
+//       const combinedData = (studentData as any[]).map((student) => {
+//         const attendance = (attendanceData as any[]).find((a) => a.id === student.id);
+//         return {
+//           id: student.id,
+//           name: student.studentName,
+//           checked: attendance ? attendance[day] === true : false,
+//         };
+//       });
+
+//       setStudents(combinedData.sort((a, b) => a.id - b.id));
+//     } catch (error) {
+//       console.error("Error fetching students:", error);
+//     }
+//   };
+
+//   const saveAttendance = async () => {
+//     try {
+//       await Promise.all(
+//         students.map(async (student) => {
+//           const { error } = await supabase
+//             .from(classTime)
+//             .update({ [day]: student.checked || null })
+//             .eq("id", student.id);
+
+//           if (error) throw error;
+//         })
+//       );
+//       alert("Attendance saved successfully!");
+//     } catch (error) {
+//       console.error("Error saving attendance:", error);
+//       alert("Failed to save attendance.");
+//     }
+//   };
+
+//   const toggleStudentCheckbox = (id: number) => {
+//     setStudents((prev) =>
+//       prev.map((student) =>
+//         student.id === id ? { ...student, checked: !student.checked } : student
+//       )
+//     );
+//   };
+
+//   const handleSelectAll = () => {
+//     const newSelectAll = !selectAll;
+//     setSelectAll(newSelectAll);
+//     setStudents((prev) =>
+//       prev.map((student) => ({ ...student, checked: newSelectAll }))
+//     );
+//   };
+
+//   const toggleContainerSize = () => {
+//     setIsMinimized((prev) => !prev);
+//   };
+
+//   const handleGraduationCapClick = () => {
+//     navigate("/teacherdashboard");
+//   };
+
+//   const handleMouseEnterGraduation = (e: React.MouseEvent<HTMLButtonElement>) => {
+//     const target = e.currentTarget as HTMLButtonElement;
+//     target.style.transform = "scale(1.2)";
+//   };
+
+//   const handleMouseLeaveGraduation = (e: React.MouseEvent<HTMLButtonElement>) => {
+//     const target = e.currentTarget as HTMLButtonElement;
+//     target.style.transform = "scale(1)";
+//   };
+
+//   return (
+//     <div className="attendance-page d-flex flex-column align-items-center">
+//       <h1>Student Attendance</h1>
+//       {userSchool && <h2>{userSchool}</h2>}
+
+//       {/* Graduation Cap Button */}
+//       <button
+//         onClick={handleGraduationCapClick}
+//         className="graduation-cap-btn"
+//         onMouseEnter={handleMouseEnterGraduation}
+//         onMouseLeave={handleMouseLeaveGraduation}
+//         aria-label="Go to Teacher Dashboard"
+//       >
+//         🎓
+//       </button>
+
+//       {/* Form Container */}
+//       <div className={`card w-100 max-w-600 ${isMinimized ? 'p-2' : 'p-4'}`} style={{ maxWidth: '600px', backgroundColor: '#1e1e1e', borderRadius: '12px', boxShadow: '0 4px 15px rgba(0, 0, 0, 0.5)', transition: 'all 0.3s ease' }}>
+//         <div className="position-relative">
+//           {!isMinimized && (
+//             <div className="row g-1">
+//               {/* Class Time */}
+//               <div className="col-md-6">
+//                 <label htmlFor="classTime" className="form-label text-muted">Class Time</label>
+//                 <select
+//                   id="classTime"
+//                   className="form-select"
+//                   value={classTime}
+//                   onChange={(e) => {
+//                     setClassTime(e.target.value);
+//                     setSelectedClassName("");
+//                     setSections([]);
+//                     setStudents([]);
+//                   }}
+//                 >
+//                   <option value="">Select Class Time</option>
+//                   {["C1", "C2", "C3", "C4", "C5", "C6"].map((time) => (
+//                     <option key={time} value={time}>
+//                       {time}
+//                     </option>
+//                   ))}
+//                 </select>
+//               </div>
+
+//               {/* Class Name */}
+//               <div className="col-md-5">
+//                 <label htmlFor="className" className="form-label text-muted">Class Name</label>
+//                 <select
+//                   id="className"
+//                   className="form-select"
+//                   value={selectedClassName}
+//                   onChange={(e) => {
+//                     setSelectedClassName(e.target.value);
+//                     fetchSections(e.target.value);
+//                   }}
+//                 >
+//                   <option value="">Select Class Name</option>
+//                   {classNames.map((name) => (
+//                     <option key={name} value={name}>
+//                       {name}
+//                     </option>
+//                   ))}
+//                 </select>
+//               </div>
+
+//               {/* Section */}
+//               <div className="col-md-6">
+//                 <label htmlFor="section" className="form-label text-muted">Section</label>
+//                 <select
+//                   id="section"
+//                   className="form-select"
+//                   value={selectedSection}
+//                   onChange={(e) => setSelectedSection(e.target.value)}
+//                 >
+//                   <option value="">Select Section</option>
+//                   {sections.map((section) => (
+//                     <option key={section} value={section}>
+//                       {section}
+//                     </option>
+//                   ))}
+//                 </select>
+//               </div>
+
+//               {/* Day of the Month */}
+//               <div className="col-md-6">
+//                 <label htmlFor="day" className="form-label text-muted">Day of the Month</label>
+//                 <select
+//                   id="day"
+//                   className="form-select"
+//                   value={day}
+//                   onChange={(e) => setDay(parseInt(e.target.value))}
+//                 >
+//                   {Array.from({ length: currentMonthDays }, (_, i) => i + 1).map((d) => (
+//                     <option key={d} value={d}>
+//                       {d}
+//                     </option>
+//                   ))}
+//                 </select>
+//               </div>
+
+//               {/* Fetch Students Button */}
+//               <div className="col-12">
+//                 <button className="btn btn-success w-100" onClick={fetchStudents}>
+//                   Fetch Students
+//                 </button>
+//               </div>
+//             </div>
+//           )}
+
+//           {/* Chevron Button */}
+//           <button
+//             onClick={toggleContainerSize}
+//             className="chevron-btn"
+//             aria-label={isMinimized ? "Expand Form" : "Minimize Form"}
+//           >
+//             {isMinimized ? "\u25BC" : "\u25B2"}
+//           </button>
+//         </div>
+//       </div>
+
+//       {/* Student List Container */}
+//       <div className="card w-100 mt-4" style={{ maxWidth: '600px', backgroundColor: '#1e1e1e', borderRadius: '12px', boxShadow: '0 4px 10px rgba(0, 0, 0, 0.5)', maxHeight: isMinimized ? '300px' : '600px', overflowY: 'auto', transition: 'max-height 0.3s ease' }}>
+//         <div className="card-body">
+//           {/* Select All Checkbox */}
+//           <div className="form-check mb-3">
+//             <input
+//               className="form-check-input"
+//               type="checkbox"
+//               checked={selectAll}
+//               onChange={handleSelectAll}
+//               id="selectAll"
+//             />
+//             <label className="form-check-label text-white" htmlFor="selectAll">
+//               Select All
+//             </label>
+//           </div>
+
+//           {/* List of Students */}
+//           {students.map((student) => (
+//             <div
+//               key={student.id}
+//               className={`student-container ${student.checked ? 'checked' : ''}`}
+//               onClick={() => toggleStudentCheckbox(student.id)}
+//             >
+//               <div className="d-flex align-items-center w-100">
+//                 <input
+//                   type="checkbox"
+//                   checked={student.checked}
+//                   onChange={() => toggleStudentCheckbox(student.id)}
+//                   className="custom-checkbox me-2"
+//                   onClick={(e) => e.stopPropagation()} // Prevent parent onClick
+//                 />
+//                 <span className="ms-auto">{student.name}</span>
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+
+//       {/* Save Attendance Button */}
+//       <button
+//         onClick={saveAttendance}
+//         className="btn btn-primary save-attendance-btn"
+//       >
+//         Save Attendance
+//       </button>
+//     </div>
+//   );
+// }
+
+// export default AttendancePage;
 import React, { useState, useEffect } from "react";
 import supabase from "../../supabase";
 import { useNavigate } from "react-router-dom";
-import "./AttendancePage.css"; // Import the CSS file
+import './AttendancePage.css'; // Import the custom CSS
+import {
+  Container,
+  Row,
+  Col,
+} from 'react-bootstrap';
 
 function AttendancePage() {
   const [userSchool, setUserSchool] = useState("");
@@ -11,7 +359,7 @@ function AttendancePage() {
   const [sections, setSections] = useState<string[]>([]);
   const [selectedClassName, setSelectedClassName] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
-  const [students, setStudents] = useState<{ id: number; name: string; checked: boolean }[]>([]);
+  const [students, setStudents] = useState<{id:number;name:string;checked:boolean}[]>([]);
   const [day, setDay] = useState(new Date().getDate());
   const [selectAll, setSelectAll] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -160,124 +508,208 @@ function AttendancePage() {
     navigate("/teacherdashboard");
   };
 
-  // Removed inline event handlers for hover effects as they are now handled by CSS
+  const handleMouseEnterGraduation = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const target = e.currentTarget as HTMLButtonElement;
+    target.style.transform = "scale(1.2)";
+  };
+
+  const handleMouseLeaveGraduation = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const target = e.currentTarget as HTMLButtonElement;
+    target.style.transform = "scale(1)";
+  };
 
   return (
-    <div className={`page-container ${isMinimized ? "minimized" : ""}`}>
-      <h1 className="heading">Student Attendance</h1>
-      {userSchool && <h2 className="subheading">{userSchool}</h2>}
+    <div className="attendance-page d-flex flex-column align-items-center">
+      <h1>Student Attendance</h1>
+      {userSchool && <h2>{userSchool}</h2>}
+
+      {/* Graduation Cap Button */}
       <button
         onClick={handleGraduationCapClick}
-        className={`graduation-cap-button ${isMinimized ? "minimized" : ""}`}
-        aria-label="Navigate to Teacher Dashboard"
+        className="graduation-cap-btn"
+        onMouseEnter={handleMouseEnterGraduation}
+        onMouseLeave={handleMouseLeaveGraduation}
+        aria-label="Go to Teacher Dashboard"
       >
         🎓
       </button>
-      <div className={`form-container ${isMinimized ? "minimized" : ""}`}>
-        {!isMinimized && (
-          <>
-            <div className="form-group">
-              <label>Class Time</label>
-              <select
-                value={classTime}
-                onChange={(e) => {
-                  setClassTime(e.target.value);
-                  setSelectedClassName("");
-                  setSections([]);
-                  setStudents([]);
-                }}
-              >
-                <option value="">Select Class Time</option>
-                {["C1", "C2", "C3", "C4", "C5", "C6"].map((time) => (
-                  <option key={time} value={time}>
-                    {time}
-                  </option>
-                ))}
-              </select>
+
+      {/* Form Container */}
+      <div
+        className={`card w-100 mt-4 ${isMinimized ? 'p-4' : 'p-4'}`}
+        style={{
+          maxWidth: '600px',
+          backgroundColor: '#1e1e1e',
+          borderRadius: '12px',
+          boxShadow: '0 4px 15px rgba(0, 0, 0, 0.5)',
+          transition: 'all 0.3s ease',
+        }}
+      >
+        <div className="position-relative">
+          {!isMinimized && (
+            <div className="row g-3">
+              {/* Class Time */}
+              <div className="col-md-6">
+                <select
+                  id="classTime"
+                  className="form-select custom-select-bright"
+                  value={classTime}
+                  onChange={(e) => {
+                    setClassTime(e.target.value);
+                    setSelectedClassName("");
+                    setSections([]);
+                    setStudents([]);
+                  }}
+                >
+                  <option value="">Select Class Time</option>
+                  {["C1", "C2", "C3", "C4", "C5", "C6"].map((time) => (
+                    <option key={time} value={time}>
+                      {time}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Class Name */}
+              <div className="col-md-5">
+                <select
+                  id="className"
+                  className="form-select custom-select-bright"
+                  value={selectedClassName}
+                  onChange={(e) => {
+                    setSelectedClassName(e.target.value);
+                    fetchSections(e.target.value);
+                  }}
+                >
+                  <option value="">Select Class Name</option>
+                  {classNames.map((name) => (
+                    <option key={name} value={name}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Section */}
+              <div className="col-md-6">
+                <select
+                  id="section"
+                  className="form-select custom-select-bright"
+                  value={selectedSection}
+                  onChange={(e) => setSelectedSection(e.target.value)}
+                >
+                  <option value="">Select Section</option>
+                  {sections.map((section) => (
+                    <option key={section} value={section}>
+                      {section}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Day of the Month */}
+              <div className="col-md-6">
+                <select
+                  id="day"
+                  className="form-select custom-select-bright"
+                  value={day}
+                  onChange={(e) => setDay(parseInt(e.target.value))}
+                >
+                  {Array.from({ length: currentMonthDays }, (_, i) => i + 1).map((d) => (
+                    <option key={d} value={d}>
+                      {d}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Fetch Students Button */}
+              <div className="col-12">
+                <button className="btn btn-success w-100" onClick={fetchStudents}>
+                  Fetch Students
+                </button>
+              </div>
             </div>
-            <div className="form-group">
-              <label>Class Name</label>
-              <select
-                value={selectedClassName}
-                onChange={(e) => {
-                  setSelectedClassName(e.target.value);
-                  fetchSections(e.target.value);
-                }}
-              >
-                <option value="">Select Class Name</option>
-                {classNames.map((name) => (
-                  <option key={name} value={name}>
-                    {name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="form-group">
-              <label>Section</label>
-              <select
-                value={selectedSection}
-                onChange={(e) => setSelectedSection(e.target.value)}
-              >
-                <option value="">Select Section</option>
-                {sections.map((section) => (
-                  <option key={section} value={section}>
-                    {section}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="form-group">
-              <label>Day of the Month</label>
-              <select
-                value={day}
-                onChange={(e) => setDay(parseInt(e.target.value))}
-              >
-                {Array.from({ length: currentMonthDays }, (_, i) => i + 1).map((d) => (
-                  <option key={d} value={d}>
-                    {d}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <button onClick={fetchStudents} className="fetch-button">
-              Fetch Students
-            </button>
-          </>
-        )}
-        <button onClick={toggleContainerSize} className="chevron-button" aria-label="Toggle Form Size">
-          {isMinimized ? "\u25BC" : "\u25B2"}
-        </button>
+          )}
+
+          {/* Chevron Button */}
+          <button
+            onClick={toggleContainerSize}
+            className="chevron-btn"
+            aria-label={isMinimized ? "Expand Form" : "Minimize Form"}
+          >
+            {isMinimized ? "\u25BC" : "\u25B2"}
+          </button>
+        </div>
       </div>
 
-      <div className={`student-list-container ${isMinimized ? "minimized" : ""}`}>
-        <div className="select-all-container">
-          <input
-            type="checkbox"
-            checked={selectAll}
-            onChange={handleSelectAll}
-          />
-          <label>Select All</label>
-        </div>
-        {students.map((student) => (
-          <div
-            key={student.id}
-            className={`student-item ${student.checked ? "checked" : ""}`}
-            onClick={() => toggleStudentCheckbox(student.id)}
-          >
-            <label className="student-label">
-              <input
-                type="checkbox"
-                checked={student.checked}
-                onChange={() => toggleStudentCheckbox(student.id)}
-                onClick={(e) => e.stopPropagation()}
-              />
-              {student.name}
+      {/* Student List Container */}
+      <div
+        className="card w-100 mt-4"
+        style={{
+          maxWidth: '600px',
+          backgroundColor: '#1e1e1e',
+          borderRadius: '12px',
+          boxShadow: '0 4px 10px rgba(0, 0, 0, 0.5)',
+          maxHeight: isMinimized ? '500px' : '245px',
+          overflowY: 'auto',
+          transition: 'max-height 0.3s ease',
+        }}
+      >
+        <div className="card-body">
+          {/* Select All Checkbox */}
+          <div className="form-check mb-3">
+            <input
+              className="form-check-input custom-select-bright"
+              type="checkbox"
+              checked={selectAll}
+              onChange={handleSelectAll}
+              id="selectAll"
+              style={{ backgroundColor: '#2a2a2a', color: '#ffffff' }} // Optional inline styles
+            />
+            <label className="form-check-label text-white" htmlFor="selectAll">
+              Select All
             </label>
           </div>
-        ))}
-      </div>
 
-      <button onClick={saveAttendance} className="save-attendance-button">
+                  {/* List of Students */}
+          {students.map((student) => (
+            <div
+              key={student.id}
+              className={`student-container ${student.checked ? 'checked' : ''} ${isMinimized ? 'student-container-minimized' : 'student-container-maximized'}`}
+              onClick={() => toggleStudentCheckbox(student.id)}
+            >
+              <div className="d-flex align-items-center w-100">
+                <input
+                  type="checkbox"
+                  checked={student.checked}
+                  onChange={() => toggleStudentCheckbox(student.id)}
+                  className="custom-checkbox me-2"
+                  onClick={(e) => e.stopPropagation()} // Prevent parent onClick
+                />
+                <span className="ms-auto">{student.name}</span>
+              </div>
+            </div>
+          ))}
+
+        </div>
+      </div>
+      {/* Footer */}
+      <footer className="footer">
+        <Container>
+          <Row>
+            <Col className="text-center">
+              &copy; {new Date().getFullYear()} SchoolMood. All rights reserved.
+            </Col>
+          </Row>
+        </Container>
+      </footer>
+
+      {/* Save Attendance Button */}
+      <button
+        onClick={saveAttendance}
+        className="btn btn-primary save-attendance-btn"
+      >
         Save Attendance
       </button>
     </div>
@@ -285,7 +717,6 @@ function AttendancePage() {
 }
 
 export default AttendancePage;
-
 
 // import React, { useState, useEffect } from "react";
 // import supabase from "../../supabase";
@@ -609,17 +1040,17 @@ export default AttendancePage;
 // };
 
 // const headingStyle = {
-//   fontSize: "36px",
+//   fontSize: "24px",
 //   fontWeight: "bold",
-//   marginBottom: "15px",
-//   marginTop: "-5px",
+//   marginBottom: "5px",
+//   marginTop: "5px",
 //   textAlign: "center" as const,
 //   color: "#e0e0e0",
 // };
 
 // const subHeadingStyle = {
-//   fontSize: "25px",
-//   marginBottom: "10px",
+//   fontSize: "16px",
+//   marginBottom: "15px",
 //   textAlign: "center" as const,
 //   color: "#b0b0b0",
 // };
@@ -645,14 +1076,14 @@ export default AttendancePage;
 
 // const formContainerStyle = (minimized: boolean) => ({
 //   backgroundColor: "#1e1e1e",
-//   padding: minimized ? "10px" : "25px",
+//   padding: minimized ? "10px" : "20px",
 //   borderRadius: "12px",
 //   boxShadow: "0 4px 15px rgba(0, 0, 0, 0.5)",
 //   marginBottom: minimized ? "20px" : "20px",
 //   width: "100%",
 //   maxWidth: "600px",
 //   overflow: "visible",
-//   height: minimized ? "60px" : "auto",
+//   height: minimized ? "20px" : "auto",
 //   position: "relative" as const,
 //   transition: "height 0.3s ease, padding 0.3s ease",
 // });
@@ -698,8 +1129,8 @@ export default AttendancePage;
 
 // const saveButtonStyle = {
 //   ...buttonStyle,
-//   marginTop: "0px",
-//   width: "590px",
+//   marginBottom: "40px",
+//   width: "100%",
 // } as React.CSSProperties;
 
 // const studentListContainerStyle = (expanded: boolean) => ({
@@ -717,7 +1148,7 @@ export default AttendancePage;
 
 // const studentContainerStyle = {
 //   display: "flex",
-//   alignItems: "center",
+//   alignItems: "flex",
 //   justifyContent: "space-between",
 //   padding: "12px",
 //   marginBottom: "12px",

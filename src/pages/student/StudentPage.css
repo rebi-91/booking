@@ -1,424 +1,163 @@
-/* StudentPage.css */
+/* File: StudentPage.css */
 
-/* CSS Variables for Consistency */
-:root {
-    --primary-color: #007bff;
-    --secondary-color: #6c757d;
-    --success-color: #28a745;
-    --info-color: #17a2b8;
-    --warning-color: #ffc107;
-    --danger-color: #dc3545;
-    --light-color: #f8f9fa;
-    --dark-color: #343a40;
+/* Table Header */
+.th-custom {
+  border: 1px solid #dddddd;
+  padding: 12px;
+  background-color: #ADD8E6 !important; /* Light Blue background */
+  color: white;
+  text-align: center !important; /* Centers the text horizontally */
+  vertical-align: middle; /* Centers the text vertically */
+  /* Optional: Add more s
+  /* Optional: Add more styles if needed */
+}
+
+/* Optional: Table Cells */
+.td-custom {
+  border: 1px solid #dddddd;
+  padding: 8px;
+  background-color: #f9f9f9;
+  color: #333;
+  text-align: left;
+}
+
+/* Header Container Styling */
+.header-container {
+  background-color: #343a40; /* Dark background */
+  padding: 10px;
+  border-radius: 5px;
+}
+
+/* Back Button Styling */
+.back-button {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Coin Button Styling */
+.coin-button {
+  width: 55px;
+  height: 55px;
   
-    --font-family: Arial, sans-serif;
-  
-    /* Font Sizes */
-    --font-size-title: 24px;
-    --font-size-subheading: 18px;
-    --font-size-label: 16px;
-    --font-size-select: 16px;
-    --font-size-table-header: 14px;
-    --font-size-table-data: 12px;
-    --font-size-error: 16px;
-    --font-size-button: 14px;
-    --font-size-graduation: 24px;
+  border-radius: 50%;
+  background-color: #03138e !important; /* Adjusted for visibility */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none; /* Remove default outline */
+  transition: transform 0.3s ease;
+  border: 2px solid #beebfb;
+}
+
+/* Coin Button 2 Styling */
+.coin-button2 {
+  width: 55px;
+  height: 55px;
+  border: none;
+  border: 1px solid #d1d5d3; /* 1px white border */
+  border-radius: 50%;
+  background-color:  #90eae4 !important; /* Adjusted for visibility */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none; /* Remove default outline */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
+  color: #ffffff; /* White font color */
+
+}
+
+/* Styling for the Coin Icon */
+.coin-icon {
+  color: #ffd700; /* Gold color */
+  font-size: 28px;
+  transition: transform 1s ease;
+  display: inline-block;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  background-color: #03138e; /* Transparent background to focus on the icon */
+}
+
+/* Spinning Animation on Hover */
+.coin-button:hover .coin-icon,
+.coin-button2:hover .coin-icon {
+  animation: spin3d 2s linear infinite;
+  background-color: #03138e; /* Transparent background to focus on the icon */
+}
+
+/* Keyframes for 3D Spinning */
+@keyframes spin3d {
+  from {
+    transform: rotateY(0deg);
   }
-  
-  /* General Styles */
-  .page-container {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    background-color: #f5f5f5;
-    min-height: 100vh;
-    font-family: var(--font-family);
+  to {
+    transform: rotateY(360deg);
   }
-  
-  .card {
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 1200px;
-  }
-  
-  .student-info-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-  }
-  
-  .student-info {
-    margin-bottom: 20px;
-    flex: 1 1 300px;
-  }
-  
-  .student-name {
-    color: #000;
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-  
-  .school-name {
-    font-size: 18px;
-    color: #333;
-    margin-bottom: 5px;
-  }
-  
-  .class-section {
-    font-size: 16px;
-    color: #666;
-  }
-  
-  .pie-chart-container {
-    position: relative;
-    width: 250px;
-    height: 250px;
-  }
-  
-  .center-percentage {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-  }
-  
-  .percentage-text {
-    font-size: 24px;
-    font-weight: bold;
-    color: #000;
-  }
-  
-  .attendance-title {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 15px;
-    text-align: center;
-  }
-  
-  .attendance-table-container {
-    overflow-x: auto;
-  }
-  
-  .attendance-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .table-header {
-    border: 1px solid #dddddd;
-    text-align: center;
+}
+
+/* Active State (when clicked) */
+.coin-button:active .coin-icon,
+.coin-button2:active .coin-icon {
+  transform: scale(0.95);
+  background-color: #6c757d; /* Adjusted for visibility */
+}
+
+/* Focus State for Accessibility */
+.coin-button:focus .coin-icon,
+.coin-button2:focus .coin-icon {
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.5); /* Gold outline on focus */
+  background-color: #6c757d; /* Adjusted for visibility */
+}
+
+/* Legend Line Styling */
+.legend-line {
+  width: 20px;
+  height: 5px;
+  border-radius: 2px;
+}
+
+/* Attendance Cross Styling */
+.attendance-cross {
+  color: #ff4d4d; /* Red color for cross */
+  font-size: 1.2em;
+  margin-left: 5px;
+}
+
+/* Adjust padding and font size for smaller screens */
+@media (max-width: 768px) {
+  .th-custom {
     padding: 8px;
-    background-color: var(--primary-color);
-    color: white;
+    font-size: 0.9rem;
   }
-  
-  .day-cell {
-    background-color: #f2f2f2;
-    font-weight: bold;
-    color: #777;
-    border: 1px solid #dddddd;
-    text-align: center;
-    padding: 8px;
+
+  .td-custom {
+    padding: 6px;
+    font-size: 0.8rem;
   }
-  
-  .checkbox-cell {
-    border: 1px solid #dddddd;
-    text-align: center;
-    padding: 8px;
-    width: 50px;
+
+  .header-content .title {
+    font-size: 1.25rem;
   }
-  
-  .checkbox-label {
-    position: relative;
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    cursor: default;
+
+  .header-content .subheading {
+    font-size: 1rem;
   }
-  
-  .hidden-checkbox {
-    opacity: 0;
-    width: 0;
-    height: 0;
+
+  .graph-buttons-container .btn {
+    font-size: 0.9rem;
   }
-  
-  .custom-checkbox {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 20px;
-    width: 20px;
-    background-color: #ffffff;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .red-cross {
-    color: red;
-    font-size: 16px;
-  }
-  
-  .loading-container,
-  .error-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-  }
-  
-  .spinner {
-    border: 8px solid #f3f3f3;
-    border-top: 8px solid var(--primary-color);
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    animation: spin 1s linear infinite;
-    margin-bottom: 20px;
-  }
-  
-  .error-message {
-    color: red;
-    font-size: 18px;
-  }
-  
-  .graduation-cap-button {
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    background-color: #d3d3d3;
-    color: #ffffff;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    cursor: pointer;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-    z-index: 1000;
-    transform: translateX(-50%) scale(1);
-  }
-  
-  /* Spinner Animation */
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  
-  /* Responsive Styles */
-  
-  /* Extra Small Devices (Phones, <576px) */
-  @media (max-width: 575.98px) {
-    .graduation-cap-button {
-      top: 15px;
-      width: 35px;
-      height: 35px;
-      font-size: 20px;
-    }
-  
-    .pie-chart-container {
-      width: 200px;
-      height: 200px;
-    }
-  
-    .percentage-text {
-      font-size: 20px;
-    }
-  
-    .student-name {
-      font-size: 20px;
-    }
-  
-    .school-name {
-      font-size: 16px;
-    }
-  
-    .class-section {
-      font-size: 14px;
-    }
-  
-    .attendance-title {
-      font-size: 18px;
-    }
-  
-    .table-header {
-      font-size: 12px;
-      padding: 6px;
-    }
-  
-    .day-cell {
-      font-size: 14px;
-      padding: 6px;
-    }
-  
-    .checkbox-cell {
-      padding: 6px;
-      width: 40px;
-    }
-  
-    .custom-checkbox {
-      height: 16px;
-      width: 16px;
-    }
-  
-    .red-cross {
-      font-size: 14px;
-    }
-  
-    .percentage-text {
-      font-size: 20px;
-    }
-  }
-  
-  /* Small Devices (Large Phones, ≥576px) */
-  @media (min-width: 576px) and (max-width: 767.98px) {
-    .graduation-cap-button {
-      top: 18px;
-      width: 38px;
-      height: 38px;
-      font-size: 22px;
-    }
-  
-    .pie-chart-container {
-      width: 220px;
-      height: 220px;
-    }
-  
-    .percentage-text {
-      font-size: 22px;
-    }
-  
-    .student-name {
-      font-size: 22px;
-    }
-  
-    .school-name {
-      font-size: 17px;
-    }
-  
-    .class-section {
-      font-size: 15px;
-    }
-  
-    .attendance-title {
-      font-size: 19px;
-    }
-  
-    .table-header {
-      font-size: 13px;
-      padding: 7px;
-    }
-  
-    .day-cell {
-      font-size: 15px;
-      padding: 7px;
-    }
-  
-    .checkbox-cell {
-      padding: 7px;
-      width: 45px;
-    }
-  
-    .custom-checkbox {
-      height: 18px;
-      width: 18px;
-    }
-  
-    .red-cross {
-      font-size: 15px;
-    }
-  
-    .percentage-text {
-      font-size: 22px;
-    }
-  }
-  
-  /* Medium Devices (Tablets, ≥768px) */
-  @media (min-width: 768px) and (max-width: 991.98px) {
-    .graduation-cap-button {
-      top: 20px;
-      width: 40px;
-      height: 40px;
-      font-size: 24px;
-    }
-  
-    .pie-chart-container {
-      width: 250px;
-      height: 250px;
-    }
-  
-    .percentage-text {
-      font-size: 24px;
-    }
-  
-    .student-name {
-      font-size: 24px;
-    }
-  
-    .school-name {
-      font-size: 18px;
-    }
-  
-    .class-section {
-      font-size: 16px;
-    }
-  
-    .attendance-title {
-      font-size: 20px;
-    }
-  
-    .table-header {
-      font-size: 14px;
-      padding: 8px;
-    }
-  
-    .day-cell {
-      font-size: 16px;
-      padding: 8px;
-    }
-  
-    .checkbox-cell {
-      padding: 8px;
-      width: 50px;
-    }
-  
-    .custom-checkbox {
-      height: 20px;
-      width: 20px;
-    }
-  
-    .red-cross {
-      font-size: 16px;
-    }
-  
-    .percentage-text {
-      font-size: 24px;
-    }
-  }
-  
-  /* Large Devices (Desktops, ≥992px) */
-  @media (min-width: 992px) and (max-width: 1199.98px) {
-    /* No changes needed; use general styles */
-  }
-  
-  /* Extra Large Devices (Large Desktops, ≥1200px) */
-  @media (min-width: 1200px) {
-    /* No changes needed; use general styles */
-  }
-  
+}
+
+/* Remove the general .table th selector to prevent conflicts */
+/* If you still need to style other th elements, use more specific selectors or classes */
+
+/* Example: */
+/*
+.table th.th-custom {
+  // your styles
+}
+*/
