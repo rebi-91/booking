@@ -289,11 +289,41 @@ function StudentForm() {
     }
   };
 
-  // Open the edit modal for a specific student
-  const openEditModal = (student: Student) => {
+  // // Open the edit modal for a specific student
+  // const openEditModal = (student: Student) => {
+  //   setEditStudent(student);
+  //   setStudentIDAvailability((prev) => ({ ...prev, edit: null }));
+  // };
+// new code
+const openEditModal = async (student: Student) => {
+  try {
+    setIsLoading(true);
+
+    // Set the student to be edited
     setEditStudent(student);
     setStudentIDAvailability((prev) => ({ ...prev, edit: null }));
-  };
+
+    // Fetch unique sections for the current school
+    const { data: sectionData, error } = await supabase
+      .from("student")
+      .select("section")
+      .eq("school", userSchool)
+      .neq("section", null);
+
+    if (error) throw error;
+
+    const uniqueSections = [
+      ...new Set((sectionData as any[]).map((item) => item.section)),
+    ];
+    setSections(uniqueSections);
+
+  } catch (error: any) {
+    console.error("Error opening edit modal:", error.message);
+    setAlertMessage("Error opening edit modal. Please try again.");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   // Update student details
   const updateStudent = async () => {
