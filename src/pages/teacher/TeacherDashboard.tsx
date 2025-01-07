@@ -291,48 +291,51 @@ const handleSaveWithDelay = async () => {
   }, [selectedClass, selectedSection, studentSheetName, userSchool]);
 
   // Fetch Exam Types based on selectedSubject and userSchool
-  useEffect(() => {
-    const fetchExamTypes = async () => {
-      if (selectedSubject && userSchool) {
-        setLoadingExamTypes(true);
-        setError('');
-        setExamTypes([]);
-        setSelectedExamType('');
-        setSelectedExamColumn('');
-        try {
-          const { data, error } = await supabase
-            .from('exam')
-            .select('examType, columnNumber')
-            .eq('subjectName', selectedSubject)
-            .eq('school', userSchool);
+// Fetch Exam Types based on userSchool (Removed subjectName condition)
+useEffect(() => {
+  const fetchExamTypes = async () => {
+    if (userSchool) {
+      setLoadingExamTypes(true);
+      setError('');
+      setExamTypes([]);
+      setSelectedExamType('');
+      setSelectedExamColumn('');
+      try {
+        // Removed .eq('subjectName', selectedSubject)
+        const { data, error } = await supabase
+          .from('exam')
+          .select('examType, columnNumber')
+          .eq('school', userSchool);
 
-          if (error || !data) {
-            throw error || new Error('No exam types found');
-          }
-
-          let mappedExamTypes = (data as any[]).map((item) => ({
-            examType: item.examType as string,
-            columnNumber: item.columnNumber as number,
-          }));
-
-          mappedExamTypes.sort((a, b) => a.columnNumber - b.columnNumber);
-
-          setExamTypes(mappedExamTypes);
-        } catch (err: any) {
-          console.error(err);
-          setError(err.message || 'Failed to fetch exam types.');
-        } finally {
-          setLoadingExamTypes(false);
+        if (error || !data) {
+          throw error || new Error('No exam types found');
         }
-      } else {
-        setExamTypes([]);
-        setSelectedExamType('');
-        setSelectedExamColumn('');
-      }
-    };
 
-    fetchExamTypes();
-  }, [selectedSubject, userSchool]);
+        // Map the data to the ExamType interface
+        let mappedExamTypes = (data as any[]).map((item) => ({
+          examType: item.examType as string,
+          columnNumber: item.columnNumber as number,
+        }));
+
+        // Sort exam types by columnNumber ascending
+        mappedExamTypes.sort((a, b) => a.columnNumber - b.columnNumber);
+
+        setExamTypes(mappedExamTypes);
+      } catch (err: any) {
+        console.error(err);
+        setError(err.message || 'Failed to fetch exam types.');
+      } finally {
+        setLoadingExamTypes(false);
+      }
+    } else {
+      setExamTypes([]);
+      setSelectedExamType('');
+      setSelectedExamColumn('');
+    }
+  };
+
+  fetchExamTypes();
+}, [userSchool]); // Notice we only watch userSchool here, not selectedSubject
 
   // Update selectedExamColumn based on selectedExamType
   useEffect(() => {
