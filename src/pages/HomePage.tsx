@@ -40,62 +40,15 @@ const HomePage: React.FC = () => {
     setError("");
 
     try {
-      // Fetch the user's profile to get teacherID (from password) and school
-      const { data: profileData, error: profileError } = await supabase
-        .from("profiles")
-        .select("role, password, school")
-        .eq("id", session.user.id)
-        .single();
-
-      if (profileError || !profileData) {
-        throw new Error("Failed to retrieve user profile information.");
-      }
-
-      const { role, password: teacherID, school } = profileData;
-
-      // If the user is a Teacher, update the 'Logout' column in the 'teacher' table
-      if (role === "Teacher") {
-        if (!teacherID || !school) {
-          throw new Error("Incomplete teacher profile information.");
-        }
-
-        // Get current time in Baghdad timezone formatted as "HH:MM"
-        const currentDate = new Date();
-        const options: Intl.DateTimeFormatOptions = {
-          hour: "2-digit",
-          minute: "2-digit",
-          timeZone: "Asia/Baghdad",
-          hour12: false,
-        };
-        const formattedLogoutTime = currentDate.toLocaleTimeString(
-          "en-US",
-          options
-        );
-
-        // Update the 'Logout' column with the formatted time
-        const { error: updateError } = await supabase
-          .from("teacher")
-          .update({ Logout: formattedLogoutTime }) // Set to "HH:MM" format
-          .eq("teacherID", teacherID)
-          .eq("school", school);
-
-        if (updateError) {
-          throw new Error("Failed to update logout time.");
-        }
-      }
-
-      // Proceed to sign out
+      // Sign out the user immediately
       const { error: signOutError } = await supabase.auth.signOut();
-
       if (signOutError) {
         throw new Error(signOutError.message);
       }
 
       setStatus("Signed out successfully.");
-      // Redirect to the Sign-In page after a short delay
-      setTimeout(() => {
-        navigate("/sign-in");
-      }, 2000);
+      // Redirect to the Sign-In page immediately (or after a short delay if desired)
+      navigate("/sign-in");
     } catch (err: any) {
       console.error("Sign out error:", err.message);
       setError(err.message || "An unexpected error occurred during sign out.");
@@ -189,9 +142,6 @@ const HomePage: React.FC = () => {
                 <Link to="/dashboard3" className={styles.roleLink}>
                   Student Manager
                 </Link>
-                {/* <Link to="/dashboard4" className={styles.roleLink}>
-                  Fee Manager
-                </Link> */}
                 <Link to="/dash5" className={styles.roleLink}>
                   Staff Attendance
                 </Link>
@@ -223,6 +173,7 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
+
 
 // import React, { useEffect, useState } from "react";
 // import { Link, useNavigate } from "react-router-dom";
