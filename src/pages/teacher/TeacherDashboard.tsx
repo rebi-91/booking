@@ -1,10 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import supabase from '../../supabase'; // Ensure this path is correct
+import supabase from '../../supabase'; 
 import { Chart, registerables } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import {
   Container,
   Row,
@@ -14,23 +12,30 @@ import {
   Table,
   Spinner,
   Alert,
-  Modal,
   Card,
-  Dropdown, // Import Dropdown
+  Dropdown,
 } from 'react-bootstrap';
-import './TeacherDashboard.css'; // Import the custom CSS
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import './TeacherDashboard.css';
 
 Chart.register(...registerables);
 
 interface ExamType {
   examType: string;
-  columnNumber: number;
+  columnNumber: string; // Changed to string as per your clarification
+}
+
+interface StudentRow {
+  id: number; // Represents the unique identifier from sheetName
+  studentID: number;
+  studentName: string;
+  [key: string]: any; // To accommodate dynamic columns
 }
 
 const TeacherDashboard: React.FC = () => {
   const navigate = useNavigate();
 
-  // User Data
+  // --- State Declarations ---
   const [subjects, setSubjects] = useState<string[]>([]);
   const [userSchool, setUserSchool] = useState('');
 
@@ -38,6 +43,8 @@ const TeacherDashboard: React.FC = () => {
   const [selectedSubject, setSelectedSubject] = useState('');
   const [selectedClass, setSelectedClass] = useState('');
   const [selectedSection, setSelectedSection] = useState('');
+  
+  // Exam Type Selection
   const [selectedExamType, setSelectedExamType] = useState('');
 
   // Dropdown Options
@@ -45,10 +52,17 @@ const TeacherDashboard: React.FC = () => {
   const [sections, setSections] = useState<string[]>([]);
   const [examTypes, setExamTypes] = useState<ExamType[]>([]);
 
-  // Selected Exam Column (can be number or string)
-  const [selectedExamColumn, setSelectedExamColumn] = useState<string>('');
+  // Mark-Related
+  const [students, setStudents] = useState<StudentRow[]>([]);
+  const [studentMarks, setStudentMarks] = useState<{ [key: number]: string }>({});
 
-  // Loading and Error States
+  // Validation
+  const [validationErrors, setValidationErrors] = useState<{ [key: number]: string }>({});
+
+  // Sheet Info
+  const [sheetName, setSheetName] = useState('');
+
+  // Loading & Error
   const [loadingSubjects, setLoadingSubjects] = useState(false);
   const [loadingClasses, setLoadingClasses] = useState(false);
   const [loadingSections, setLoadingSections] = useState(false);
@@ -56,47 +70,30 @@ const TeacherDashboard: React.FC = () => {
   const [loadingExamTypes, setLoadingExamTypes] = useState(false);
   const [error, setError] = useState('');
 
-  // Students List
-  const [students, setStudents] = useState<{ id: number; studentName: string }[]>([]);
+  // Container Toggle
+  const [isMinimized, setIsMinimized] = useState(false);
+  const toggleContainerSize = () => setIsMinimized((prev) => !prev);
 
-  // Student Marks
-  const [studentMarks, setStudentMarks] = useState<{ [key: number]: string }>({});
+  // Save Button
+  const [isSaveDisabled, setIsSaveDisabled] = useState(false);
 
-  // Validation Errors
-  const [validationErrors, setValidationErrors] = useState<{ [key: number]: string }>({});
+  // Helper Function to Get Numeric Column Number
+  const getNumericColumn = (columnKey: string): string => {
+    return columnKey.replace(/^col/, '');
+  };
 
+  // Helper Function to Get Column Key
+  const getSelectedColumnKey = (): string | null => {
+    const examType = examTypes.find((type) => type.examType === selectedExamType);
+    if (!examType) return null;
 
-  // Sheet Names
-  const [sheetName, setSheetName] = useState('');
-  const studentSheetName = 'student';
+    // Since columnNumber is already the column name, return it directly
+    return examType.columnNumber;
+  };
 
- // Add State
-const [isMinimized, setIsMinimized] = useState(false);
-
-// Toggle Minimized State for Containers
-const toggleContainerSize = () => {
-  setIsMinimized((prev) => !prev);
-};
-
-// Clear All Marks Handler
-const handleClearAll = () => {
-  if (window.confirm("Are you sure you want to clear all marks?")) {
-    setStudentMarks({});
-    alert("All marks cleared successfully.");
-  }
-};
-const [isSaveDisabled, setIsSaveDisabled] = useState(false); // State to manage button disable
-
-const handleSaveWithDelay = async () => {
-  if (isSaveDisabled) return;
-
-  setIsSaveDisabled(true); // Disable the button
-  await handleSave(); // Call the actual save function
-  setTimeout(() => setIsSaveDisabled(false), 5000); // Re-enable after 5 seconds
-};
-
-
-  // Fetch User Profile
+  // =============================
+  // 1. Fetch user’s subjects & school
+  // =============================
   useEffect(() => {
     const fetchUserProfile = async () => {
       setLoadingSubjects(true);
@@ -106,9 +103,9 @@ const handleSaveWithDelay = async () => {
           data: { session },
         } = await supabase.auth.getSession();
 
-        if (session && session.user) {
+        if (session?.user) {
           const { data: profile, error } = await supabase
-            .from('profiles')
+            .from('profiles') // Corrected table name to 'profiles'
             .select('subject1, subject2, subject3, subject4, subject5, school')
             .eq('id', session.user.id)
             .single();
@@ -123,7 +120,7 @@ const handleSaveWithDelay = async () => {
             profile.subject3,
             profile.subject4,
             profile.subject5,
-          ].filter((subject: string | null) => subject) as string[];
+          ].filter((s) => s) as string[];
 
           setSubjects(userSubjects);
           setUserSchool(profile.school);
@@ -141,7 +138,10 @@ const handleSaveWithDelay = async () => {
     fetchUserProfile();
   }, []);
 
-  // Fetch Sheet Name based on selectedSubject and userSchool
+  // =============================
+  // 2. Fetch the 'sheetName' from 'subjects'
+  //    matching subjectName + school
+  // =============================
   useEffect(() => {
     const fetchSheetName = async () => {
       if (selectedSubject && userSchool) {
@@ -152,15 +152,15 @@ const handleSaveWithDelay = async () => {
             .from('subjects')
             .select('sheetName')
             .eq('school', userSchool)
-            .eq('subjectName', selectedSubject)
-            .single();
+            .eq('subjectName', selectedSubject);
 
-          if (subjectError || !subjectData) {
-            throw subjectError || new Error('No subject data found');
+          if (subjectError) throw subjectError;
+          if (!subjectData || subjectData.length === 0) {
+            // No row => no sheet
+            return;
           }
 
-          const fetchedSheetName = subjectData.sheetName as string;
-          setSheetName(fetchedSheetName);
+          setSheetName(subjectData[0].sheetName);
         } catch (err: any) {
           console.error(err);
           setError(err.message || 'Failed to fetch sheet name.');
@@ -173,10 +173,13 @@ const handleSaveWithDelay = async () => {
     fetchSheetName();
   }, [selectedSubject, userSchool]);
 
-  // Fetch Classes based on userSchool
+  // =============================
+  // 3. Fetch Classes from the 'sheetName' table
+  //    We get distinct className where school = userSchool
+  // =============================
   useEffect(() => {
     const fetchClasses = async () => {
-      if (studentSheetName && userSchool) {
+      if (sheetName && userSchool) {
         setLoadingClasses(true);
         setError('');
         setClasses([]);
@@ -186,7 +189,7 @@ const handleSaveWithDelay = async () => {
         setStudents([]);
         try {
           const { data: classData, error: classError } = await supabase
-            .from(studentSheetName)
+            .from(sheetName)
             .select('className')
             .eq('school', userSchool)
             .neq('className', null);
@@ -195,7 +198,9 @@ const handleSaveWithDelay = async () => {
             throw classError || new Error('No class data found');
           }
 
-          const uniqueClasses = [...new Set((classData as any[]).map((item) => item.className))];
+          const uniqueClasses = [
+            ...new Set(classData.map((row: any) => row.className)),
+          ];
           setClasses(uniqueClasses);
         } catch (err: any) {
           console.error(err);
@@ -209,17 +214,18 @@ const handleSaveWithDelay = async () => {
         setSections([]);
         setSelectedSection('');
         setStudents([]);
-        setSheetName('');
       }
     };
 
     fetchClasses();
-  }, [studentSheetName, userSchool]);
+  }, [sheetName, userSchool]);
 
-  // Fetch Sections based on selectedClass
+  // =============================
+  // 4. Fetch Sections from 'sheetName' based on className
+  // =============================
   useEffect(() => {
     const fetchSections = async () => {
-      if (selectedClass && studentSheetName && userSchool) {
+      if (selectedClass && sheetName && userSchool) {
         setLoadingSections(true);
         setError('');
         setSections([]);
@@ -227,7 +233,7 @@ const handleSaveWithDelay = async () => {
         setStudents([]);
         try {
           const { data: sectionData, error: sectionError } = await supabase
-            .from(studentSheetName)
+            .from(sheetName)
             .select('section')
             .eq('school', userSchool)
             .eq('className', selectedClass)
@@ -237,7 +243,9 @@ const handleSaveWithDelay = async () => {
             throw sectionError || new Error('No section data found');
           }
 
-          const uniqueSections = [...new Set((sectionData as any[]).map((item) => item.section))];
+          const uniqueSections = [
+            ...new Set(sectionData.map((row: any) => row.section)),
+          ];
           setSections(uniqueSections);
         } catch (err: any) {
           console.error(err);
@@ -253,29 +261,33 @@ const handleSaveWithDelay = async () => {
     };
 
     fetchSections();
-  }, [selectedClass, studentSheetName, userSchool]);
+  }, [selectedClass, sheetName, userSchool]);
 
-  // Fetch Students based on selectedClass and selectedSection
+  // =============================
+  // 5. Fetch Students from 'sheetName'
+  //    matching school, className, and section
+  //    Sorted by 'id' in increasing order
+  // =============================
   useEffect(() => {
     const fetchStudents = async () => {
-      if (selectedClass && selectedSection && studentSheetName && userSchool) {
+      if (selectedClass && selectedSection && sheetName && userSchool) {
         setLoadingStudents(true);
         setError('');
         setStudents([]);
         try {
           const { data: studentData, error: studentError } = await supabase
-            .from(studentSheetName)
-            .select('id, studentName')
+            .from(sheetName)
+            .select('id, studentID, studentName') // Included 'id' in select
             .eq('school', userSchool)
             .eq('className', selectedClass)
             .eq('section', selectedSection)
-            .order('id', { ascending: true });
+            .order('id', { ascending: true }); // Ordered by 'id' ascending
 
           if (studentError || !studentData) {
             throw studentError || new Error('No students found');
           }
 
-          setStudents(studentData as any[]);
+          setStudents(studentData as StudentRow[]);
         } catch (err: any) {
           console.error(err);
           setError(err.message || 'Failed to fetch students.');
@@ -288,98 +300,112 @@ const handleSaveWithDelay = async () => {
     };
 
     fetchStudents();
-  }, [selectedClass, selectedSection, studentSheetName, userSchool]);
+  }, [selectedClass, selectedSection, sheetName, userSchool]);
 
-  // Fetch Exam Types based on selectedSubject and userSchool
-// Fetch Exam Types based on userSchool (Removed subjectName condition)
-useEffect(() => {
-  const fetchExamTypes = async () => {
-    if (userSchool) {
-      setLoadingExamTypes(true);
-      setError('');
-      setExamTypes([]);
-      setSelectedExamType('');
-      setSelectedExamColumn('');
-      try {
-        // Removed .eq('subjectName', selectedSubject)
-        const { data, error } = await supabase
-          .from('exam')
-          .select('examType, columnNumber')
-          .eq('school', userSchool);
-
-        if (error || !data) {
-          throw error || new Error('No exam types found');
-        }
-
-        // Map the data to the ExamType interface
-        let mappedExamTypes = (data as any[]).map((item) => ({
-          examType: item.examType as string,
-          columnNumber: item.columnNumber as number,
-        }));
-
-        // Sort exam types by columnNumber ascending
-        mappedExamTypes.sort((a, b) => a.columnNumber - b.columnNumber);
-
-        setExamTypes(mappedExamTypes);
-      } catch (err: any) {
-        console.error(err);
-        setError(err.message || 'Failed to fetch exam types.');
-      } finally {
-        setLoadingExamTypes(false);
-      }
-    } else {
-      setExamTypes([]);
-      setSelectedExamType('');
-      setSelectedExamColumn('');
-    }
-  };
-
-  fetchExamTypes();
-}, [userSchool]); // Notice we only watch userSchool here, not selectedSubject
-
-  // Update selectedExamColumn based on selectedExamType
+  // =============================
+  // 6. Fetch Exam Types
+  // =============================
   useEffect(() => {
-    if (selectedExamType && examTypes.length > 0) {
-      const selectedExam = examTypes.find((et) => et.examType === selectedExamType);
-      if (selectedExam) {
-        // Convert columnNumber to string since we use it as a key
-        setSelectedExamColumn(selectedExam.columnNumber.toString());
-      } else {
-        setSelectedExamColumn('');
-      }
-    } else {
-      setSelectedExamColumn('');
-    }
-  }, [selectedExamType, examTypes]);
+    const fetchExamTypes = async () => {
+      if (userSchool) {
+        setLoadingExamTypes(true);
+        setError('');
+        setExamTypes([]);
+        setSelectedExamType('');
+        try {
+          const { data, error } = await supabase
+            .from('exam')
+            .select('examType, columnNumber')
+            .eq('school', userSchool);
 
-  // Fetch Marks based on selectedExamColumn and students
+          if (error || !data) {
+            throw error || new Error('No exam types found');
+          }
+
+          let mappedExamTypes: ExamType[] = data.map((item: any) => ({
+            examType: item.examType as string,
+            columnNumber: item.columnNumber as string, // Ensure it's string
+          }));
+
+          // Optional: Sort exam types based on columnNumber or any other logic
+          mappedExamTypes.sort((a, b) => {
+            // If columnNumber starts with 'col' followed by a number, sort numerically
+            const getNumber = (col: string) => {
+              const match = col.match(/col(\d+)/);
+              return match ? parseInt(match[1], 10) : 0;
+            };
+            return getNumber(a.columnNumber) - getNumber(b.columnNumber);
+          });
+
+          setExamTypes(mappedExamTypes);
+        } catch (err: any) {
+          console.error(err);
+          setError(err.message || 'Failed to fetch exam types.');
+        } finally {
+          setLoadingExamTypes(false);
+        }
+      } else {
+        setExamTypes([]);
+        setSelectedExamType('');
+      }
+    };
+
+    fetchExamTypes();
+  }, [userSchool]);
+
+  // =============================
+  // 7. Fetch Marks Dynamically Based on Selected Exam Type
+  // =============================
   useEffect(() => {
     const fetchMarks = async () => {
-      if (selectedExamColumn && students.length > 0 && sheetName && userSchool) {
+      if (
+        students.length > 0 &&
+        sheetName &&
+        userSchool &&
+        selectedExamType
+      ) {
+        const columnKey = getSelectedColumnKey();
+        if (!columnKey) {
+          setError('Invalid exam type selected.');
+          return;
+        }
+
         setError('');
         try {
-          const columnKey = selectedExamColumn; // It's already a string
-          const selectColumns = `id, ${columnKey}`;
+          const selectString = `studentID, studentName, ${columnKey}`;
+
+          console.log('Fetching marks with:', {
+            sheetName,
+            selectString,
+            school: userSchool,
+            className: selectedClass,
+            section: selectedSection,
+            studentIDs: students.map((s) => s.studentID),
+          });
 
           const { data: marksData, error: marksError } = await supabase
             .from(sheetName)
-            .select(selectColumns)
-            .in('id', students.map((s) => s.id));
+            .select(selectString)
+            .eq('school', userSchool)
+            .eq('className', selectedClass)
+            .eq('section', selectedSection)
+            .in('studentID', students.map((s) => s.studentID));
 
           if (marksError || !marksData) {
             throw marksError || new Error('No marks data found');
           }
 
+          // Build initial marks
           const initialMarks: { [key: number]: string } = {};
-          (marksData as any[]).forEach((markRecord: any) => {
-            const val = markRecord[columnKey];
-            initialMarks[markRecord.id] =
-              val !== null && val !== undefined ? val.toString() : '';
+          marksData.forEach((row: any) => {
+            const val = row[columnKey];
+            initialMarks[row.studentID] = val !== null && val !== undefined ? val.toString() : '';
           });
 
-          students.forEach((student) => {
-            if (!initialMarks.hasOwnProperty(student.id)) {
-              initialMarks[student.id] = '';
+          // For any student not returned in marksData, set empty
+          students.forEach((stu) => {
+            if (!initialMarks.hasOwnProperty(stu.studentID)) {
+              initialMarks[stu.studentID] = '';
             }
           });
 
@@ -394,133 +420,111 @@ useEffect(() => {
     };
 
     fetchMarks();
-  }, [selectedExamColumn, students, sheetName, userSchool]);
+  }, [
+    students,
+    sheetName,
+    userSchool,
+    selectedClass,
+    selectedSection,
+    selectedExamType,
+    examTypes,
+  ]);
 
-  // Handle Input Change for Marks
-  const handleInputChange = (studentId: number, value: string) => {
+  // =============================
+  // handleInputChange
+  // =============================
+  const handleInputChange = (studentID: number, value: string) => {
+    // 0-100 or "-" logic
     if (
       value === '-' ||
       value === '' ||
       (/^\d+$/.test(value) && Number(value) >= 0 && Number(value) <= 100)
     ) {
-      setStudentMarks((prevMarks) => ({
-        ...prevMarks,
-        [studentId]: value,
+      setStudentMarks((prev) => ({
+        ...prev,
+        [studentID]: value,
       }));
       setValidationErrors((prevErrors) => {
-        const { [studentId]: removed, ...rest } = prevErrors;
+        const { [studentID]: _, ...rest } = prevErrors;
         return rest;
       });
+    } else {
+      setValidationErrors((prevErrors) => ({
+        ...prevErrors,
+        [studentID]: 'Enter a number between 0 and 100 or "-"',
+      }));
     }
   };
 
-  // Handle Save Marks
-  // const handleSave = async () => {
-  //   if (!selectedExamType || !selectedExamColumn || !sheetName) {
-  //     setError('Exam type, column, or sheet name is not defined.');
-  //     return;
-  //   }
-
-  //   setValidationErrors({});
-  //   let hasError = false;
-  //   const newValidationErrors: { [key: number]: string } = {};
-
-  //   try {
-  //     for (const student of students) {
-  //       const mark = studentMarks[student.id];
-  //       if (mark === '') {
-  //         hasError = true;
-  //         newValidationErrors[student.id] = 'Mark cannot be empty.';
-  //       } else if (
-  //         mark !== '-' &&
-  //         (isNaN(Number(mark)) || Number(mark) < 0 || Number(mark) > 100)
-  //       ) {
-  //         hasError = true;
-  //         newValidationErrors[student.id] =
-  //           'Mark must be between 0 and 100 or "-".';
-  //       }
-  //     }
-
-  //     if (hasError) {
-  //       setValidationErrors(newValidationErrors);
-  //       alert('Please fill in all marks correctly before saving.');
-  //       return;
-  //     }
-
-  //     const columnKey = selectedExamColumn; // already a string
-  //     const updates = students.map(async (student) => {
-  //       const mark = studentMarks[student.id];
-  //       let markValue: string | number | null = null;
-  //       if (mark === '-') {
-  //         markValue = '-';
-  //       } else if (mark === '') {
-  //         markValue = null;
-  //       } else {
-  //         markValue = Number(mark);
-  //       }
-
-  //       const updateData = { [columnKey]: markValue };
-  //       const { error } = await supabase
-  //         .from(sheetName)
-  //         .update(updateData)
-  //         .eq('id', student.id);
-
-  //       if (error) {
-  //         throw error;
-  //       }
-  //     });
-
-  //     await Promise.all(updates);
-  //     alert('Marks saved successfully!');
-  //   } catch (err: any) {
-  //     console.error(err);
-  //     setError(err.message || 'Failed to save marks.');
-  //   }
-  // };
+  // =============================
+  // handleSave
+  // =============================
   const handleSave = async () => {
-    if (!selectedExamType || !selectedExamColumn || !sheetName) {
-      setError('Exam type, column, or sheet name is not defined.');
+    if (!sheetName) {
+      setError('Sheet name not defined.');
       return;
     }
-  
+
+    if (!selectedExamType) {
+      setError('Please select an exam type.');
+      return;
+    }
+
+    const columnKey = getSelectedColumnKey();
+    if (!columnKey) {
+      setError('Invalid exam type selected.');
+      return;
+    }
+
     try {
-      const columnKey = selectedExamColumn; // already a string
-      const updates = students.map(async (student) => {
-        const mark = studentMarks[student.id];
-        let markValue: string | number | null = null;
-  
+      // For each student, update the mark in the sheetName table
+      const updates = students.map(async (stu) => {
+        const mark = studentMarks[stu.studentID];
         if (mark !== undefined && mark !== '') {
-          if (mark === '-') {
-            markValue = '-';
-          } else {
-            markValue = Number(mark);
-          }
-  
-          const updateData = { [columnKey]: markValue };
+          let markValue: string | number | null = null;
+          if (mark === '-') markValue = '-';
+          else markValue = Number(mark);
+
+          const updateData: any = { [columnKey]: markValue };
           const { error } = await supabase
             .from(sheetName)
             .update(updateData)
-            .eq('id', student.id);
-  
-          if (error) {
-            throw error;
-          }
+            .eq('studentID', stu.studentID)
+            .eq('school', userSchool)
+            .eq('className', selectedClass)
+            .eq('section', selectedSection);
+
+          if (error) throw error;
         }
       });
-  
+
       await Promise.all(updates);
-      alert('Marks saved successfully!');
+      alert(`Marks (${getNumericColumn(columnKey)}: ${selectedExamType}) saved successfully!`);
     } catch (err: any) {
       console.error(err);
       setError(err.message || 'Failed to save marks.');
     }
   };
-  
 
-  // ----------------------------
-  // Render Component
-  // ----------------------------
+  // Optional: Delay Save
+  const handleSaveWithDelay = async () => {
+    if (isSaveDisabled) return;
+    setIsSaveDisabled(true);
+    await handleSave();
+    setTimeout(() => setIsSaveDisabled(false), 5000);
+  };
 
+  // Clear All Marks
+  const handleClearAll = () => {
+    if (window.confirm('Are you sure you want to clear all marks?')) {
+      setStudentMarks({});
+      alert('All marks cleared successfully.');
+    }
+  };
+
+  // =============================
+  // Render
+  // =============================
   return (
     <>
       {/* Header */}
@@ -531,7 +535,6 @@ useEffect(() => {
               <h1 className="header-title">Teacher Dashboard</h1>
             </Col>
             <Col className="text-end">
-              {/* Attendance Icon */}
               <Link
                 to="/attendance"
                 className="attendance-icon btn btn-light rounded-circle p-2 shadow"
@@ -545,263 +548,1034 @@ useEffect(() => {
         </Container>
       </header>
 
-      {/* Main Content */}
       <Container fluid className="main-content position-relative">
-        {/* Error Message */}
+        {/* Show Errors */}
         {error && <Alert variant="danger" className="error-message">{error}</Alert>}
 
-       {/* Dropdowns Container */}
-       <div
+        {/* Dropdowns */}
+        <div
           className={`card p-4 mb-4 dropdown-container ${
-            isMinimized ? "dropdown-container-minimized" : "dropdown-container-expanded"
+            isMinimized ? 'dropdown-container-minimized' : 'dropdown-container-expanded'
           }`}
           style={{
-            width: "100%", // Ensures the container spans the full width
-            margin: "0",
-            transition: "all 0.3s ease",
+            width: '100%',
+            margin: '0',
+            transition: 'all 0.3s ease',
           }}
         >
           {!isMinimized && (
             <Row>
+              {/* Subject */}
               <Col md={3} sm={6} xs={12} className="mb-3">
-             {/* Select Subject Dropdown */}
-            <Form.Group controlId="subjectDropdown">
-              <Form.Label>Select Subject</Form.Label>
-              <Dropdown onSelect={(eventKey) => setSelectedSubject(eventKey || '')}>
-                <Dropdown.Toggle
-                  variant="light"
-                  id="dropdown-subject"
-                  className="w-100"
-                  aria-label="Select Subject"
-                  disabled={loadingSubjects || subjects.length === 0}
-                >
-                  {selectedSubject || (loadingSubjects ? 'Loading subjects...' : 'Select a subject')}
-                </Dropdown.Toggle>
+                <Form.Group controlId="subjectDropdown">
+                  <Form.Label>Select Subject</Form.Label>
+                  <Dropdown onSelect={(val) => setSelectedSubject(val || '')}>
+                    <Dropdown.Toggle
+                      variant="light"
+                      id="dropdown-subject"
+                      className="w-100"
+                      disabled={loadingSubjects || subjects.length === 0}
+                    >
+                      {selectedSubject ||
+                        (loadingSubjects ? 'Loading subjects...' : 'Select a subject')}
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu className="w-100">
+                      {subjects.map((subj, idx) => (
+                        <Dropdown.Item key={idx} eventKey={subj}>
+                          {subj}
+                        </Dropdown.Item>
+                      ))}
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </Form.Group>
+              </Col>
 
-                <Dropdown.Menu className="w-100">
-                  {subjects.map((subject, index) => (
-                    <Dropdown.Item key={index} eventKey={subject}>
-                      {subject}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Menu>
-              </Dropdown>
-            </Form.Group>
-          </Col>
+              {/* Class */}
+              <Col md={3} sm={6} xs={12} className="mb-3">
+                <Form.Group controlId="classDropdown">
+                  <Form.Label>Select Class</Form.Label>
+                  <Dropdown onSelect={(val) => setSelectedClass(val || '')}>
+                    <Dropdown.Toggle
+                      variant="light"
+                      id="dropdown-class"
+                      className="w-100"
+                      disabled={!sheetName || loadingClasses || classes.length === 0}
+                    >
+                      {selectedClass ||
+                        (loadingClasses ? 'Loading classes...' : 'Select a class')}
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu className="w-100">
+                      {classes.map((cls, idx) => (
+                        <Dropdown.Item key={idx} eventKey={cls}>
+                          {cls}
+                        </Dropdown.Item>
+                      ))}
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </Form.Group>
+              </Col>
 
-          {/* Select Class Dropdown */}
-          <Col md={3} sm={6} xs={12} className="mb-3">
-            <Form.Group controlId="classDropdown">
-              <Form.Label>Select Class</Form.Label>
-              <Dropdown onSelect={(eventKey) => setSelectedClass(eventKey || '')}>
-                <Dropdown.Toggle
-                  variant="light"
-                  id="dropdown-class"
-                  className="w-100"
-                  aria-label="Select Class"
-                  disabled={!selectedSubject || loadingClasses || classes.length === 0}
-                >
-                  {selectedClass || (loadingClasses ? 'Loading classes...' : 'Select a class')}
-                </Dropdown.Toggle>
+              {/* Section */}
+              <Col md={3} sm={6} xs={12} className="mb-3">
+                <Form.Group controlId="sectionDropdown">
+                  <Form.Label>Select Section</Form.Label>
+                  <Dropdown onSelect={(val) => setSelectedSection(val || '')}>
+                    <Dropdown.Toggle
+                      variant="light"
+                      id="dropdown-section"
+                      className="w-100"
+                      disabled={!selectedClass || loadingSections || sections.length === 0}
+                      style={{ minWidth: '250px' }} // Increased width
+                    >
+                      {selectedSection ||
+                        (loadingSections ? 'Loading sections...' : 'Select a section')}
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu className="w-100">
+                      {sections.map((sec, idx) => (
+                        <Dropdown.Item key={idx} eventKey={sec}>
+                          {sec}
+                        </Dropdown.Item>
+                      ))}
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </Form.Group>
+              </Col>
 
-                <Dropdown.Menu className="w-100">
-                  {classes.map((cls, index) => (
-                    <Dropdown.Item key={index} eventKey={cls}>
-                      {cls}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Menu>
-              </Dropdown>
-            </Form.Group>
-          </Col>
+              {/* Exam Type */}
+              <Col md={3} sm={6} xs={12} className="mb-3">
+                <Form.Group controlId="examTypeDropdown">
+                  <Form.Label>Exam Type</Form.Label>
+                  <Dropdown onSelect={(val) => setSelectedExamType(val || '')}>
+                    <Dropdown.Toggle
+                      variant="light"
+                      id="dropdown-examType"
+                      className="w-100"
+                      disabled={loadingExamTypes || examTypes.length === 0}
+                      style={{ minWidth: '700px' }} // Increased width
+                    >
+                      {selectedExamType ||
+                        (loadingExamTypes ? 'Loading exam types...' : 'Select an exam type')}
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu className="w-100">
+                      {examTypes.map((type, idx) => (
+                        <Dropdown.Item key={idx} eventKey={type.examType}>
+                          {`${getNumericColumn(type.columnNumber)}: ${type.examType}`}
+                        </Dropdown.Item>
+                      ))}
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </Form.Group>
+              </Col>
+            </Row>
+          )}
 
-          {/* Select Section Dropdown */}
-          <Col md={3} sm={6} xs={12} className="mb-3">
-            <Form.Group controlId="sectionDropdown">
-              <Form.Label>Select Section</Form.Label>
-              <Dropdown onSelect={(eventKey) => setSelectedSection(eventKey || '')}>
-                <Dropdown.Toggle
-                  variant="light"
-                  id="dropdown-section"
-                  className="w-100"
-                  aria-label="Select Section"
-                  disabled={!selectedClass || loadingSections || sections.length === 0}
-                >
-                  {selectedSection || (loadingSections ? 'Loading sections...' : 'Select a section')}
-                </Dropdown.Toggle>
-
-                <Dropdown.Menu className="w-100">
-                  {sections.map((section, index) => (
-                    <Dropdown.Item key={index} eventKey={section}>
-                      {section}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Menu>
-              </Dropdown>
-            </Form.Group>
-          </Col>
-
-          {/* Select Exam Type Dropdown */}
-          <Col md={3} sm={6} xs={12} className="mb-3">
-            <Form.Group controlId="examTypeDropdown">
-              <Form.Label>Exam Type</Form.Label>
-              <Dropdown onSelect={(eventKey) => setSelectedExamType(eventKey || '')}>
-                <Dropdown.Toggle
-                  variant="light"
-                  id="dropdown-examType"
-                  className="w-100"
-                  aria-label="Select Exam Type"
-                  disabled={!selectedSubject || loadingExamTypes || examTypes.length === 0}
-                >
-                  {selectedExamType || (loadingExamTypes ? 'Loading exam types...' : 'Select an exam type')}
-                </Dropdown.Toggle>
-
-                <Dropdown.Menu className="w-100">
-                  {examTypes.map((type, index) => (
-                    <Dropdown.Item key={index} eventKey={type.examType}>
-                      {`${type.columnNumber}: ${type.examType}`}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Menu>
-              </Dropdown>
-            </Form.Group>
-          </Col>
-        </Row>)}
-      
-       {/* Chevron Button */}
-       <button
+          <button
             onClick={toggleContainerSize}
             className="chevron-btn2"
-            aria-label={isMinimized ? "Expand Dropdowns" : "Minimize Dropdowns"}
+            aria-label={isMinimized ? 'Expand Dropdowns' : 'Minimize Dropdowns'}
           >
-            {isMinimized ? "\u25BC" : "\u25B2"}
+            {isMinimized ? '\u25BC' : '\u25B2'}
           </button>
         </div>
-          
-        {/* Students List */}
+
+        {/* Students Table */}
         <Row>
-  <Col>
-    <Card
-      className={`students-card ${
-        isMinimized ? "students-card-expanded" : "students-card-collapsed"
-      }`}
-      style={{
-        maxHeight: isMinimized ? "600px" : "300px", // Dynamic height based on state
-        transition: "max-height 0.3s ease",
-        overflowY: "auto",
-      }}
-    >
-      <Card.Body>
-        {loadingStudents ? (
-          <div className="d-flex justify-content-center align-items-center spinner-container">
-            <Spinner animation="border" variant="primary" />
-          </div>
-        ) : students.length > 0 ? (
-          <>
-            {/* Students Table */}
-            <Table bordered hover responsive className="students-table">
-              <thead className="table-primary">
-                <tr>
-                  <th>Student Name</th>
-                  <th>Mark</th>
-                </tr>
-              </thead>
-              <tbody>
-                {students.map((student) => (
-                  <tr key={student.id}>
-                    <td>{student.studentName}</td>
-                    <td>
-                      <Form.Control
-                        type="text"
-                        placeholder="Enter mark"
-                        value={studentMarks[student.id] || ""}
-                        onChange={(e) => handleInputChange(student.id, e.target.value)}
-                        isInvalid={!!validationErrors[student.id]}
-                        aria-label={`Enter mark for ${student.studentName}`}
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        {validationErrors[student.id]}
-                      </Form.Control.Feedback>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </>
-        ) : (
-          <Alert variant="info"></Alert>
-        )}
-      </Card.Body>
-    </Card>
-  </Col>
-</Row>
-
-        {/* Save Marks Button */}
-        <Row className="fixed-bottom mt-4">
-          <Col className="d-flex flex-column align-items-center">
-       {/* Fixed Buttons at the Bottom */}
-{/* <div
-  style={{
-    position: "fixed",
-    bottom: "20px",
-    left: "50%",
-    transform: "translateX(-50%)",
-    zIndex: 1000,
-    display: "flex",
-    gap: "20px", // Adds space between buttons
-  }}
-> */}
- <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "0px", // Space between buttons
-        width: "100%", // Ensures responsiveness
-        alignItems: "center", // Centers buttons horizontally
-      }}
-    >
-  {/* Save Marks Button */}
-  <Button
-     variant="primary"
-     onClick={handleSaveWithDelay}
-     disabled={isSaveDisabled || students.length === 0}
-    aria-label="Save Marks"
-    className="save-marks-button"
-  >
-    Save Marks
-  </Button>
-
-  {/* Clear All Button */}
-  {/* <button
-    onClick={handleClearAll}
-    className="btn btn-danger clear-all-btn"
-    style={{
-      padding: "10px 20px",
-      borderRadius: "20px",
-      fontSize: "16px",
-      width: "100%", //
-    }}
-  >
-    Clear All
-  </button> */}
-</div>
-
+          <Col>
+            <Card
+              className={`students-card ${isMinimized ? 'students-card-expanded' : 'students-card-collapsed'}`}
+              style={{
+                maxHeight: isMinimized ? '600px' : '300px',
+                transition: 'max-height 0.3s ease',
+                overflowY: 'auto',
+              }}
+            >
+              <Card.Body>
+                {loadingStudents ? (
+                  <div className="d-flex justify-content-center align-items-center spinner-container">
+                    <Spinner animation="border" variant="primary" />
+                  </div>
+                ) : students.length > 0 ? (
+                  <>
+                    <Table bordered hover responsive className="students-table">
+                      <thead className="table-primary">
+                        <tr>
+                          <th>Student Name</th>
+                          <th>
+                            {selectedExamType
+                              ? `Marks in ${getNumericColumn(getSelectedColumnKey() || '')}: (${selectedExamType})`
+                              : 'Mark'}
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {students.map((stu) => (
+                          <tr key={stu.id}> {/* Changed key to 'stu.id' */}
+                            <td>{stu.studentName}</td>
+                            <td>
+                              <Form.Control
+                                type="text"
+                                placeholder="Enter mark"
+                                value={studentMarks[stu.studentID] || ''}
+                                onChange={(e) => handleInputChange(stu.studentID, e.target.value)}
+                                isInvalid={!!validationErrors[stu.studentID]}
+                                aria-label={`Enter mark for ${stu.studentName}`}
+                              />
+                              <Form.Control.Feedback type="invalid">
+                                {validationErrors[stu.studentID]}
+                              </Form.Control.Feedback>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </Table>
+                  </>
+                ) : (
+                  <Alert variant="info">
+                    No students found or not yet loaded.
+                  </Alert>
+                )}
+              </Card.Body>
+            </Card>
           </Col>
         </Row>
-      {/* Footer */}
-      <footer className="footer">
-        <Container>
-          <Row>
-            <Col className="text-center">
-              &copy; {new Date().getFullYear()} SchoolMood. All rights reserved.
-            </Col>
-          </Row>
-        </Container>
-      </footer>
+
+        {/* Bottom Buttons */}
+        <Row className="fixed-bottom mt-4">
+          <Col className="d-flex flex-column align-items-center">
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0px',
+                width: '100%',
+                alignItems: 'center',
+              }}
+            >
+              <Button
+                variant="primary"
+                onClick={handleSaveWithDelay}
+                disabled={
+                  isSaveDisabled || students.length === 0 || !selectedExamType
+                }
+                aria-label="Save Marks"
+                className="save-marks-button"
+                style={{ minWidth: '250px' }} // Increased width
+              >
+                Save Marks ({getNumericColumn(getSelectedColumnKey() || 'N/A')})
+              </Button>
+              {/*
+              <Button
+                variant="danger"
+                onClick={handleClearAll}
+                style={{ width: '100%' }}
+              >
+                Clear All
+              </Button>
+              */}
+            </div>
+          </Col>
+        </Row>
+
+        {/* Footer */}
+        <footer className="footer">
+          <Container>
+            <Row>
+              <Col className="text-center">
+                &copy; {new Date().getFullYear()} SchoolMood. All rights reserved.
+              </Col>
+            </Row>
+          </Container>
+        </footer>
       </Container>
     </>
   );
-
 };
 
 export default TeacherDashboard;
+
+// import React, { useState, useEffect } from 'react';
+// import { Link, useNavigate } from 'react-router-dom';
+// import supabase from '../../supabase'; 
+// import { Chart, registerables } from 'chart.js';
+// import { Bar } from 'react-chartjs-2';
+// import {
+//   Container,
+//   Row,
+//   Col,
+//   Button,
+//   Form,
+//   Table,
+//   Spinner,
+//   Alert,
+//   Card,
+//   Dropdown,
+// } from 'react-bootstrap';
+// import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+// import './TeacherDashboard.css';
+
+// Chart.register(...registerables);
+
+// interface ExamType {
+//   examType: string;
+//   columnNumber: string; // Changed to string as per your clarification
+// }
+
+// interface StudentRow {
+//   id: number; // Added to represent the unique identifier from sheetName
+//   studentID: number;
+//   studentName: string;
+//   [key: string]: any; // to accommodate dynamic columns
+// }
+
+// const TeacherDashboard: React.FC = () => {
+//   const navigate = useNavigate();
+
+//   // --- State Declarations ---
+//   const [subjects, setSubjects] = useState<string[]>([]);
+//   const [userSchool, setUserSchool] = useState('');
+
+//   // Dropdown Selections
+//   const [selectedSubject, setSelectedSubject] = useState('');
+//   const [selectedClass, setSelectedClass] = useState('');
+//   const [selectedSection, setSelectedSection] = useState('');
+  
+//   // Exam Type Selection
+//   const [selectedExamType, setSelectedExamType] = useState('');
+
+//   // Dropdown Options
+//   const [classes, setClasses] = useState<string[]>([]);
+//   const [sections, setSections] = useState<string[]>([]);
+//   const [examTypes, setExamTypes] = useState<ExamType[]>([]);
+
+//   // Mark-Related
+//   const [students, setStudents] = useState<StudentRow[]>([]);
+//   const [studentMarks, setStudentMarks] = useState<{ [key: number]: string }>({});
+
+//   // Validation
+//   const [validationErrors, setValidationErrors] = useState<{ [key: number]: string }>({});
+
+//   // Sheet Info
+//   const [sheetName, setSheetName] = useState('');
+
+//   // Loading & Error
+//   const [loadingSubjects, setLoadingSubjects] = useState(false);
+//   const [loadingClasses, setLoadingClasses] = useState(false);
+//   const [loadingSections, setLoadingSections] = useState(false);
+//   const [loadingStudents, setLoadingStudents] = useState(false);
+//   const [loadingExamTypes, setLoadingExamTypes] = useState(false);
+//   const [error, setError] = useState('');
+
+//   // Container Toggle
+//   const [isMinimized, setIsMinimized] = useState(false);
+//   const toggleContainerSize = () => setIsMinimized((prev) => !prev);
+
+//   // Save Button
+//   const [isSaveDisabled, setIsSaveDisabled] = useState(false);
+
+//   // Helper Function to Get Column Key
+//   const getSelectedColumnKey = (): string | null => {
+//     const examType = examTypes.find((type) => type.examType === selectedExamType);
+//     if (!examType) return null;
+
+//     // Since columnNumber is already the column name, return it directly
+//     return examType.columnNumber;
+//   };
+
+//   // =============================
+//   // 1. Fetch user’s subjects & school
+//   // =============================
+//   useEffect(() => {
+//     const fetchUserProfile = async () => {
+//       setLoadingSubjects(true);
+//       setError('');
+//       try {
+//         const {
+//           data: { session },
+//         } = await supabase.auth.getSession();
+
+//         if (session?.user) {
+//           const { data: profile, error } = await supabase
+//             .from('profiles') // Corrected table name to 'profiles'
+//             .select('subject1, subject2, subject3, subject4, subject5, school')
+//             .eq('id', session.user.id)
+//             .single();
+
+//           if (error || !profile) {
+//             throw error || new Error('No profile found');
+//           }
+
+//           const userSubjects = [
+//             profile.subject1,
+//             profile.subject2,
+//             profile.subject3,
+//             profile.subject4,
+//             profile.subject5,
+//           ].filter((s) => s) as string[];
+
+//           setSubjects(userSubjects);
+//           setUserSchool(profile.school);
+//         } else {
+//           setError('User not authenticated.');
+//         }
+//       } catch (err: any) {
+//         console.error(err);
+//         setError(err.message || 'Failed to fetch user profile.');
+//       } finally {
+//         setLoadingSubjects(false);
+//       }
+//     };
+
+//     fetchUserProfile();
+//   }, []);
+
+//   // =============================
+//   // 2. Fetch the 'sheetName' from 'subjects'
+//   //    matching subjectName + school
+//   // =============================
+//   useEffect(() => {
+//     const fetchSheetName = async () => {
+//       if (selectedSubject && userSchool) {
+//         setError('');
+//         setSheetName('');
+//         try {
+//           const { data: subjectData, error: subjectError } = await supabase
+//             .from('subjects')
+//             .select('sheetName')
+//             .eq('school', userSchool)
+//             .eq('subjectName', selectedSubject);
+
+//           if (subjectError) throw subjectError;
+//           if (!subjectData || subjectData.length === 0) {
+//             // No row => no sheet
+//             return;
+//           }
+
+//           setSheetName(subjectData[0].sheetName);
+//         } catch (err: any) {
+//           console.error(err);
+//           setError(err.message || 'Failed to fetch sheet name.');
+//         }
+//       } else {
+//         setSheetName('');
+//       }
+//     };
+
+//     fetchSheetName();
+//   }, [selectedSubject, userSchool]);
+
+//   // =============================
+//   // 3. Fetch Classes from the 'sheetName' table
+//   //    We get distinct className where school = userSchool
+//   // =============================
+//   useEffect(() => {
+//     const fetchClasses = async () => {
+//       if (sheetName && userSchool) {
+//         setLoadingClasses(true);
+//         setError('');
+//         setClasses([]);
+//         setSelectedClass('');
+//         setSections([]);
+//         setSelectedSection('');
+//         setStudents([]);
+//         try {
+//           const { data: classData, error: classError } = await supabase
+//             .from(sheetName)
+//             .select('className')
+//             .eq('school', userSchool)
+//             .neq('className', null);
+
+//           if (classError || !classData) {
+//             throw classError || new Error('No class data found');
+//           }
+
+//           const uniqueClasses = [
+//             ...new Set(classData.map((row: any) => row.className)),
+//           ];
+//           setClasses(uniqueClasses);
+//         } catch (err: any) {
+//           console.error(err);
+//           setError(err.message || 'Failed to fetch classes.');
+//         } finally {
+//           setLoadingClasses(false);
+//         }
+//       } else {
+//         setClasses([]);
+//         setSelectedClass('');
+//         setSections([]);
+//         setSelectedSection('');
+//         setStudents([]);
+//       }
+//     };
+
+//     fetchClasses();
+//   }, [sheetName, userSchool]);
+
+//   // =============================
+//   // 4. Fetch Sections from 'sheetName' based on className
+//   // =============================
+//   useEffect(() => {
+//     const fetchSections = async () => {
+//       if (selectedClass && sheetName && userSchool) {
+//         setLoadingSections(true);
+//         setError('');
+//         setSections([]);
+//         setSelectedSection('');
+//         setStudents([]);
+//         try {
+//           const { data: sectionData, error: sectionError } = await supabase
+//             .from(sheetName)
+//             .select('section')
+//             .eq('school', userSchool)
+//             .eq('className', selectedClass)
+//             .neq('section', null);
+
+//           if (sectionError || !sectionData) {
+//             throw sectionError || new Error('No section data found');
+//           }
+
+//           const uniqueSections = [
+//             ...new Set(sectionData.map((row: any) => row.section)),
+//           ];
+//           setSections(uniqueSections);
+//         } catch (err: any) {
+//           console.error(err);
+//           setError(err.message || 'Failed to fetch sections.');
+//         } finally {
+//           setLoadingSections(false);
+//         }
+//       } else {
+//         setSections([]);
+//         setSelectedSection('');
+//         setStudents([]);
+//       }
+//     };
+
+//     fetchSections();
+//   }, [selectedClass, sheetName, userSchool]);
+
+//   // =============================
+//   // 5. Fetch Students from 'sheetName'
+//   //    matching school, className, and section
+//   //    Sorted by 'id' in increasing order
+//   // =============================
+//   useEffect(() => {
+//     const fetchStudents = async () => {
+//       if (selectedClass && selectedSection && sheetName && userSchool) {
+//         setLoadingStudents(true);
+//         setError('');
+//         setStudents([]);
+//         try {
+//           const { data: studentData, error: studentError } = await supabase
+//             .from(sheetName)
+//             .select('id, studentID, studentName') // Included 'id' in select
+//             .eq('school', userSchool)
+//             .eq('className', selectedClass)
+//             .eq('section', selectedSection)
+//             .order('id', { ascending: true }); // Ordered by 'id' ascending
+
+//           if (studentError || !studentData) {
+//             throw studentError || new Error('No students found');
+//           }
+
+//           setStudents(studentData as StudentRow[]);
+//         } catch (err: any) {
+//           console.error(err);
+//           setError(err.message || 'Failed to fetch students.');
+//         } finally {
+//           setLoadingStudents(false);
+//         }
+//       } else {
+//         setStudents([]);
+//       }
+//     };
+
+//     fetchStudents();
+//   }, [selectedClass, selectedSection, sheetName, userSchool]);
+
+//   // =============================
+//   // 6. Fetch Exam Types
+//   // =============================
+//   useEffect(() => {
+//     const fetchExamTypes = async () => {
+//       if (userSchool) {
+//         setLoadingExamTypes(true);
+//         setError('');
+//         setExamTypes([]);
+//         setSelectedExamType('');
+//         try {
+//           const { data, error } = await supabase
+//             .from('exam')
+//             .select('examType, columnNumber')
+//             .eq('school', userSchool);
+
+//           if (error || !data) {
+//             throw error || new Error('No exam types found');
+//           }
+
+//           let mappedExamTypes: ExamType[] = data.map((item: any) => ({
+//             examType: item.examType as string,
+//             columnNumber: item.columnNumber as string, // Ensure it's string
+//           }));
+
+//           // Optional: Sort exam types based on columnNumber or any other logic
+//           mappedExamTypes.sort((a, b) => {
+//             // If columnNumber starts with 'col' followed by a number, sort numerically
+//             const getNumber = (col: string) => {
+//               const match = col.match(/col(\d+)/);
+//               return match ? parseInt(match[1], 10) : 0;
+//             };
+//             return getNumber(a.columnNumber) - getNumber(b.columnNumber);
+//           });
+
+//           setExamTypes(mappedExamTypes);
+//         } catch (err: any) {
+//           console.error(err);
+//           setError(err.message || 'Failed to fetch exam types.');
+//         } finally {
+//           setLoadingExamTypes(false);
+//         }
+//       } else {
+//         setExamTypes([]);
+//         setSelectedExamType('');
+//       }
+//     };
+
+//     fetchExamTypes();
+//   }, [userSchool]);
+
+//   // =============================
+//   // 7. Fetch Marks Dynamically Based on Selected Exam Type
+//   // =============================
+//   useEffect(() => {
+//     const fetchMarks = async () => {
+//       if (
+//         students.length > 0 &&
+//         sheetName &&
+//         userSchool &&
+//         selectedExamType
+//       ) {
+//         const columnKey = getSelectedColumnKey();
+//         if (!columnKey) {
+//           setError('Invalid exam type selected.');
+//           return;
+//         }
+
+//         setError('');
+//         try {
+//           const selectString = `studentID, studentName, ${columnKey}`;
+
+//           console.log('Fetching marks with:', {
+//             sheetName,
+//             selectString,
+//             school: userSchool,
+//             className: selectedClass,
+//             section: selectedSection,
+//             studentIDs: students.map((s) => s.studentID),
+//           });
+
+//           const { data: marksData, error: marksError } = await supabase
+//             .from(sheetName)
+//             .select(selectString)
+//             .eq('school', userSchool)
+//             .eq('className', selectedClass)
+//             .eq('section', selectedSection)
+//             .in('studentID', students.map((s) => s.studentID));
+
+//           if (marksError || !marksData) {
+//             throw marksError || new Error('No marks data found');
+//           }
+
+//           // Build initial marks
+//           const initialMarks: { [key: number]: string } = {};
+//           marksData.forEach((row: any) => {
+//             const val = row[columnKey];
+//             initialMarks[row.studentID] = val !== null && val !== undefined ? val.toString() : '';
+//           });
+
+//           // For any student not returned in marksData, set empty
+//           students.forEach((stu) => {
+//             if (!initialMarks.hasOwnProperty(stu.studentID)) {
+//               initialMarks[stu.studentID] = '';
+//             }
+//           });
+
+//           setStudentMarks(initialMarks);
+//         } catch (err: any) {
+//           console.error(err);
+//           setError(err.message || 'Failed to fetch marks.');
+//         }
+//       } else {
+//         setStudentMarks({});
+//       }
+//     };
+
+//     fetchMarks();
+//   }, [
+//     students,
+//     sheetName,
+//     userSchool,
+//     selectedClass,
+//     selectedSection,
+//     selectedExamType,
+//     examTypes,
+//   ]);
+
+//   // =============================
+//   // handleInputChange
+//   // =============================
+//   const handleInputChange = (studentID: number, value: string) => {
+//     // 0-100 or "-" logic
+//     if (
+//       value === '-' ||
+//       value === '' ||
+//       (/^\d+$/.test(value) && Number(value) >= 0 && Number(value) <= 100)
+//     ) {
+//       setStudentMarks((prev) => ({
+//         ...prev,
+//         [studentID]: value,
+//       }));
+//       setValidationErrors((prevErrors) => {
+//         const { [studentID]: _, ...rest } = prevErrors;
+//         return rest;
+//       });
+//     } else {
+//       setValidationErrors((prevErrors) => ({
+//         ...prevErrors,
+//         [studentID]: 'Enter a number between 0 and 100 or "-"',
+//       }));
+//     }
+//   };
+
+//   // =============================
+//   // handleSave
+//   // =============================
+//   const handleSave = async () => {
+//     if (!sheetName) {
+//       setError('Sheet name not defined.');
+//       return;
+//     }
+
+//     if (!selectedExamType) {
+//       setError('Please select an exam type.');
+//       return;
+//     }
+
+//     const columnKey = getSelectedColumnKey();
+//     if (!columnKey) {
+//       setError('Invalid exam type selected.');
+//       return;
+//     }
+
+//     try {
+//       // For each student, update the mark in the sheetName table
+//       const updates = students.map(async (stu) => {
+//         const mark = studentMarks[stu.studentID];
+//         if (mark !== undefined && mark !== '') {
+//           let markValue: string | number | null = null;
+//           if (mark === '-') markValue = '-';
+//           else markValue = Number(mark);
+
+//           const updateData: any = { [columnKey]: markValue };
+//           const { error } = await supabase
+//             .from(sheetName)
+//             .update(updateData)
+//             .eq('studentID', stu.studentID)
+//             .eq('school', userSchool)
+//             .eq('className', selectedClass)
+//             .eq('section', selectedSection);
+
+//           if (error) throw error;
+//         }
+//       });
+
+//       await Promise.all(updates);
+//       alert(`Marks (${columnKey}) saved successfully!`);
+//     } catch (err: any) {
+//       console.error(err);
+//       setError(err.message || 'Failed to save marks.');
+//     }
+//   };
+
+//   // Optional: Delay Save
+//   const handleSaveWithDelay = async () => {
+//     if (isSaveDisabled) return;
+//     setIsSaveDisabled(true);
+//     await handleSave();
+//     setTimeout(() => setIsSaveDisabled(false), 5000);
+//   };
+
+//   // Clear All Marks
+//   const handleClearAll = () => {
+//     if (window.confirm('Are you sure you want to clear all marks?')) {
+//       setStudentMarks({});
+//       alert('All marks cleared successfully.');
+//     }
+//   };
+
+//   // =============================
+//   // Render
+//   // =============================
+//   return (
+//     <>
+//       {/* Header */}
+//       <header className="header">
+//         <Container>
+//           <Row className="align-items-center">
+//             <Col>
+//               <h1 className="header-title">Teacher Dashboard</h1>
+//             </Col>
+//             <Col className="text-end">
+//               <Link
+//                 to="/attendance"
+//                 className="attendance-icon btn btn-light rounded-circle p-2 shadow"
+//                 aria-label="Attendance Link"
+//                 title="Attendance"
+//               >
+//                 📅
+//               </Link>
+//             </Col>
+//           </Row>
+//         </Container>
+//       </header>
+
+//       <Container fluid className="main-content position-relative">
+//         {/* Show Errors */}
+//         {error && <Alert variant="danger" className="error-message">{error}</Alert>}
+
+//         {/* Dropdowns */}
+//         <div
+//           className={`card p-4 mb-4 dropdown-container ${
+//             isMinimized ? 'dropdown-container-minimized' : 'dropdown-container-expanded'
+//           }`}
+//           style={{
+//             width: '100%',
+//             margin: '0',
+//             transition: 'all 0.3s ease',
+//           }}
+//         >
+//           {!isMinimized && (
+//             <Row>
+//               {/* Subject */}
+//               <Col md={3} sm={6} xs={12} className="mb-3">
+//                 <Form.Group controlId="subjectDropdown">
+//                   <Form.Label>Select Subject</Form.Label>
+//                   <Dropdown onSelect={(val) => setSelectedSubject(val || '')}>
+//                     <Dropdown.Toggle
+//                       variant="light"
+//                       id="dropdown-subject"
+//                       className="w-100"
+//                       disabled={loadingSubjects || subjects.length === 0}
+//                     >
+//                       {selectedSubject ||
+//                         (loadingSubjects ? 'Loading subjects...' : 'Select a subject')}
+//                     </Dropdown.Toggle>
+//                     <Dropdown.Menu className="w-100">
+//                       {subjects.map((subj, idx) => (
+//                         <Dropdown.Item key={idx} eventKey={subj}>
+//                           {subj}
+//                         </Dropdown.Item>
+//                       ))}
+//                     </Dropdown.Menu>
+//                   </Dropdown>
+//                 </Form.Group>
+//               </Col>
+
+//               {/* Class */}
+//               <Col md={3} sm={6} xs={12} className="mb-3">
+//                 <Form.Group controlId="classDropdown">
+//                   <Form.Label>Select Class</Form.Label>
+//                   <Dropdown onSelect={(val) => setSelectedClass(val || '')}>
+//                     <Dropdown.Toggle
+//                       variant="light"
+//                       id="dropdown-class"
+//                       className="w-100"
+//                       disabled={!sheetName || loadingClasses || classes.length === 0}
+//                     >
+//                       {selectedClass ||
+//                         (loadingClasses ? 'Loading classes...' : 'Select a class')}
+//                     </Dropdown.Toggle>
+//                     <Dropdown.Menu className="w-100">
+//                       {classes.map((cls, idx) => (
+//                         <Dropdown.Item key={idx} eventKey={cls}>
+//                           {cls}
+//                         </Dropdown.Item>
+//                       ))}
+//                     </Dropdown.Menu>
+//                   </Dropdown>
+//                 </Form.Group>
+//               </Col>
+
+//               {/* Section */}
+//               <Col md={3} sm={6} xs={12} className="mb-3">
+//                 <Form.Group controlId="sectionDropdown">
+//                   <Form.Label>Select Section</Form.Label>
+//                   <Dropdown onSelect={(val) => setSelectedSection(val || '')}>
+//                     <Dropdown.Toggle
+//                       variant="light"
+//                       id="dropdown-section"
+//                       className="w-100"
+//                       disabled={!selectedClass || loadingSections || sections.length === 0}
+//                     >
+//                       {selectedSection ||
+//                         (loadingSections ? 'Loading sections...' : 'Select a section')}
+//                     </Dropdown.Toggle>
+//                     <Dropdown.Menu className="w-100">
+//                       {sections.map((sec, idx) => (
+//                         <Dropdown.Item key={idx} eventKey={sec}>
+//                           {sec}
+//                         </Dropdown.Item>
+//                       ))}
+//                     </Dropdown.Menu>
+//                   </Dropdown>
+//                 </Form.Group>
+//               </Col>
+
+//               {/* Exam Type */}
+//               <Col md={3} sm={6} xs={12} className="mb-3">
+//                 <Form.Group controlId="examTypeDropdown">
+//                   <Form.Label>Exam Type</Form.Label>
+//                   <Dropdown onSelect={(val) => setSelectedExamType(val || '')}>
+//                     <Dropdown.Toggle
+//                       variant="light"
+//                       id="dropdown-examType"
+//                       className="w-100"
+//                       disabled={loadingExamTypes || examTypes.length === 0}
+//                     >
+//                       {selectedExamType ||
+//                         (loadingExamTypes ? 'Loading exam types...' : 'Select an exam type')}
+//                     </Dropdown.Toggle>
+//                     <Dropdown.Menu className="w-100">
+//                       {examTypes.map((type, idx) => (
+//                         <Dropdown.Item key={idx} eventKey={type.examType}>
+//                           {`${type.columnNumber}: ${type.examType}`}
+//                         </Dropdown.Item>
+//                       ))}
+//                     </Dropdown.Menu>
+//                   </Dropdown>
+//                 </Form.Group>
+//               </Col>
+//             </Row>
+//           )}
+
+//           <button
+//             onClick={toggleContainerSize}
+//             className="chevron-btn2"
+//             aria-label={isMinimized ? 'Expand Dropdowns' : 'Minimize Dropdowns'}
+//           >
+//             {isMinimized ? '\u25BC' : '\u25B2'}
+//           </button>
+//         </div>
+
+//         {/* Students Table */}
+//         <Row>
+//           <Col>
+//             <Card
+//               className={`students-card ${isMinimized ? 'students-card-expanded' : 'students-card-collapsed'}`}
+//               style={{
+//                 maxHeight: isMinimized ? '600px' : '300px',
+//                 transition: 'max-height 0.3s ease',
+//                 overflowY: 'auto',
+//               }}
+//             >
+//               <Card.Body>
+//                 {loadingStudents ? (
+//                   <div className="d-flex justify-content-center align-items-center spinner-container">
+//                     <Spinner animation="border" variant="primary" />
+//                   </div>
+//                 ) : students.length > 0 ? (
+//                   <>
+//                     <Table bordered hover responsive className="students-table">
+//                       <thead className="table-primary">
+//                         <tr>
+//                           <th>Student Name</th>
+//                           <th>
+//                             {selectedExamType
+//                               ? `Mark in ${getSelectedColumnKey()} (${selectedExamType})`
+//                               : 'Mark'}
+//                           </th>
+//                         </tr>
+//                       </thead>
+//                       <tbody>
+//                         {students.map((stu) => (
+//                           <tr key={stu.id}> {/* Changed key to 'stu.id' */}
+//                             <td>{stu.studentName}</td>
+//                             <td>
+//                               <Form.Control
+//                                 type="text"
+//                                 placeholder="Enter mark"
+//                                 value={studentMarks[stu.studentID] || ''}
+//                                 onChange={(e) => handleInputChange(stu.studentID, e.target.value)}
+//                                 isInvalid={!!validationErrors[stu.studentID]}
+//                                 aria-label={`Enter mark for ${stu.studentName}`}
+//                               />
+//                               <Form.Control.Feedback type="invalid">
+//                                 {validationErrors[stu.studentID]}
+//                               </Form.Control.Feedback>
+//                             </td>
+//                           </tr>
+//                         ))}
+//                       </tbody>
+//                     </Table>
+//                   </>
+//                 ) : (
+//                   <Alert variant="info">
+//                     No students found or not yet loaded.
+//                   </Alert>
+//                 )}
+//               </Card.Body>
+//             </Card>
+//           </Col>
+//         </Row>
+
+//         {/* Bottom Buttons */}
+//         <Row className="fixed-bottom mt-4">
+//           <Col className="d-flex flex-column align-items-center">
+//             <div
+//               style={{
+//                 display: 'flex',
+//                 flexDirection: 'column',
+//                 gap: '0px',
+//                 width: '100%',
+//                 alignItems: 'center',
+//               }}
+//             >
+//               <Button
+//                 variant="primary"
+//                 onClick={handleSaveWithDelay}
+//                 disabled={
+//                   isSaveDisabled || students.length === 0 || !selectedExamType
+//                 }
+//                 aria-label="Save Marks"
+//                 className="save-marks-button"
+//               >
+//                 Save Marks ({getSelectedColumnKey() || 'N/A'})
+//               </Button>
+//               {/*
+//               <Button
+//                 variant="danger"
+//                 onClick={handleClearAll}
+//                 style={{ width: '100%' }}
+//               >
+//                 Clear All
+//               </Button>
+//               */}
+//             </div>
+//           </Col>
+//         </Row>
+
+//         {/* Footer */}
+//         <footer className="footer">
+//           <Container>
+//             <Row>
+//               <Col className="text-center">
+//                 &copy; {new Date().getFullYear()} SchoolMood. All rights reserved.
+//               </Col>
+//             </Row>
+//           </Container>
+//         </footer>
+//       </Container>
+//     </>
+//   );
+// };
+
+// export default TeacherDashboard;

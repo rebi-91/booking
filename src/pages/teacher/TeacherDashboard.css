@@ -9,7 +9,6 @@ body {
   margin: 0;
   padding: 0;
   color: #333;
-
 }
 
 /* Chevron Button */
@@ -33,10 +32,9 @@ body {
   z-index: 1000;
 }
 
-.chevron-btn:hover {
+.chevron-btn2:hover {
   background-color: #3a3a3a;
 }
-
 
 /* ----------------------------
    Header Styles
@@ -85,15 +83,25 @@ body {
 /* ----------------------------
    Dropdown Card Styles
 ----------------------------- */
-.dropdown-card {
+.dropdown-container-expanded .row > [class*='col-'] {
+  margin-bottom: 0;
+  padding: 0 15px;
+}
+
+.dropdown-container-minimized .row > [class*='col-'] {
+  padding: 0 10px;
+}
+
+.dropdown-container {
   background-color: #ffffff;
   border: 1px solid #bdc3c7;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
+  position: relative;
 }
 
-.dropdown-card .form-label {
+.dropdown-container .form-label {
   font-size: 1.1rem;
   font-weight: bold;
   color: #2c3e50;
@@ -105,18 +113,27 @@ body {
 .dropdown-menu {
   z-index: 1050 !important; /* Ensure it appears above other elements */
   border-radius: 8px;
+  width: 300px !important;
+  max-height: 400px !important; /* Limit height */
+  overflow-y: auto; /* Scroll if necessary */
 }
 
 .dropdown-item {
   font-size: 1rem;
   padding: 10px 20px;
-
 }
 
 .dropdown-item:hover,
 .dropdown-item:focus {
   background-color: #f1f1f1;
   color: #0D2F7A;
+}
+
+/* ----------------------------
+   Dropdown Toggle Wide
+----------------------------- */
+.dropdown-toggle-wide {
+  min-width: 250px;
 }
 
 /* ----------------------------
@@ -144,7 +161,7 @@ body {
 }
 
 .students-table td {
-  font-size: 1rem;
+  font-size: 1.2rem;
   vertical-align: middle;
 }
 
@@ -175,7 +192,7 @@ body {
 .save-marks-button {
   width: 98% !important;
   height: 100% !important;
-  padding: 20px 20px !important ;
+  padding: 20px 20px !important;
   font-size: 1.2rem !important;
   background-color: #0D2F7A;
   border: none;
@@ -197,7 +214,6 @@ body {
 /* ----------------------------
    Footer Styles
 ----------------------------- */
-
 
 /* ----------------------------
    Spinner Container
@@ -225,11 +241,11 @@ body {
   }
 
   /* Dropdown Card Adjustments */
-  .dropdown-card {
+  .dropdown-container {
     padding: 15px;
   }
 
-  .dropdown-card .form-group {
+  .dropdown-container .form-group {
     margin-bottom: 15px;
   }
 
@@ -265,28 +281,52 @@ body {
   }
 }
 
-/* Student List Card (Collapsed State) */
-.students-card-collapsed {
-  max-height: 300px;
-  overflow-y: auto;
+/* ----------------------------
+   Large Screen Enhancements
+----------------------------- */
+@media (min-width: 769px) {
+  /* Increase width of dropdown toggles */
+  .dropdown-toggle-wide {
+    min-width: 300px;
+  }
+
+  /* Arrange dropdowns with more spacing */
+  .dropdown-container-expanded .row > [class*='col-'] {
+    padding: 0 20px;
+  }
+
+  /* Enhance dropdown menu items */
+  .dropdown-item {
+    font-size: 1.1rem;
+    padding: 12px 25px;
+  }
+
+  .dropdown-item:hover,
+  .dropdown-item:focus {
+    background-color: #e6e6e6;
+    color: #0D2F7A;
+  }
+
+  /* Adjust table header font size */
+  .students-table th {
+    font-size: 1.2rem;
+  }
+
+  /* Adjust save button */
+  .save-marks-button {
+    font-size: 1.3rem !important;
+    padding: 15px 25px !important;
+    border-radius: 5px !important;
+    min-width: 300px;
+  }
+
+  .save-marks-button:hover:not(:disabled) {
+    transform: scale(1.07);
+  }
+
+  /* Improve dropdown menu appearance */
+  .dropdown-menu {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
 }
-
-/* Student List Card (Expanded State) */
-.students-card-expanded {
-  max-height: 600px;
-  overflow-y: auto;
-}
-
-
-
-/* Save Marks Button */
-.save-marks-btn {
-  width: 200px;
-  height: 50px;
-  border-radius: 25px;
-  text-align: center;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-

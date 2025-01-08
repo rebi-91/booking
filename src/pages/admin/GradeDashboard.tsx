@@ -374,6 +374,7 @@ const GradeDashboard: React.FC = () => {
             .select("*")
             .eq("className", selectedClass)
             .eq("section", selectedSection)
+            .eq("school", school) // **Added this line to filter by school**
             .order("id", { ascending: true });
 
           if (gradesError || !gradesRows) {
@@ -563,6 +564,7 @@ const GradeDashboard: React.FC = () => {
           handleSaveMark(studentId, examType, parsedValue);
         } else {
           alert("Please enter a valid number, leave empty, or enter '-'.");
+          setEditingCell(null);
         }
       }
     }
@@ -986,925 +988,6 @@ styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
 
 export default GradeDashboard;
 
-// import React, { useState, useEffect, useRef, CSSProperties } from "react";
-// import { useNavigate } from "react-router-dom";
-// import supabase from "../../supabase";
-// import { useSession } from "../../context/SessionContext";
-
-// /**
-//  * Interfaces (same as your original code)
-//  */
-// interface Profile {
-//   school: string;
-//   role: string; 
-// }
-
-// interface Student {
-//   className: string;
-//   section: string;
-// }
-
-// interface ClassData {
-//   class: string;
-//   sub1?: string; 
-//   sub2?: string; 
-//   sub3?: string; 
-//   sub4?: string; 
-//   sub5?: string; 
-//   sub6?: string; 
-//   sub7?: string; 
-//   sub8?: string; 
-//   sub9?: string; 
-//   sub10?: string; 
-//   sub11?: string; 
-//   sub12?: string; 
-//   sub13?: string; 
-//   sub14?: string; 
-//   sub15?: string;
-// }
-
-// interface Exam {
-//   examType: string;
-//   columnNumber: number;
-// }
-
-// interface Subject {
-//   subjectName: string;
-//   sheetName: string;
-// }
-
-// interface GradeData {
-//   studentName: string;
-//   id: number;
-//   average: string;
-//   examMarks: { [key: string]: number | string };
-// }
-
-// interface ExamType {
-//   examType: string;
-//   columnNumber: number;
-//   term: string;
-//   weight: number;
-// }
-
-// const GradeDashboard: React.FC = () => {
-//   const navigate = useNavigate();
-//   const { session } = useSession();
-
-//   const [school, setSchool] = useState<string>("");
-//   const [role, setRole] = useState<string>("");
-//   const [classes, setClasses] = useState<string[]>([]);
-//   const [sections, setSections] = useState<string[]>([]);
-//   const [selectedClass, setSelectedClass] = useState<string>("");
-//   const [selectedSection, setSelectedSection] = useState<string>("");
-//   const [subjects, setSubjects] = useState<string[]>([]);
-//   const [selectedSubject, setSelectedSubject] = useState<string>("");
-//   const [examTypes, setExamTypes] = useState<ExamType[]>([]);
-//   const [selectedTerm, setSelectedTerm] = useState<string>("First Term");
-//   const [grades, setGrades] = useState<GradeData[]>([]);
-//   const [loading, setLoading] = useState<boolean>(true);
-//   const [error, setError] = useState<string>("");
-
-//   const [editingCell, setEditingCell] = useState<{
-//     studentId: number;
-//     examType: string;
-//   } | null>(null);
-//   const inputRef = useRef<HTMLInputElement>(null);
-
-//   const terms = ["First Term", "Second Term", "Retakes"];
-
-//   // Utility to extract term from examType name
-//   const extractTerm = (examTypeName: string): string | null => {
-//     const termRegex = /(First Term|Second Term|Retakes)/i;
-//     const match = examTypeName.match(termRegex);
-//     return match ? match[1] : null;
-//   };
-
-//   // Utility to extract weight from examType name
-//   const extractWeight = (examTypeName: string): number | null => {
-//     const weightRegex = /\((\d+)\s*pts?\)/i;
-//     const match = examTypeName.match(weightRegex);
-//     return match ? parseInt(match[1], 10) : null;
-//   };
-
-//   // Utility to map columnNumber to string
-//   const mapColumnNumberToColumnName = (columnNumber: number): string => {
-//     return `${columnNumber}`;
-//   };
-
-//   const handleClassChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-//     setSelectedClass(e.target.value);
-//     setSelectedSection("");
-//     setSelectedSubject("");
-//     setExamTypes([]);
-//     setGrades([]);
-//   };
-
-//   const handleSectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-//     setSelectedSection(e.target.value);
-//     setSelectedSubject("");
-//     setExamTypes([]);
-//     setGrades([]);
-//   };
-
-//   const handleSubjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-//     setSelectedSubject(e.target.value);
-//     setExamTypes([]);
-//     setGrades([]);
-//   };
-
-//   const handleTermChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-//     setSelectedTerm(e.target.value);
-//     setGrades([]);
-//   };
-
-//   // -- (A) Ensure user is logged in & has role=ADMIN
-//   useEffect(() => {
-//     if (!session) {
-//       navigate("/login");
-//       return;
-//     }
-
-//     const fetchInitialData = async () => {
-//       try {
-//         setLoading(true);
-
-//         const userId = session.user.id;
-
-//         const { data: profileData, error: profileError } = await supabase
-//           .from("profiles")
-//           .select("school, role")
-//           .eq("id", userId)
-//           .single();
-
-//         if (profileError || !profileData) {
-//           throw new Error("Failed to fetch profile.");
-//         }
-
-//         const profile = profileData as Profile;
-//         if (profile.role !== "ADMIN") {
-//           navigate("/grades");
-//           return;
-//         }
-
-//         const userSchool = profile.school;
-//         setSchool(userSchool);
-//         setRole(profile.role);
-
-//         // Fetch classes
-//         const { data: classData, error: classError } = await supabase
-//           .from("student")
-//           .select("className")
-//           .eq("school", userSchool)
-//           .neq("className", "")
-//           .order("className", { ascending: true });
-
-//         if (classError || !classData) {
-//           throw new Error("Failed to fetch classes.");
-//         }
-
-//         const uniqueClasses = Array.from(
-//           new Set(classData.map((s: Student) => s.className))
-//         );
-//         setClasses(uniqueClasses);
-
-//         // Fetch sections
-//         const { data: sectionData, error: sectionError } = await supabase
-//           .from("student")
-//           .select("section")
-//           .eq("school", userSchool)
-//           .neq("section", "")
-//           .order("section", { ascending: true });
-
-//         if (sectionError || !sectionData) {
-//           throw new Error("Failed to fetch sections.");
-//         }
-
-//         const uniqueSections = Array.from(
-//           new Set(sectionData.map((s: Student) => s.section))
-//         );
-//         setSections(uniqueSections);
-//       } catch (err: any) {
-//         console.error("Error during initial data fetching:", err);
-//         setError(err.message || "An unexpected error occurred.");
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchInitialData();
-//   }, [session, navigate]);
-
-//   // -- (B) If a class is selected, fetch subjects
-//   useEffect(() => {
-//     if (selectedClass) {
-//       const fetchSubjects = async () => {
-//         try {
-//           setLoading(true);
-//           const { data: classSubjects, error: classSubjectsError } = await supabase
-//             .from("class")
-//             .select(
-//               "sub1, sub2, sub3, sub4, sub5, sub6, sub7, sub8, sub9, sub10, sub11, sub12, sub13, sub14, sub15"
-//             )
-//             .eq("class", selectedClass)
-//             .eq("school", school)
-//             .single();
-
-//           if (classSubjectsError || !classSubjects) {
-//             throw new Error("Failed to fetch class subjects.");
-//           }
-
-//           const fetchedSubjects: string[] = [];
-//           for (let i = 1; i <= 15; i++) {
-//             const sub = classSubjects[`sub${i}` as keyof ClassData] as
-//               | string
-//               | undefined;
-//             if (sub && sub.trim() !== "") {
-//               fetchedSubjects.push(sub.trim());
-//             }
-//           }
-
-//           setSubjects(fetchedSubjects);
-//         } catch (err: any) {
-//           console.error("Error fetching subjects:", err);
-//           setError(err.message || "An unexpected error occurred.");
-//         } finally {
-//           setLoading(false);
-//         }
-//       };
-
-//       fetchSubjects();
-//     } else {
-//       setSubjects([]);
-//     }
-//   }, [selectedClass, school]);
-
-//   // -- (C) If a subject is selected, fetch examTypes (ignoring subjectName)
-//   useEffect(() => {
-//     if (selectedSubject) {
-//       const fetchExamTypes = async () => {
-//         try {
-//           setLoading(true);
-
-//           const { data: examData, error: examError } = await supabase
-//             .from("exam")
-//             .select("examType, columnNumber")
-//             .eq("school", school); 
-//             // intentionally ignoring subjectName
-
-//           if (examError) throw new Error("Failed to fetch exam types.");
-//           if (!examData) throw new Error("No exam types returned.");
-
-//           // Map to typed array
-//           const examTypeList: ExamType[] = examData
-//             .map((exam: Exam) => {
-//               const term = extractTerm(exam.examType);
-//               if (!term) return null;
-//               const weight = extractWeight(exam.examType);
-//               if (weight === null) return null;
-//               return {
-//                 examType: exam.examType,
-//                 columnNumber: exam.columnNumber,
-//                 term,
-//                 weight,
-//               };
-//             })
-//             .filter((et): et is ExamType => et !== null);
-
-//           // Validate sum=100 per term
-//           const termWeightMap: { [key: string]: number } = {};
-//           examTypeList.forEach((et) => {
-//             termWeightMap[et.term] = (termWeightMap[et.term] || 0) + et.weight;
-//           });
-//           const invalidTerms = Object.entries(termWeightMap).filter(
-//             ([, totalWeight]) => totalWeight !== 100
-//           );
-//           if (invalidTerms.length > 0) {
-//             console.error("Term weights not summing to 100:", invalidTerms);
-//             throw new Error(
-//               "Invalid weight distribution. Each term's weights must sum to 100."
-//             );
-//           }
-
-//           // Sort by columnNumber
-//           examTypeList.sort((a, b) => a.columnNumber - b.columnNumber);
-
-//           setExamTypes(examTypeList);
-//         } catch (err: any) {
-//           console.error("Error fetching exam types:", err);
-//           setError(err.message || "An unexpected error occurred.");
-//         } finally {
-//           setLoading(false);
-//         }
-//       };
-
-//       fetchExamTypes();
-//     } else {
-//       setExamTypes([]);
-//     }
-//   }, [selectedSubject, school]);
-
-//   // -- (D) If class, section, subject, term, & examTypes are loaded => fetch grades
-//   useEffect(() => {
-//     if (
-//       selectedClass &&
-//       selectedSection &&
-//       selectedSubject &&
-//       selectedTerm &&
-//       examTypes.length > 0
-//     ) {
-//       const fetchGrades = async () => {
-//         try {
-//           setLoading(true);
-
-//           // get sheetName from subjects table
-//           const { data: subjectData, error: subjectError } = await supabase
-//             .from("subjects")
-//             .select("sheetName")
-//             .eq("school", school)
-//             .eq("subjectName", selectedSubject)
-//             .single();
-
-//           if (subjectError || !subjectData) {
-//             throw new Error("Failed to fetch sheetName for subject.");
-//           }
-
-//           const sheetName = (subjectData as Subject).sheetName;
-//           if (!sheetName) throw new Error("sheetName is missing.");
-
-//           // fetch rows from sheetName
-//           const { data: gradesRows, error: gradesError } = await supabase
-//             .from(sheetName)
-//             .select("*")
-//             .eq("className", selectedClass)
-//             .eq("section", selectedSection)
-//             .order("id", { ascending: true });
-
-//           if (gradesError || !gradesRows) {
-//             throw new Error("Failed to fetch grades data.");
-//           }
-
-//           // filter examTypes by selectedTerm
-//           const filteredExamTypes = examTypes.filter(
-//             (exam) => exam.term === selectedTerm
-//           );
-
-//           const newGrades: GradeData[] = (gradesRows as any[]).map((row: any) => {
-//             const studentName = row.studentName || "-";
-//             const studentId = row.id || 0;
-//             let sumWeightedMarks = 0;
-//             let sumWeights = 0;
-//             let markCount = 0;
-//             let singleMark = 0;
-//             const examMarks: { [key: string]: number | string } = {};
-
-//             filteredExamTypes.forEach((exam) => {
-//               const columnName = mapColumnNumberToColumnName(exam.columnNumber);
-//               const rawVal = row[columnName];
-//               let numericMark: number | null = null;
-
-//               if (typeof rawVal === "number") {
-//                 numericMark = rawVal;
-//               } else if (typeof rawVal === "string") {
-//                 const parsed = parseFloat(rawVal);
-//                 if (!isNaN(parsed)) numericMark = parsed;
-//               }
-
-//               if (numericMark !== null) {
-//                 examMarks[exam.examType] = numericMark;
-//                 sumWeightedMarks += numericMark * exam.weight;
-//                 sumWeights += exam.weight;
-//                 markCount += 1;
-//                 if (markCount === 1) singleMark = numericMark;
-//               } else {
-//                 examMarks[exam.examType] = rawVal !== undefined ? rawVal : "";
-//               }
-//             });
-
-//             let average: string;
-//             if (markCount >= 2 && sumWeights > 0) {
-//               average = (sumWeightedMarks / sumWeights).toFixed(1) + "%";
-//             } else if (markCount === 1) {
-//               average = singleMark.toFixed(1) + "%";
-//             } else {
-//               average = "";
-//             }
-
-//             return {
-//               studentName,
-//               id: studentId,
-//               average,
-//               examMarks,
-//             };
-//           });
-
-//           setGrades(newGrades);
-//         } catch (err: any) {
-//           console.error("Error fetching grades:", err);
-//           setError(err.message || "An unexpected error occurred.");
-//         } finally {
-//           setLoading(false);
-//         }
-//       };
-
-//       fetchGrades();
-//     } else {
-//       setGrades([]);
-//     }
-//   }, [
-//     selectedClass,
-//     selectedSection,
-//     selectedSubject,
-//     selectedTerm,
-//     examTypes,
-//     school,
-//   ]);
-
-//   // exam columns displayed in the table
-//   const displayExamTypes = examTypes
-//     .filter((exam) => exam.term === selectedTerm)
-//     .sort((a, b) => a.columnNumber - b.columnNumber)
-//     .map((exam) => exam.examType);
-
-//   // Format avg
-//   const calculateAverage = (grade: GradeData) => {
-//     if (grade.average.endsWith("%")) return grade.average;
-//     return grade.average;
-//   };
-
-//   // Double-click => edit cell
-//   const handleDoubleClick = (studentId: number, examType: string) => {
-//     setEditingCell({ studentId, examType });
-//   };
-
-//   // Save mark after editing
-//   const handleSaveMark = async (
-//     studentId: number,
-//     examType: string,
-//     newMark: number | string | null
-//   ) => {
-//     try {
-//       const exam = examTypes.find((e) => e.examType === examType);
-//       if (!exam) throw new Error("Exam type not found.");
-
-//       // fetch subject's sheetName
-//       const { data: subjectData, error: subjectError } = await supabase
-//         .from("subjects")
-//         .select("sheetName")
-//         .eq("school", school)
-//         .eq("subjectName", selectedSubject)
-//         .single();
-
-//       if (subjectError || !subjectData) {
-//         throw new Error("Failed to fetch sheetName for the selected subject.");
-//       }
-
-//       const sheetName = (subjectData as Subject).sheetName;
-//       if (!sheetName) throw new Error("Sheet name missing.");
-
-//       // update row
-//       const columnName = mapColumnNumberToColumnName(exam.columnNumber);
-//       const { error: updateError } = await supabase
-//         .from(sheetName)
-//         .update({
-//           [columnName]: newMark === "" ? null : newMark,
-//         })
-//         .eq("id", studentId);
-
-//       if (updateError) throw new Error("Failed to update the mark.");
-
-//       // update local state
-//       setGrades((prev) =>
-//         prev.map((grade) => {
-//           if (grade.id === studentId) {
-//             return {
-//               ...grade,
-//               examMarks: {
-//                 ...grade.examMarks,
-//                 [examType]: newMark === "" ? null : newMark,
-//               },
-//             };
-//           }
-//           return grade;
-//         })
-//       );
-//     } catch (err: any) {
-//       console.error("Error saving mark:", err);
-//       alert(err.message || "Failed to save the mark.");
-//     } finally {
-//       setEditingCell(null);
-//     }
-//   };
-
-//   // Save on Enter key
-//   const handleKeyPress = (
-//     e: React.KeyboardEvent<HTMLInputElement>,
-//     studentId: number,
-//     examType: string
-//   ) => {
-//     if (e.key === "Enter") {
-//       const target = e.target as HTMLInputElement;
-//       const value = target.value;
-//       if (value === "") {
-//         handleSaveMark(studentId, examType, null);
-//       } else if (value === "-") {
-//         handleSaveMark(studentId, examType, value);
-//       } else {
-//         const parsed = parseFloat(value);
-//         if (!isNaN(parsed)) {
-//           handleSaveMark(studentId, examType, parsed);
-//         } else {
-//           alert("Please enter a valid number, empty, or '-'.");
-//           setEditingCell(null);
-//         }
-//       }
-//     }
-//   };
-
-//   // Focus on input
-//   useEffect(() => {
-//     if (editingCell && inputRef.current) {
-//       inputRef.current.focus();
-//     }
-//   }, [editingCell]);
-
-//   // Loading spinner
-//   if (loading) {
-//     return (
-//       <div style={styles.loadingContainer}>
-//         <div style={styles.spinner}></div>
-//         <p>Loading...</p>
-//       </div>
-//     );
-//   }
-
-//   // Error display
-//   if (error) {
-//     return (
-//       <div style={styles.errorContainer}>
-//         <p style={styles.errorMessage}>{error}</p>
-//       </div>
-//     );
-//   }
-
-//   // Render 
-//   return (
-//     <div style={styles.mainContainer}>
-//       {/* Floating Buttons (top-right) */}
-//       <div style={styles.floatingContainer}>
-//         <button
-//           style={{ ...styles.iconButton, backgroundColor: "#007bff" }}
-//           onClick={() => navigate("/dashboard")}
-//           onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-//           onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-//         >
-//           📅
-//         </button>
-//         <button
-//           style={{ ...styles.iconButton, backgroundColor: "#50B755" }}
-//           onClick={() => navigate("/dashboard3")}
-//           onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-//           onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-//         >
-//           +
-//         </button>
-//         <button
-//           style={{ ...styles.iconButton, backgroundColor: "#f44336" }}
-//           onClick={() => navigate("/")}
-//           onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-//           onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-//         >
-//           👤
-//         </button>
-//       </div>
-
-//       {/* Main Card */}
-//       <div style={styles.card}>
-//         <h1 style={styles.header}>Grade Dashboard</h1>
-//         <h2 style={styles.subheader}>School: {school}</h2>
-
-//         {/* Filter Rows */}
-//         <div style={styles.filterContainer}>
-//           <div style={styles.formGroup}>
-//             <label style={styles.label}>Class:</label>
-//             <select
-//               style={styles.select}
-//               value={selectedClass}
-//               onChange={handleClassChange}
-//             >
-//               <option value="">All Classes</option>
-//               {classes.map((c) => (
-//                 <option key={c} value={c}>
-//                   {c}
-//                 </option>
-//               ))}
-//             </select>
-//           </div>
-
-//           <div style={styles.formGroup}>
-//             <label style={styles.label}>Section:</label>
-//             <select
-//               style={styles.select}
-//               value={selectedSection}
-//               onChange={handleSectionChange}
-//               disabled={!selectedClass}
-//             >
-//               <option value="">All Sections</option>
-//               {sections.map((sec) => (
-//                 <option key={sec} value={sec}>
-//                   {sec}
-//                 </option>
-//               ))}
-//             </select>
-//           </div>
-
-//           <div style={styles.formGroup}>
-//             <label style={styles.label}>Subject:</label>
-//             <select
-//               style={styles.select}
-//               value={selectedSubject}
-//               onChange={handleSubjectChange}
-//               disabled={!selectedClass || !selectedSection}
-//             >
-//               <option value="">All Subjects</option>
-//               {subjects.map((sub) => (
-//                 <option key={sub} value={sub}>
-//                   {sub}
-//                 </option>
-//               ))}
-//             </select>
-//           </div>
-
-//           <div style={styles.formGroup}>
-//             <label style={styles.label}>Term:</label>
-//             <select
-//               style={styles.select}
-//               value={selectedTerm}
-//               onChange={handleTermChange}
-//               disabled={!selectedSubject}
-//             >
-//               {terms.map((t) => (
-//                 <option key={t} value={t}>
-//                   {t}
-//                 </option>
-//               ))}
-//             </select>
-//           </div>
-//         </div>
-
-//         {/* Grades Table */}
-//         <div style={styles.tableContainer}>
-//           <table style={styles.table}>
-//             <thead>
-//               <tr>
-//                 <th style={{ ...styles.th, textAlign: "left" }}>Student Name</th>
-//                 <th style={styles.th}>Average %</th>
-//                 {displayExamTypes.map((exam) => (
-//                   <th key={exam} style={styles.th}>
-//                     {exam}
-//                   </th>
-//                 ))}
-//               </tr>
-//             </thead>
-//             <tbody>
-//               {grades.length > 0 ? (
-//                 grades.map((grade) => (
-//                   <tr key={grade.id}>
-//                     <td style={{ ...styles.td, textAlign: "left" }}>
-//                       {grade.studentName}
-//                     </td>
-//                     <td style={styles.td}>{calculateAverage(grade)}</td>
-//                     {displayExamTypes.map((exam) => {
-//                       const cellEditing =
-//                         editingCell &&
-//                         editingCell.studentId === grade.id &&
-//                         editingCell.examType === exam;
-//                       return (
-//                         <td
-//                           key={exam}
-//                           style={styles.td}
-//                           onDoubleClick={() =>
-//                             setEditingCell({ studentId: grade.id, examType: exam })
-//                           }
-//                         >
-//                           {cellEditing ? (
-//                             <input
-//                               type="text"
-//                               ref={inputRef}
-//                               defaultValue={
-//                                 grade.examMarks[exam] !== null
-//                                   ? (grade.examMarks[exam] as string)
-//                                   : ""
-//                               }
-//                               onBlur={(e) => {
-//                                 const val = e.target.value;
-//                                 if (val === "") {
-//                                   handleSaveMark(grade.id, exam, null);
-//                                 } else if (val === "-") {
-//                                   handleSaveMark(grade.id, exam, val);
-//                                 } else {
-//                                   const parsed = parseFloat(val);
-//                                   if (!isNaN(parsed)) {
-//                                     handleSaveMark(grade.id, exam, parsed);
-//                                   } else {
-//                                     alert("Enter valid number, empty, or '-'.");
-//                                     setEditingCell(null);
-//                                   }
-//                                 }
-//                               }}
-//                               onKeyPress={(e) =>
-//                                 handleKeyPress(e, grade.id, exam)
-//                               }
-//                               style={styles.editInput}
-//                             />
-//                           ) : (
-//                             grade.examMarks[exam] !== null
-//                               ? grade.examMarks[exam]
-//                               : ""
-//                           )}
-//                         </td>
-//                       );
-//                     })}
-//                   </tr>
-//                 ))
-//               ) : (
-//                 <tr>
-//                   <td style={styles.td} colSpan={2 + displayExamTypes.length}>
-//                     No data
-//                   </td>
-//                 </tr>
-//               )}
-//             </tbody>
-//           </table>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// /**
-//  * Styles - similar to StudentFee
-//  */
-// const styles: { [key: string]: CSSProperties } = {
-//   mainContainer: {
-//     width: "95%",
-//     maxWidth: "1400px",
-//     margin: "20px auto",
-//     padding: "20px",
-//     backgroundColor: "#121212",
-//     boxShadow: "0 4px 20px 1px #007BA7",
-//     borderRadius: "10px",
-//     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-//     color: "#ffffff",
-//     minHeight: "100vh",
-//     position: "relative",
-//   },
-//   floatingContainer: {
-//     position: "absolute",
-//     top: "20px",
-//     right: "20px",
-//     display: "flex",
-//     flexDirection: "column",
-//     gap: "10px",
-//     zIndex: 999,
-//   },
-//   iconButton: {
-//     width: "60px",
-//     height: "60px",
-//     fontSize: "28px",
-//     borderRadius: "10px",
-//     border: "none",
-//     cursor: "pointer",
-//     boxShadow: "0 4px 6px rgba(0,0,0,0.3)",
-//     transition: "transform 0.3s ease",
-//     color: "#fff",
-//   },
-//   card: {
-//     backgroundColor: "#1e1e1e",
-//     borderRadius: "10px",
-//     boxShadow: "0 2px 12px rgba(0, 0, 0, 0.3)",
-//     padding: "25px",
-//     marginTop: "80px",
-//   },
-//   header: {
-//     fontSize: "32px",
-//     fontWeight: 700,
-//     marginBottom: "10px",
-//     textAlign: "center",
-//     color: "#3ecf8e",
-//   },
-//   subheader: {
-//     fontSize: "18px",
-//     fontWeight: 600,
-//     marginBottom: "25px",
-//     textAlign: "center",
-//     color: "#cccccc",
-//   },
-//   filterContainer: {
-//     display: "flex",
-//     flexWrap: "wrap",
-//     justifyContent: "center",
-//     gap: "20px",
-//     marginBottom: "25px",
-//   },
-//   formGroup: {
-//     display: "flex",
-//     flexDirection: "column",
-//     minWidth: "150px",
-//     alignItems: "flex-start",
-//   },
-//   label: {
-//     fontSize: "16px",
-//     fontWeight: 500,
-//     marginBottom: "5px",
-//     color: "#fff",
-//   },
-//   select: {
-//     backgroundColor: "#555",
-//     color: "#fff",
-//     borderRadius: "5px",
-//     border: "1px solid #555",
-//     fontSize: "16px",
-//     padding: "8px",
-//     outline: "none",
-//     cursor: "pointer",
-//     transition: "border-color 0.3s ease",
-//   },
-//   tableContainer: {
-//     marginTop: "10px",
-//     borderRadius: "10px",
-//     boxShadow: "0 2px 8px rgba(0, 0, 0, 0.3)",
-//     overflowX: "auto",
-//   },
-//   table: {
-//     width: "100%",
-//     borderCollapse: "collapse",
-//     color: "#fff",
-//     fontSize: "16px",
-//     minWidth: "700px",
-//   },
-//   th: {
-//     border: "1px solid #555",
-//     backgroundColor: "#3ecf8e",
-//     color: "#000",
-//     padding: "12px 15px",
-//     textAlign: "center",
-//     fontSize: "16px",
-//   },
-//   td: {
-//     border: "1px solid #555",
-//     padding: "14px",
-//     textAlign: "center",
-//     color: "#fff",
-//     fontSize: "15px",
-//     cursor: "pointer",
-//   },
-//   editInput: {
-//     width: "100%",
-//     backgroundColor: "#333",
-//     color: "#fff",
-//     border: "1px solid #666",
-//     padding: "8px",
-//     fontSize: "14px",
-//     borderRadius: "4px",
-//   },
-//   loadingContainer: {
-//     display: "flex",
-//     flexDirection: "column",
-//     alignItems: "center",
-//     justifyContent: "center",
-//     height: "100vh",
-//   },
-//   spinner: {
-//     border: "8px solid #f3f3f3",
-//     borderTop: "8px solid #007bff",
-//     borderRadius: "50%",
-//     width: "60px",
-//     height: "60px",
-//     animation: "spin 1s linear infinite",
-//     marginBottom: "20px",
-//   },
-//   errorContainer: {
-//     display: "flex",
-//     justifyContent: "center",
-//     alignItems: "center",
-//     height: "100vh",
-//   },
-//   errorMessage: {
-//     color: "red",
-//     fontSize: "20px",
-//   },
-// };
-
-// // Insert keyframe for spinner if not already present
-// const styleSheet = document.styleSheets[0];
-// const keyframes = `
-// @keyframes spin {
-//   to { transform: rotate(360deg); }
-// }`;
-// styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
-
-// export default GradeDashboard;
 
 // import React, { useState, useEffect, useRef, CSSProperties } from "react";
 // import { useNavigate } from "react-router-dom";
@@ -1941,9 +1024,10 @@ export default GradeDashboard;
 // }
 
 // interface Exam {
-//   subjectName: string;
 //   examType: string;
 //   columnNumber: number;
+//   // If you still want to keep subjectName from the table, you can keep it:
+//   // subjectName?: string;
 // }
 
 // interface Subject {
@@ -1959,7 +1043,7 @@ export default GradeDashboard;
 // }
 
 // interface ExamType {
-//   subjectName: string;
+//   subjectName?: string; // keep optional or remove if no longer needed
 //   examType: string;
 //   columnNumber: number;
 //   term: string;
@@ -1984,7 +1068,10 @@ export default GradeDashboard;
 //   const [loading, setLoading] = useState<boolean>(true);
 //   const [error, setError] = useState<string>("");
 
-//   const [editingCell, setEditingCell] = useState<{ studentId: number; examType: string } | null>(null);
+//   const [editingCell, setEditingCell] = useState<{
+//     studentId: number;
+//     examType: string;
+//   } | null>(null);
 //   const inputRef = useRef<HTMLInputElement>(null);
 
 //   const terms = ["First Term", "Second Term", "Retakes"];
@@ -2077,7 +1164,9 @@ export default GradeDashboard;
 //           throw new Error("Failed to fetch classes.");
 //         }
 
-//         const uniqueClasses = Array.from(new Set(classData.map((s: Student) => s.className)));
+//         const uniqueClasses = Array.from(
+//           new Set(classData.map((s: Student) => s.className))
+//         );
 //         setClasses(uniqueClasses);
 
 //         const { data: sectionData, error: sectionError } = await supabase
@@ -2091,7 +1180,9 @@ export default GradeDashboard;
 //           throw new Error("Failed to fetch sections.");
 //         }
 
-//         const uniqueSections = Array.from(new Set(sectionData.map((s: Student) => s.section)));
+//         const uniqueSections = Array.from(
+//           new Set(sectionData.map((s: Student) => s.section))
+//         );
 //         setSections(uniqueSections);
 //       } catch (err: any) {
 //         console.error("Error during initial data fetching:", err);
@@ -2124,7 +1215,9 @@ export default GradeDashboard;
 
 //           const fetchedSubjects: string[] = [];
 //           for (let i = 1; i <= 15; i++) {
-//             const sub = classSubjects[`sub${i}` as keyof ClassData] as string | undefined;
+//             const sub = classSubjects[`sub${i}` as keyof ClassData] as
+//               | string
+//               | undefined;
 //             if (sub && sub.trim() !== "") {
 //               fetchedSubjects.push(sub.trim());
 //             }
@@ -2145,6 +1238,9 @@ export default GradeDashboard;
 //     }
 //   }, [selectedClass, school]);
 
+//   // ------------------------------------------------------------------------------
+//   // Updated to fetch ONLY examType and columnNumber, ignoring subjectName.
+//   // ------------------------------------------------------------------------------
 //   useEffect(() => {
 //     if (selectedSubject) {
 //       const fetchExamTypes = async () => {
@@ -2153,16 +1249,21 @@ export default GradeDashboard;
 
 //           const { data: examData, error: examError } = await supabase
 //             .from("exam")
-//             .select("subjectName, examType, columnNumber")
-//             .eq("school", school)
-//             .eq("subjectName", selectedSubject);
+//             .select("examType, columnNumber")
+//             .eq("school", school); 
+//             // Removed .eq("subjectName", selectedSubject) to ignore subjectName
 
-//           if (examError || !examData) {
+//           if (examError) {
 //             throw new Error("Failed to fetch exam types.");
+//           }
+
+//           if (!examData) {
+//             throw new Error("No exam types returned from the database.");
 //           }
 
 //           console.log("Exam data:", examData);
 
+//           // Same logic for extracting term, weight, validating sum, etc.
 //           const examTypeList: ExamType[] = examData
 //             .map((exam: Exam) => {
 //               const term = extractTerm(exam.examType);
@@ -2172,42 +1273,44 @@ export default GradeDashboard;
 //               }
 //               const weight = extractWeight(exam.examType);
 //               if (weight === null) {
-//                 console.warn(`Weight not found or invalid in examType name: ${exam.examType}`);
+//                 console.warn(
+//                   `Weight not found or invalid in examType name: ${exam.examType}`
+//                 );
 //                 return null;
 //               }
 //               return {
-//                 subjectName: exam.subjectName,
 //                 examType: exam.examType,
 //                 columnNumber: exam.columnNumber,
-//                 term: term,
-//                 weight: weight,
+//                 term,
+//                 weight,
 //               };
 //             })
 //             .filter((examType): examType is ExamType => examType !== null);
 
+//           // Validate each term sums up to 100
 //           const termWeightMap: { [key: string]: number } = {};
-//           examTypeList.forEach((examType) => {
-//             if (termWeightMap[examType.term]) {
-//               termWeightMap[examType.term] += examType.weight;
+//           examTypeList.forEach((et) => {
+//             if (termWeightMap[et.term]) {
+//               termWeightMap[et.term] += et.weight;
 //             } else {
-//               termWeightMap[examType.term] = examType.weight;
+//               termWeightMap[et.term] = et.weight;
 //             }
 //           });
 
 //           const invalidTerms = Object.entries(termWeightMap).filter(
 //             ([, totalWeight]) => totalWeight !== 100
 //           );
-
 //           if (invalidTerms.length > 0) {
 //             console.error(
 //               "The following terms have weights that do not sum to 100:",
 //               invalidTerms
 //             );
 //             throw new Error(
-//               "Invalid weight distribution. Ensure that the weights for each term sum up to 100 points."
+//               "Invalid weight distribution. Ensure that the weights for each term sum to 100 points."
 //             );
 //           }
 
+//           // Sort by columnNumber
 //           examTypeList.sort((a, b) => a.columnNumber - b.columnNumber);
 
 //           setExamTypes(examTypeList);
@@ -2224,9 +1327,16 @@ export default GradeDashboard;
 //       setExamTypes([]);
 //     }
 //   }, [selectedSubject, school]);
+//   // ------------------------------------------------------------------------------
 
 //   useEffect(() => {
-//     if (selectedClass && selectedSection && selectedSubject && selectedTerm && examTypes.length > 0) {
+//     if (
+//       selectedClass &&
+//       selectedSection &&
+//       selectedSubject &&
+//       selectedTerm &&
+//       examTypes.length > 0
+//     ) {
 //       const fetchGrades = async () => {
 //         try {
 //           setLoading(true);
@@ -2263,8 +1373,13 @@ export default GradeDashboard;
 
 //           console.log(`Fetched grades rows:`, gradesRows);
 
-//           const filteredExamTypes = examTypes.filter((exam) => exam.term === selectedTerm);
-//           console.log(`Filtered exam types for term "${selectedTerm}":`, filteredExamTypes);
+//           const filteredExamTypes = examTypes.filter(
+//             (exam) => exam.term === selectedTerm
+//           );
+//           console.log(
+//             `Filtered exam types for term "${selectedTerm}":`,
+//             filteredExamTypes
+//           );
 
 //           const gradesData: GradeData[] = gradesRows.map((row: any) => {
 //             const studentName = row.studentName || "-";
@@ -2298,7 +1413,8 @@ export default GradeDashboard;
 //                   singleMark = numericMark;
 //                 }
 //               } else {
-//                 examMarks[exam.examType] = mark !== null && mark !== undefined ? mark : "";
+//                 examMarks[exam.examType] =
+//                   mark !== null && mark !== undefined ? mark : "";
 //               }
 //             });
 
@@ -2334,7 +1450,14 @@ export default GradeDashboard;
 //     } else {
 //       setGrades([]);
 //     }
-//   }, [selectedClass, selectedSection, selectedSubject, selectedTerm, examTypes, school]);
+//   }, [
+//     selectedClass,
+//     selectedSection,
+//     selectedSubject,
+//     selectedTerm,
+//     examTypes,
+//     school,
+//   ]);
 
 //   const displayExamTypes = examTypes
 //     .filter((exam) => exam.term === selectedTerm)
@@ -2353,85 +1476,42 @@ export default GradeDashboard;
 //     setEditingCell({ studentId, examType });
 //   };
 
-//   // const handleSaveMark = async (studentId: number, examType: string, newMark: number | string) => {
-//   //   try {
-//   //     const exam = examTypes.find((e) => e.examType === examType);
-//   //     if (!exam) {
-//   //       throw new Error("Exam type not found.");
-//   //     }
-
-//   //     const subjectData = await supabase
-//   //       .from("subjects")
-//   //       .select("sheetName")
-//   //       .eq("school", school)
-//   //       .eq("subjectName", selectedSubject)
-//   //       .single();
-
-//   //     if (subjectData.error || !subjectData.data) {
-//   //       throw new Error("Failed to fetch sheet name for the selected subject.");
-//   //     }
-
-//   //     const sheetName = (subjectData.data as Subject).sheetName;
-
-//   //     const { error } = await supabase
-//   //       .from(sheetName)
-//   //       .update({ [mapColumnNumberToColumnName(exam.columnNumber)]: newMark })
-//   //       .eq("id", studentId);
-
-//   //     if (error) {
-//   //       throw new Error("Failed to update the mark.");
-//   //     }
-
-//   //     setGrades((prevGrades) =>
-//   //       prevGrades.map((grade) => {
-//   //         if (grade.id === studentId) {
-//   //           return {
-//   //             ...grade,
-//   //             examMarks: {
-//   //               ...grade.examMarks,
-//   //               [examType]: newMark,
-//   //             },
-//   //           };
-//   //         }
-//   //         return grade;
-//   //       })
-//   //     );
-//   //   } catch (err: any) {
-//   //     console.error("Error saving mark:", err);
-//   //     alert(err.message || "Failed to save the mark.");
-//   //   } finally {
-//   //     setEditingCell(null);
-//   //   }
-//   // };
-//   const handleSaveMark = async (studentId: number, examType: string, newMark: number | string | null) => {
+//   const handleSaveMark = async (
+//     studentId: number,
+//     examType: string,
+//     newMark: number | string | null
+//   ) => {
 //     try {
 //       const exam = examTypes.find((e) => e.examType === examType);
 //       if (!exam) {
 //         throw new Error("Exam type not found.");
 //       }
-  
+
 //       const subjectData = await supabase
 //         .from("subjects")
 //         .select("sheetName")
 //         .eq("school", school)
 //         .eq("subjectName", selectedSubject)
 //         .single();
-  
+
 //       if (subjectData.error || !subjectData.data) {
 //         throw new Error("Failed to fetch sheet name for the selected subject.");
 //       }
-  
+
 //       const sheetName = (subjectData.data as Subject).sheetName;
-  
+
 //       const { error } = await supabase
 //         .from(sheetName)
-//         .update({ [mapColumnNumberToColumnName(exam.columnNumber)]: newMark === "" ? null : newMark })
+//         .update({
+//           [mapColumnNumberToColumnName(exam.columnNumber)]:
+//             newMark === "" ? null : newMark,
+//         })
 //         .eq("id", studentId);
-  
+
 //       if (error) {
 //         throw new Error("Failed to update the mark.");
 //       }
-  
+
 //       setGrades((prevGrades) =>
 //         prevGrades.map((grade) => {
 //           if (grade.id === studentId) {
@@ -2453,20 +1533,7 @@ export default GradeDashboard;
 //       setEditingCell(null);
 //     }
 //   };
-  
-  
-//   // const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>, studentId: number, examType: string) => {
-//   //   if (e.key === "Enter") {
-//   //     const target = e.target as HTMLInputElement;
-//   //     const value = target.value;
-//   //     const parsedValue = parseFloat(value);
-//   //     if (!isNaN(parsedValue)) {
-//   //       handleSaveMark(studentId, examType, parsedValue);
-//   //     } else {
-//   //       alert("Please enter a valid number.");
-//   //     }
-//   //   }
-//   // };
+
 //   const handleKeyPress = (
 //     e: React.KeyboardEvent<HTMLInputElement>,
 //     studentId: number,
@@ -2475,7 +1542,8 @@ export default GradeDashboard;
 //     if (e.key === "Enter") {
 //       const target = e.target as HTMLInputElement;
 //       const value = target.value;
-  
+
+//       // Accept: empty => null, "-", or a valid number
 //       if (value === "") {
 //         handleSaveMark(studentId, examType, null);
 //       } else if (value === "-") {
@@ -2490,8 +1558,7 @@ export default GradeDashboard;
 //       }
 //     }
 //   };
-  
-  
+
 //   useEffect(() => {
 //     if (editingCell && inputRef.current) {
 //       inputRef.current.focus();
@@ -2518,31 +1585,31 @@ export default GradeDashboard;
 //   return (
 //     <div style={styles.pageContainer}>
 //       <div style={styles.floatingContainer}>
-//   <button
-//     style={{...styles.iconButton, backgroundColor: "#007BA7"}}
-//     onClick={() => navigate("/dashboard")}
-//     onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-//     onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-//   >
-//     📅
-//   </button>
-//   <button
-//     style={{ ...styles.iconButton, backgroundColor: "#50B755" }}
-//     onClick={() => navigate("/dashboard3")}
-//     onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-//     onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-//   >
-//     +
-//   </button>
-//   <button
-//     style={styles.iconButton}
-//     onClick={() => navigate("/")}
-//     onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-//     onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-//   >
-//     👤
-//   </button>
-// </div>
+//         <button
+//           style={{ ...styles.iconButton, backgroundColor: "#007BA7" }}
+//           onClick={() => navigate("/dashboard")}
+//           onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+//           onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+//         >
+//           📅
+//         </button>
+//         <button
+//           style={{ ...styles.iconButton, backgroundColor: "#50B755" }}
+//           onClick={() => navigate("/dashboard3")}
+//           onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+//           onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+//         >
+//           +
+//         </button>
+//         <button
+//           style={styles.iconButton}
+//           onClick={() => navigate("/")}
+//           onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+//           onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+//         >
+//           👤
+//         </button>
+//       </div>
 
 //       <div style={styles.card}>
 //         <h1 style={styles.title}>Grade Dashboard</h1>
@@ -2631,7 +1698,7 @@ export default GradeDashboard;
 //             <thead>
 //               <tr>
 //                 <th style={{ ...styles.th2, textAlign: "left" }}>Student Name</th>
-//                 <th style={{ ...styles.th}}>Average %</th>
+//                 <th style={{ ...styles.th }}>Average %</th>
 //                 {displayExamTypes.map((exam) => (
 //                   <th key={exam} style={styles.th}>
 //                     {exam}
@@ -2643,7 +1710,9 @@ export default GradeDashboard;
 //               {grades.length > 0 ? (
 //                 grades.map((grade) => (
 //                   <tr key={grade.id}>
-//                     <td style={{ ...styles.td2, textAlign: "right" }}>{grade.studentName}</td>
+//                     <td style={{ ...styles.td2, textAlign: "right" }}>
+//                       {grade.studentName}
+//                     </td>
 //                     <td style={styles.td}>{calculateAverage(grade)}</td>
 //                     {displayExamTypes.map((exam) => (
 //                       <td
@@ -2660,7 +1729,11 @@ export default GradeDashboard;
 //                           <input
 //                             type="text"
 //                             ref={inputRef}
-//                             defaultValue={grade.examMarks[exam] !== null ? (grade.examMarks[exam] as string) : ""}
+//                             defaultValue={
+//                               grade.examMarks[exam] !== null
+//                                 ? (grade.examMarks[exam] as string)
+//                                 : ""
+//                             }
 //                             onBlur={(e) => {
 //                               const value = e.target.value;
 //                               if (value === "") {
@@ -2672,17 +1745,22 @@ export default GradeDashboard;
 //                                 if (!isNaN(parsedValue)) {
 //                                   handleSaveMark(grade.id, exam, parsedValue);
 //                                 } else {
-//                                   alert("Please enter a valid number, leave empty, or enter '-'.");
+//                                   alert(
+//                                     "Please enter a valid number, leave empty, or enter '-'."
+//                                   );
 //                                   setEditingCell(null);
 //                                 }
 //                               }
 //                             }}
-                            
-//                             onKeyPress={(e) => handleKeyPress(e, grade.id, exam)}
+//                             onKeyPress={(e) =>
+//                               handleKeyPress(e, grade.id, exam)
+//                             }
 //                             style={styles.input}
 //                           />
 //                         ) : (
-//                           grade.examMarks[exam] !== null ? grade.examMarks[exam] : ""
+//                           grade.examMarks[exam] !== null
+//                             ? grade.examMarks[exam]
+//                             : ""
 //                         )}
 //                       </td>
 //                     ))}
@@ -2690,7 +1768,10 @@ export default GradeDashboard;
 //                 ))
 //               ) : (
 //                 <tr>
-//                   <td style={styles.td} colSpan={2 + displayExamTypes.length}></td>
+//                   <td
+//                     style={styles.td}
+//                     colSpan={2 + displayExamTypes.length}
+//                   ></td>
 //                 </tr>
 //               )}
 //             </tbody>
@@ -2702,47 +1783,46 @@ export default GradeDashboard;
 // };
 
 // const styles: { [key: string]: CSSProperties } = {
- 
 //   iconButton: {
-//     width: "60px", // Increased button size
-//     height: "60px", // Increased button size
+//     width: "60px",
+//     height: "60px",
 //     margin: "12px 0",
-//     fontSize: "28px", // Larger font size for icons
+//     fontSize: "28px",
 //     display: "flex",
 //     alignItems: "center",
 //     justifyContent: "center",
-//     backgroundColor: "#Dfff", // Slightly brighter grey for buttons
-//     color: "#fff", // Darker text color for contrast
-//     border: "3px solid #Dfff", // Border for button definition
-//     borderRadius: "10px", // Slightly rounded edges for a modern look
+//     backgroundColor: "#Dfff",
+//     color: "#fff",
+//     border: "3px solid #Dfff",
+//     borderRadius: "10px",
 //     cursor: "pointer",
 //     transition: "transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease",
-//     boxShadow: "0 4px 4px rgba(0, 0, 0, 0.5)", // Subtle shadow for button depth
+//     boxShadow: "0 4px 4px rgba(0, 0, 0, 0.5)",
 //   },
 //   iconButton2: {
-//     width: "60px", // Increased button size
-//     height: "60px", // Increased button size
+//     width: "60px",
+//     height: "60px",
 //     margin: "12px 0",
-//     fontSize: "34px", // Larger font size for icons
+//     fontSize: "34px",
 //     padding: "20px",
 //     alignItems: "center",
 //     justifyContent: "center",
-//     backgroundColor: "#Dfff", // Slightly brighter grey for buttons
-//     color: "#fff", // Darker text color for contrast
-//     border: "1px solid #Dfff", // Border for button definition
-//     borderRadius: "10px", // Slightly rounded edges for a modern look
+//     backgroundColor: "#Dfff",
+//     color: "#fff",
+//     border: "1px solid #Dfff",
+//     borderRadius: "10px",
 //     cursor: "pointer",
 //     transition: "transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease",
-//     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.3)", // Subtle shadow for button depth
+//     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
 //   },
 //   iconButtonHover: {
-//     transform: "translateY(-2px)", // Button "lifts" slightly on hover
-//     boxShadow: "0 4px 12px rgba(0, 0, 0, 0.6)", // Enhanced shadow for hover
-//     backgroundColor: "#e8e8e8", // Slightly brighter grey on hover
+//     transform: "translateY(-2px)",
+//     boxShadow: "0 4px 12px rgba(0, 0, 0, 0.6)",
+//     backgroundColor: "#e8e8e8",
 //   },
 //   pageContainer: {
-//     display: "flex", // Flexbox layout
-//     flexDirection: "row", // Row layout to position elements side-by-side
+//     display: "flex",
+//     flexDirection: "row",
 //     alignItems: "flex-start",
 //     justifyContent: "center",
 //     padding: "20px",
@@ -2750,14 +1830,13 @@ export default GradeDashboard;
 //     minHeight: "100vh",
 //     fontFamily: "Arial, sans-serif",
 //   },
-  
 //   floatingContainer: {
-//     position: "fixed", // Keep it fixed so it does not grow/shrink
+//     position: "fixed",
 //     top: "20px",
-//     left: "210px", // Adjust for 10px spacing
-//     width: "82px", // Fixed width
-//     height: "auto", // Allow content height
-//     backgroundColor: "#f2f2f2", // Light grey background
+//     left: "35px",
+//     width: "82px",
+//     height: "auto",
+//     backgroundColor: "#f2f2f2",
 //     borderRadius: "20px",
 //     boxShadow: `
 //        0 2px 10px rgba(0, 0, 0, 0.3), 
@@ -2765,23 +1844,19 @@ export default GradeDashboard;
 //     `,
 //     padding: "5px 10px",
 //     zIndex: 1000,
-//     flexShrink: 0, // Prevent shrinking or growing
+//     flexShrink: 0,
 //     border: "1px solid #D6D6D6",
 //   },
-  
-  
 //   card: {
-//     flex: 1, // Take up the remaining space
+//     flex: 1,
 //     maxWidth: "1200px",
 //     backgroundColor: "#ffffff",
 //     padding: "30px",
 //     borderRadius: "10px",
 //     boxShadow: "0 5px 3px rgba(0, 0, 0, 0.4)",
 //     textAlign: "center",
-    
-//     marginLeft: "20px", // Fixed 10px gap between float container and card
+//     marginLeft: "20px",
 //   },
-  
 //   title: {
 //     fontSize: "32px",
 //     marginBottom: "10px",
