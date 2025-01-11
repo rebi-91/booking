@@ -704,7 +704,7 @@ const openEditModal = async (student: Student) => {
       height: "auto",
       backgroundColor: "#212121",
       borderRadius: "20px",
-      boxShadow: "0 1px 10px 1px #007BA7",
+      boxShadow: "0 2px 12px 1px #007BA7",
       padding: "5px 10px",
       flexShrink: 0,
       border: "1px solid #000",
@@ -721,7 +721,7 @@ const openEditModal = async (student: Student) => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#007BA7",
+        backgroundColor: "#007bff",
         color: "#fff",
         border: "1px solid #Dfff",
         borderRadius: "10px",
@@ -731,7 +731,7 @@ const openEditModal = async (student: Student) => {
       }}
       onClick={() => navigate("/dashboard")}
       onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "scale(1.1)";
+        e.currentTarget.style.transform = "scale(1.2)";
         e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.3)";
       }}
       onMouseLeave={(e) => {
@@ -750,7 +750,7 @@ const openEditModal = async (student: Student) => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#007BA7",
+        backgroundColor: "#666",
         color: "#fff",
         border: "1px solid #Dfff",
         borderRadius: "10px",
@@ -760,7 +760,7 @@ const openEditModal = async (student: Student) => {
       }}
       onClick={() => navigate("/dashboard2")}
       onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "scale(1.1)";
+        e.currentTarget.style.transform = "scale(1.2)";
         e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.3)";
       }}
       onMouseLeave={(e) => {
@@ -779,7 +779,7 @@ const openEditModal = async (student: Student) => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#Dfff",
+        backgroundColor: "#ff4d4d",
         color: "#fff",
         border: "1px solid #Dfff",
         borderRadius: "10px",
@@ -789,7 +789,7 @@ const openEditModal = async (student: Student) => {
       }}
       onClick={() => navigate("/")}
       onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "scale(1.1)";
+        e.currentTarget.style.transform = "scale(1.2)";
         e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.3)";
       }}
       onMouseLeave={(e) => {
@@ -797,8 +797,37 @@ const openEditModal = async (student: Student) => {
         e.currentTarget.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.3)";
       }}
     >
-      👤
+      🏠
     </button>
+      <button
+        style={{
+          width: "60px",
+          height: "60px",
+          margin: "12px 0",
+          fontSize: "28px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#dbe346",
+          color: "#fff",
+          border: "1px solid #Dfff",
+          borderRadius: "10px",
+          cursor: "pointer",
+          transition: "transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease",
+          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
+        }}
+        onClick={() => navigate("/dash5")}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = "scale(1.2)";
+          e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.3)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = "scale(1)";
+          e.currentTarget.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.3)";
+        }}
+      >
+        ⏰ 
+      </button>
   </div>
     <div
       style={{
@@ -811,7 +840,7 @@ const openEditModal = async (student: Student) => {
        
         borderRadius: "10px",
         fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-        boxShadow: "0 4px 20px 7px #007BA7",
+        boxShadow: "0px 1px 15px 4px #007BA7",
       }}
     >
       {/* Header */}

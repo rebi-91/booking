@@ -597,9 +597,9 @@ const GradeDashboard: React.FC = () => {
     <div style={styles.pageContainer}>
       <div style={styles.floatingContainer}>
         <button
-          style={{ ...styles.iconButton, backgroundColor: "#007BA7" }}
+          style={{ ...styles.iconButton, backgroundColor: "#007bff" }}
           onClick={() => navigate("/dashboard")}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
           onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
           📅
@@ -607,7 +607,7 @@ const GradeDashboard: React.FC = () => {
         <button
           style={{ ...styles.iconButton, backgroundColor: "#50B755" }}
           onClick={() => navigate("/dashboard3")}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
           onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
           +
@@ -615,10 +615,18 @@ const GradeDashboard: React.FC = () => {
         <button
           style={styles.iconButton}
           onClick={() => navigate("/")}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
           onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
-          👤
+          🏠
+        </button>
+        <button
+          style={styles.iconButton2}
+          onClick={() => navigate("/dash5")}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+        >
+           ⏰ 
         </button>
       </div>
 
@@ -788,6 +796,11 @@ const GradeDashboard: React.FC = () => {
             </tbody>
           </table>
         </div>
+          <footer className="footer">
+                  <div className="text-center">
+                    &copy; {new Date().getFullYear()} SchoolMood. All rights reserved.
+              </div>
+            </footer>
       </div>
     </div>
   );
@@ -802,9 +815,9 @@ const styles: { [key: string]: CSSProperties } = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#Dfff",
+    backgroundColor: "#ff4d4d",
     color: "#fff",
-    border: "3px solid #Dfff",
+    border: "1px solid #Dfff",
     borderRadius: "10px",
     cursor: "pointer",
     transition: "transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease",
@@ -818,9 +831,9 @@ const styles: { [key: string]: CSSProperties } = {
     padding: "20px",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#Dfff",
+    backgroundColor: "#dbe346",
     color: "#fff",
-    border: "1px solid #Dfff",
+    border: "1px solid #Dfff", // Border for button definition
     borderRadius: "10px",
     cursor: "pointer",
     transition: "transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease",
@@ -837,7 +850,7 @@ const styles: { [key: string]: CSSProperties } = {
     alignItems: "flex-start",
     justifyContent: "center",
     padding: "20px",
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#000",
     minHeight: "100vh",
     fontFamily: "Arial, sans-serif",
   },
@@ -847,16 +860,13 @@ const styles: { [key: string]: CSSProperties } = {
     left: "35px",
     width: "82px",
     height: "auto",
-    backgroundColor: "#f2f2f2",
+    backgroundColor: "#000",
     borderRadius: "20px",
-    boxShadow: `
-       0 2px 10px rgba(0, 0, 0, 0.3), 
-      0 1px 0px rgba(0, 0, 0, 0.1)
-    `,
+    boxShadow: "0 2px 12px 1px #007BA7",
+
     padding: "5px 10px",
     zIndex: 1000,
     flexShrink: 0,
-    border: "1px solid #D6D6D6",
   },
   card: {
     flex: 1,
@@ -864,7 +874,6 @@ const styles: { [key: string]: CSSProperties } = {
     backgroundColor: "#ffffff",
     padding: "30px",
     borderRadius: "10px",
-    boxShadow: "0 5px 3px rgba(0, 0, 0, 0.4)",
     textAlign: "center",
     marginLeft: "20px",
   },

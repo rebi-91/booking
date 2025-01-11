@@ -581,6 +581,7 @@ function DashBoard() {
       width: "100%",
       display: "flex",
       flexDirection: "column",
+      
     },
     customMessageInput: {
       width: "100%",
@@ -592,7 +593,6 @@ function DashBoard() {
       borderRadius: "8px",
       outline: "none",
       resize: "vertical",
-      backgroundColor: "#f1f1f1",
     },
     saveButton: {
       marginTop: "10px",
@@ -758,7 +758,7 @@ function DashBoard() {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: "#Dfff", // Slightly brighter grey for buttons
+      backgroundColor: "#ff4d4d", // Slightly brighter grey for buttons
       color: "#fff", // Darker text color for contrast
       border: "1px solid #Dfff", // Border for button definition
       borderRadius: "10px", // Slightly rounded edges for a modern look
@@ -774,7 +774,7 @@ function DashBoard() {
       padding: "20px",
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: "#Dfff", // Slightly brighter grey for buttons
+      backgroundColor: "#dbe346", // Slightly brighter grey for buttons
       color: "#fff", // Darker text color for contrast
       border: "1px solid #Dfff", // Border for button definition
       borderRadius: "10px", // Slightly rounded edges for a modern look
@@ -798,18 +798,18 @@ function DashBoard() {
       fontFamily: "Arial, sans-serif",
     },
     floatingContainer: {
-      position: "fixed", // Keep it fixed so it does not grow/shrink
+      position: "fixed",
       top: "20px",
-      left: "15px", // Adjust for 10px spacing
-      width: "85px", // Fixed width
-      height: "auto", // Allow content height
-      backgroundColor: "#000", // Light grey background
+      left: "35px",
+      width: "82px",
+      height: "auto",
+      backgroundColor: "#000",
       borderRadius: "20px",
-      boxShadow: "0 1px 5px 1px #007BA7",
+      boxShadow: "0 2px 12px 1px #007BA7",
+  
       padding: "5px 10px",
       zIndex: 1000,
-      flexShrink: 0, // Prevent shrinking or growing
-      border: "1px solid #000",
+      flexShrink: 0,
     },
     card: {
       flex: 1, // Take up the remaining space
@@ -830,9 +830,9 @@ function DashBoard() {
     <div style={styles.container}>
       <div style={styles.floatingContainer}>
         <button
-          style={{ ...styles.iconButton2, backgroundColor: "#007BA7" }}
+          style={{ ...styles.iconButton2, backgroundColor: "#666" }}
           onClick={() => navigate("/dashboard2")}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
           onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
           🎓
@@ -840,7 +840,7 @@ function DashBoard() {
         <button
           style={{ ...styles.iconButton, backgroundColor: "#50B755" }}
           onClick={() => navigate("/dashboard3")}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
           onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
           +
@@ -848,14 +848,22 @@ function DashBoard() {
         <button
           style={styles.iconButton}
           onClick={() => navigate("/")}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
           onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
-          👤
+          🏠
+        </button>
+        <button
+          style={styles.iconButton2}
+          onClick={() => navigate("/dash5")}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+        >
+           ⏰ 
         </button>
       </div>
       <div style={styles.card}>
-        <h1 style={styles.header}>Dashboard</h1>
+        <h1 style={styles.header}>Student Attendance</h1>
         <p style={styles.schoolName}>{userSchool}</p>
 
         {/* Top Section */}

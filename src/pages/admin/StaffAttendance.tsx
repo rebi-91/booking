@@ -1580,7 +1580,44 @@ function StaffAttendance() {
   // Render
   // -----------------------------------
   return (
-    <div style={styles.container}>
+    <div style={styles.container2}>
+      {/* Floating Container */}
+      <div style={styles.floatingContainer}>
+        <button
+          style={{ ...styles.iconButton2, backgroundColor: "#666" }}
+          onClick={() => navigate("/dashboard2")}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+        >
+          🎓
+        </button>
+        <button
+          style={{ ...styles.iconButton, backgroundColor: "#50B755" }}
+          onClick={() => navigate("/dashboard3")}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+        >
+          +
+        </button>
+        <button
+          style={styles.iconButton}
+          onClick={() => navigate("/")}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+        >
+          🏠
+        </button>
+        <button
+          style={styles.iconButton2}
+          onClick={() => navigate("/dashboard")}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+        >
+          📅
+        </button>
+      </div>
+    <div style={styles.card}>
+      
       <h1 style={styles.header}>Staff Attendance</h1>
       <p style={styles.schoolName}>{userSchool}</p>
 
@@ -1945,6 +1982,8 @@ function StaffAttendance() {
         </Modal.Footer>
       </Modal>
     </div>
+    </div>
+   
   );
 }
 
@@ -1952,16 +1991,76 @@ function StaffAttendance() {
 // Styles
 // ------------------------------------
 const styles: Record<string, CSSProperties> = {
-  container: {
+  container2: {
+    position: "relative",
     width: "95%",
     maxWidth: "1400px",
     margin: "20px auto",
     padding: "20px",
-    backgroundColor: "#121212",
+    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+    color: "#ffffff",
+  },
+  floatingContainer: {
+    position: "fixed",
+    top: "20px",
+    left: "35px",
+    width: "82px",
+    height: "auto",
+    backgroundColor: "#000",
+    borderRadius: "20px",
+    boxShadow: "0 2px 12px 1px #007BA7",
+
+    padding: "5px 10px",
+    zIndex: 1000,
+    flexShrink: 0,
+  },
+  card: {
+    margin: "0 auto",
+    width: "95%",
+    maxWidth: "1400px",
+    padding: "20px",
+    backgroundColor: "#000",
     boxShadow: "0 4px 20px 1px #007BA7",
     borderRadius: "10px",
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
     color: "#ffffff",
+  },
+  iconButton: {
+    width: "60px",
+    height: "60px",
+    margin: "12px 0",
+    fontSize: "28px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#ff4d4d",
+    color: "#fff",
+    border: "1px solid #Dfff",
+    borderRadius: "10px",
+    cursor: "pointer",
+    transition: "transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease",
+    boxShadow: "0 4px 4px rgba(0, 0, 0, 0.5)",
+  },
+  iconButton2: {
+    width: "60px",
+    height: "60px",
+    margin: "12px 0",
+    fontSize: "34px",
+    padding: "20px",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#007bff",
+    color: "#fff",
+    border: "1px solid #Dfff", // Border for button definition
+    borderRadius: "10px",
+    cursor: "pointer",
+    transition: "transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease",
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
+  },
+  iconButtonHover: {
+    transform: "translateY(-2px)",
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.6)",
+    backgroundColor: "#e8e8e8",
   },
   header: {
     fontSize: "32px",

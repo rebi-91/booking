@@ -535,14 +535,29 @@ const TeacherDashboard: React.FC = () => {
               <h1 className="header-title">Teacher Dashboard</h1>
             </Col>
             <Col className="text-end">
-              <Link
-                to="/attendance"
-                className="attendance-icon btn btn-light rounded-circle p-2 shadow"
-                aria-label="Attendance Link"
-                title="Attendance"
-              >
-                📅
-              </Link>
+            <div className="button-row d-flex justify-content-center gap-2 my-3">
+                <button
+                  className="teacher-icon-button4 me-2"
+                  onClick={() => navigate("/attendance")}
+                  title="Go to Student Attendance"
+                >
+                  📅
+                </button>
+                <button
+                  className="teacher-icon-button3 me-2"
+                  onClick={() => navigate("/")}
+                  title="Go to Home Page"
+                >
+                  🏠
+                </button>
+                <button
+                  className="teacher-icon-button2 "
+                  onClick={() => navigate("/my-attendance")}
+                  title="Go to My Attendance Page"
+                >
+                  ⏰ 
+                </button>
+                </div>
             </Col>
           </Row>
         </Container>

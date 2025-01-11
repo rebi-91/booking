@@ -2,10 +2,10 @@
 
 /* Container Background Consistent with Dark Theme */
 .staffpage-container {
-  background-color: #121212;
+  background-color: #000000;
   min-height: 100vh;
-  box-shadow: 0 4px 20px 1px #007BA7 !important; /* Corrected syntax */
 }
+
 
 /* Table Header Styles */
 
@@ -60,9 +60,10 @@
 .teacher-icon-button {
   width: 55px;
   height: 55px;
+  font-size: 28px;
   border: none;
   border-radius: 50%;
-  background-color: #007bff; /* Blue matching Morning Attendance */
+  background-color: #57595c; /* Blue matching Morning Attendance */
   color: #ffffff; /* White icon color */
   cursor: pointer;
   display: flex;
@@ -74,7 +75,7 @@
 }
 
 .teacher-icon-button:hover {
-  transform: scale(1.05);
+  transform: scale(1.15);
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);
 }
 
@@ -84,7 +85,24 @@
   height: 55px;
   border: none;
   border-radius: 50%;
-  background-color: #50B755; /* Green matching Evening Attendance */
+  font-size: 20px;
+  background-color: #dbe346; /* Green matching Evening Attendance */
+  color: #ffffff; /* White icon color */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+.teacher-icon-button4 {
+  width: 55px;
+  height: 55px;
+  border: none;
+  border-radius: 50%;
+  font-size: 20px;
+  background-color: #007bff; /* Green matching Evening Attendance */
   color: #ffffff; /* White icon color */
   cursor: pointer;
   display: flex;
@@ -96,7 +114,11 @@
 }
 
 .teacher-icon-button2:hover {
-  transform: scale(1.05);
+  transform: scale(1.15);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);
+}
+.teacher-icon-button4:hover {
+  transform: scale(1.15);
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);
 }
 
@@ -106,6 +128,7 @@
   height: 55px;
   border: none;
   border-radius: 50%;
+  font-size: 24px;
   background-color: #ff4d4d; /* Red for Absent */
   color: #ffffff; /* White icon color */
   cursor: pointer;
@@ -118,7 +141,7 @@
 }
 
 .teacher-icon-button3:hover {
-  transform: scale(1.05);
+  transform: scale(1.15);
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);
 }
 

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import supabase from "../../supabase";
@@ -18,7 +19,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 function StaffPage() {
   const { session } = useSession();
   const navigate = useNavigate();
-  const geolocation = useGeolocation(); // For geolocation checks
+  const geolocation = useGeolocation();
 
   // Teacher info
   const [teacherName, setTeacherName] = useState("");
@@ -34,7 +35,7 @@ function StaffPage() {
 
   // Date info
   const today = new Date();
-  const currentDay = today.getDate();  // e.g. 3
+  const currentDay = today.getDate();
   const currentMonth = today.getMonth();
   const currentYear = today.getFullYear();
   const monthNames = [
@@ -45,25 +46,19 @@ function StaffPage() {
   const numberOfDays = new Date(currentYear, currentMonth + 1, 0).getDate();
   const daysArray = Array.from({ length: numberOfDays }, (_, i) => i + 1);
 
-  // Start = columns 1..31, Finish = e1..e31
   const [startAttendance, setStartAttendance] = useState<(boolean | null)[]>([]);
   const [finishAttendance, setFinishAttendance] = useState<(boolean | null)[]>([]);
-
-  // present / presentEvening
   const [present, setPresent] = useState(0);
   const [presentEvening, setPresentEvening] = useState(0);
 
-  // Loading / Error
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Pie chart slices
   const [startPresentCount, setStartPresentCount] = useState(0);
   const [startAbsentCount, setStartAbsentCount] = useState(0);
   const [finishPresentCount, setFinishPresentCount] = useState(0);
   const [finishAbsentCount, setFinishAbsentCount] = useState(0);
 
-  // If no session
   useEffect(() => {
     if (!session) {
       setError("No active session. Please log in.");
@@ -91,7 +86,6 @@ function StaffPage() {
       try {
         setLoading(true);
 
-        // Auth user
         const { data: userData, error: userError } = await supabase.auth.getUser();
         if (userError || !userData?.user) {
           setError("User not authenticated. Please log in.");
@@ -99,7 +93,6 @@ function StaffPage() {
           return;
         }
 
-        // from 'profiles' => role=Teacher, password=teacherID, school=school
         const { data: profileRow, error: profileError } = await supabase
           .from("profiles")
           .select("role, password, school")
@@ -121,7 +114,6 @@ function StaffPage() {
         const schoolName = profileRow.school;
         setSchool(schoolName || "");
 
-        // fetch row from teacher table
         const { data: teacherRow, error: teacherError } = await supabase
           .from("teacher")
           .select("*")
@@ -135,21 +127,14 @@ function StaffPage() {
           return;
         }
 
-        // fill local states
         setTeacherName(teacherRow.teacherName || "");
-        // loginTime from inN
         setLoginTime(teacherRow[`in${currentDay}`] || null);
-        // logoutTime from outN
         setLogoutTime(teacherRow[`out${currentDay}`] || null);
-        // minLate from minLateN
         setMinLate(teacherRow[`minLate${currentDay}`] ?? 0);
         setTotalLate(teacherRow.totalLate ?? 0);
-
-        // present/presentEvening
         setPresent(teacherRow.present || 0);
         setPresentEvening(teacherRow.presentEvening || 0);
 
-        // build arrays for start & finish
         const tempStart: (boolean | null)[] = [];
         const tempFinish: (boolean | null)[] = [];
         for (let d = 1; d <= numberOfDays; d++) {
@@ -170,10 +155,8 @@ function StaffPage() {
     if (session) {
       fetchTeacherData();
     }
-    // eslint-disable-next-line
-  }, [session]);
+  }, [session, currentDay, numberOfDays]);
 
-  // 3) Compute present/absent counts for Login/Logout charts
   useEffect(() => {
     if (startAttendance.length > 0) {
       let present = 0, absent = 0;
@@ -196,20 +179,24 @@ function StaffPage() {
     }
   }, [startAttendance, finishAttendance]);
 
-  // Filter shifts to match teacher's school, only show Evening if hour >= 14
+  // Filtering shifts
   const baghdadTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Baghdad" });
   const baghdadDate = new Date(baghdadTime);
   const baghdadHour = baghdadDate.getHours();
 
+  console.log("User's school:", school);
+  console.log("Fetched shifts:", shifts);
+
   const filteredShifts = shifts.filter((sh) => {
-    if (sh.school !== school) return false;
+    // Use trimmed comparison for school matching
+    if (sh.school?.trim() !== school?.trim()) return false;
     if (sh.shift === "Evening" && baghdadHour < 14) return false;
     return true;
   });
 
   const shiftLabel = (sh: any) => `${sh.shift} [${sh.cutOff} - ${sh.earlyOff}]`;
 
-  // Re-count present / presentEvening after changes
+  // Compute monthly counters (omitted for brevity, same as original)
   const updateMonthlyCounters = async (teacherRow: any, teacherID: string, schoolName: string) => {
     try {
       let countStart = 0;
@@ -249,12 +236,10 @@ function StaffPage() {
     }
   };
 
-  // Geolocation check (50m) but fetch from 'schoolName' column in school table
   const verifySchoolRange = async (schoolName: string) => {
     const { data: schoolRow, error: schoolErr } = await supabase
       .from("school")
       .select("lat, long")
-      // CHANGED: match 'schoolName' column in the school table
       .eq("schoolName", schoolName)
       .maybeSingle();
 
@@ -285,30 +270,24 @@ function StaffPage() {
     return filteredShifts.find((sh) => shiftLabel(sh) === label) || null;
   };
 
-  // =================== handleLogin ===================
+  // handleLogin function (same as original)
   const handleLogin = async () => {
     try {
       if (!selectedShift) {
         alert("Please select a shift first.");
         return;
       }
-      // geolocation
       await verifySchoolRange(school);
-
-      // shift
       const chosenShift = findShiftByLabel(selectedShift);
       if (!chosenShift) {
         throw new Error("Invalid shift selection.");
       }
-
-      // compare current time vs. cutOff
       const [cutOffHour, cutOffMin] = chosenShift.cutOff.split(":").map(Number);
       const nowBaghdad = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Baghdad" }));
       const cutOffTime = new Date(nowBaghdad);
       cutOffTime.setHours(cutOffHour, cutOffMin, 0, 0);
       const isLate = nowBaghdad > cutOffTime;
 
-      // fetch teacher row again
       const userRes = await supabase.auth.getUser();
       if (!userRes.data?.user) throw new Error("User not found in session.");
       const userId = userRes.data.user.id;
@@ -335,8 +314,6 @@ function StaffPage() {
       }
 
       const dayStr = currentDay.toString();
-
-      // NO MULTIPLE SIGN-INS => if dayStr or inN is set, disallow
       if (teacherRow[dayStr] === true) {
         throw new Error("You have already signed in today.");
       }
@@ -344,11 +321,9 @@ function StaffPage() {
         throw new Error("Login time for today is already recorded.");
       }
 
-      // build update
       const updateObj: any = {};
       updateObj[dayStr] = true;
 
-      // record inN
       const baghdadTimeStr = nowBaghdad.toLocaleTimeString("en-US", {
         hour: "2-digit",
         minute: "2-digit",
@@ -357,7 +332,6 @@ function StaffPage() {
       });
       updateObj[`in${dayStr}`] = baghdadTimeStr;
 
-      // if late => minLateN
       let minutesLate = 0;
       if (isLate) {
         const diffMs = nowBaghdad.getTime() - cutOffTime.getTime();
@@ -365,12 +339,10 @@ function StaffPage() {
       }
       updateObj[`minLate${dayStr}`] = minutesLate.toString();
 
-      // add to totalLate
       const oldTotalLate = parseInt(teacherRow.totalLate || "0", 10);
       const newTotalLate = oldTotalLate + minutesLate;
       updateObj.totalLate = newTotalLate.toString();
 
-      // update DB
       const { error: updErr } = await supabase
         .from("teacher")
         .update(updateObj)
@@ -379,17 +351,14 @@ function StaffPage() {
 
       if (updErr) throw new Error("Failed to record login: " + updErr.message);
 
-      // success => update local UI
       setLoginTime(baghdadTimeStr);
       setMinLate(minutesLate);
       setTotalLate(newTotalLate);
 
-      // set day => true in startAttendance
       const copy = [...startAttendance];
       copy[currentDay - 1] = true;
       setStartAttendance(copy);
 
-      // re-fetch row to update counters
       const { data: afterRow } = await supabase
         .from("teacher")
         .select("*")
@@ -408,35 +377,29 @@ function StaffPage() {
     }
   };
 
-  // =================== handleLogout ===================
+  // handleLogout function (same as original)
   const handleLogout = async () => {
     try {
       if (!selectedShift) {
         alert("Please select a shift first.");
         return;
       }
-      // geolocation
       await verifySchoolRange(school);
-
-      // shift
       const chosenShift = findShiftByLabel(selectedShift);
       if (!chosenShift) {
         throw new Error("Invalid shift selection for logout.");
       }
 
-      // 30 min before earlyOff
       const [eoHour, eoMin] = chosenShift.earlyOff.split(":").map(Number);
       const nowBaghdad = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Baghdad" }));
       const earlyOffTime = new Date(nowBaghdad);
       earlyOffTime.setHours(eoHour, eoMin, 0, 0);
 
-      // The teacher can only logout if now >= (earlyOff - 30 min)
       const cutoffLogout = new Date(earlyOffTime.getTime() - 30 * 60000);
       if (nowBaghdad < cutoffLogout) {
         throw new Error("Logout 30 mins before shift ends. Thank you!");
       }
 
-      // fetch teacher row
       const userRes = await supabase.auth.getUser();
       if (!userRes.data?.user) throw new Error("User not found in session.");
       const userId = userRes.data.user.id;
@@ -465,16 +428,9 @@ function StaffPage() {
 
       const eDayStr = `e${currentDay}`;
 
-      // We DO NOT block if eN is already TRUE => we allow overwriting
-      // if (teacherRow[eDayStr] === true) {
-      //   // no error => multiple sign-outs are allowed
-      // }
-
-      // build update
       const updateObj: any = {};
-      updateObj[eDayStr] = true;  // always set to TRUE or keep it if it was already true
+      updateObj[eDayStr] = true;
 
-      // record outN
       const baghdadTimeStr = nowBaghdad.toLocaleTimeString("en-US", {
         hour: "2-digit",
         minute: "2-digit",
@@ -483,7 +439,6 @@ function StaffPage() {
       });
       updateObj[`out${currentDay}`] = baghdadTimeStr;
 
-      // update DB
       const { error: updErr } = await supabase
         .from("teacher")
         .update(updateObj)
@@ -494,15 +449,12 @@ function StaffPage() {
         throw new Error("Failed to record logout: " + updErr.message);
       }
 
-      // success => update UI
       setLogoutTime(baghdadTimeStr);
 
-      // mark eN => true in finishAttendance
       const copy = [...finishAttendance];
       copy[currentDay - 1] = true;
       setFinishAttendance(copy);
 
-      // re-fetch row to update counters
       const { data: afterRow } = await supabase
         .from("teacher")
         .select("*")
@@ -521,7 +473,6 @@ function StaffPage() {
     }
   };
 
-  // If loading
   if (loading) {
     return (
       <Container className="staffpage-container vh-100 d-flex flex-column align-items-center justify-content-center">
@@ -531,7 +482,6 @@ function StaffPage() {
     );
   }
 
-  // If error
   if (error) {
     return (
       <Container className="staffpage-container vh-100 d-flex flex-column align-items-center justify-content-center">
@@ -540,7 +490,6 @@ function StaffPage() {
     );
   }
 
-  // Build chart data
   const loginData = {
     labels: ["Present (Login)", "Absent (Login)"],
     datasets: [
@@ -572,18 +521,15 @@ function StaffPage() {
     },
   };
 
-  // Format month-year
   const getCurrentMonthYear = () => {
     return `${monthNames[today.getMonth()]} ${today.getFullYear()}`;
   };
 
   return (
-    <Container fluid className="staffpage-container py-4">
+    <Container fluid className="staffpage-container py-4" >
       <Row className="justify-content-center">
         <Col xs={12} md={10} lg={8}>
-          <div className="bg-dark text-white p-4 rounded shadow">
-
-            {/* Header */}
+          <div className="bg-dark text-white p-4 rounded " style={{ boxShadow: "0 1px 20px 1px #007BA7" }}>
             <div className="d-flex flex-column flex-md-row justify-content-between align-items-start mb-3">
               <div>
                 <h2 className="text-primary mb-1">
@@ -595,7 +541,6 @@ function StaffPage() {
                 <p className="current-month-year">{getCurrentMonthYear()}</p>
               </div>
               <div className="d-flex flex-row align-items-end mt-3 mt-md-0">
-                {/* Buttons exactly the same as the previous example */}
                 <button
                   className="teacher-icon-button me-2"
                   onClick={() => navigate("/teacherdashboard")}
@@ -604,23 +549,22 @@ function StaffPage() {
                   🎓
                 </button>
                 <button
-                  className="teacher-icon-button2 me-2"
-                  onClick={() => navigate("/attendance")}
-                  title="Go to Attendance Page"
-                >
-                  📃
-                </button>
-                <button
-                  className="teacher-icon-button3"
+                  className="teacher-icon-button3 me-2"
                   onClick={() => navigate("/")}
                   title="Go to Home Page"
                 >
                   🏠
                 </button>
+                <button
+                  className="teacher-icon-button4 "
+                  onClick={() => navigate("/attendance")}
+                  title="Go to Student Attendance Page"
+                >
+                   📅
+                </button>
               </div>
             </div>
 
-            {/* SHIFT DROPDOWN */}
             <div className="mb-3">
               <Form.Group>
                 <Form.Label>Select Shift:</Form.Label>
@@ -642,10 +586,8 @@ function StaffPage() {
               </Form.Group>
             </div>
 
-            {/* Top Container: Login, Logout, minLate, totalLate */}
             <div className="stats-container mb-4">
               <Row>
-                {/* Login container => handleLogin */}
                 <Col xs={6} md={3} className="mb-2">
                   <div
                     className="stat-box clickable"
@@ -656,8 +598,6 @@ function StaffPage() {
                     <span className="stat-value">{loginTime || "---"}</span>
                   </div>
                 </Col>
-
-                {/* Logout container => handleLogout */}
                 <Col xs={6} md={3} className="mb-2">
                   <div
                     className="stat-box clickable"
@@ -668,8 +608,6 @@ function StaffPage() {
                     <span className="stat-value">{logoutTime || "---"}</span>
                   </div>
                 </Col>
-
-                {/* Minutes Late */}
                 <Col xs={6} md={3} className="mb-2">
                   <div className="stat-box">
                     <span className="stat-label">Minutes Late</span>
@@ -678,8 +616,6 @@ function StaffPage() {
                     </span>
                   </div>
                 </Col>
-
-                {/* Total Late */}
                 <Col xs={6} md={3} className="mb-2">
                   <div className="stat-box">
                     <span className="stat-label">Total Late</span>
@@ -697,7 +633,6 @@ function StaffPage() {
               </Row>
             </div>
 
-            {/* Pie Charts: "Login" & "Logout" */}
             <Row className="justify-content-center">
               <Col xs={12} md={5} lg={4} className="mb-4 d-flex flex-column align-items-center">
                 <h5 className="chart-title" style={{ backgroundColor: "#007bff" }}>
@@ -737,7 +672,6 @@ function StaffPage() {
               </Col>
             </Row>
 
-            {/* present => "Login (Days)", presentEvening => "Logout (Days)" */}
             <Row className="justify-content-center mb-4">
               <Col xs={12} md={6} lg={4} className="d-flex justify-content-center">
                 <div className="present-container p-4 rounded shadow">
@@ -755,7 +689,6 @@ function StaffPage() {
               </Col>
             </Row>
 
-            {/* Table: two columns for Login/Logout, then Day, then Start/Finish */}
             <div className="table-responsive">
               <Table bordered hover className="text-center align-middle w-100 table-custom">
                 <thead>
@@ -774,7 +707,6 @@ function StaffPage() {
 
                     return (
                       <tr key={day}>
-                        {/* Show today's inN/outN or '---' */}
                         <td>
                           {day === currentDay ? (loginTime || "---") : "---"}
                         </td>
@@ -790,6 +722,15 @@ function StaffPage() {
                 </tbody>
               </Table>
             </div>
+            <footer className="footer">
+              <Container>
+                <Row>
+                  <Col className="text-center">
+                    &copy; {new Date().getFullYear()} SchoolMood. All rights reserved.
+                  </Col>
+                </Row>
+              </Container>
+            </footer>
 
           </div>
         </Col>
