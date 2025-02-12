@@ -181,13 +181,13 @@ function AttendancePage() {
       {userSchool && <h2>{userSchool}</h2>}
 
       <div className="button-row d-flex justify-content-center gap-2 my-3">
-                <button
+                {/* <button
                   className="teacher-icon-button me-2"
                   onClick={() => navigate("/teacherdashboard")}
                   title="Go to Teacher Dashboard"
                 >
                   🎓
-                </button>
+                </button> */}
                 <button
                   className="teacher-icon-button3 me-2 "
                   onClick={() => navigate("/")}

@@ -541,13 +541,13 @@ function StaffPage() {
                 <p className="current-month-year">{getCurrentMonthYear()}</p>
               </div>
               <div className="d-flex flex-row align-items-end mt-3 mt-md-0">
-                <button
+                {/* <button
                   className="teacher-icon-button me-2"
                   onClick={() => navigate("/teacherdashboard")}
                   title="Go to Teacher Dashboard"
                 >
                   🎓
-                </button>
+                </button> */}
                 <button
                   className="teacher-icon-button3 me-2"
                   onClick={() => navigate("/")}

@@ -235,7 +235,7 @@ function StudentFeeGraph() {
           {/* Back Button */}
           <button
             className="back-button mb-5"
-            onClick={() => navigate("/grade")}
+            onClick={() => navigate("/student")}
             aria-label="Back"
           >
             <i className="bi bi-chevron-left"></i>

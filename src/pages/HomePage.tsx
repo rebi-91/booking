@@ -108,9 +108,9 @@ const HomePage: React.FC = () => {
                 <Link to="/student" className={styles.roleLink}>
                   Attendance
                 </Link>
-                <Link to="/grade" className={styles.roleLink}>
+                {/* <Link to="/grade" className={styles.roleLink}>
                   Exam Results
-                </Link>
+                </Link> */}
                 <Link to="/student-fee" className={styles.roleLink}>
                   Student Fee
                 </Link>
@@ -122,9 +122,9 @@ const HomePage: React.FC = () => {
                 <Link to="/attendance" className={styles.roleLink}>
                   Student Attendance
                 </Link>
-                <Link to="/teacherdashboard" className={styles.roleLink}>
+                {/* <Link to="/teacherdashboard" className={styles.roleLink}>
                   Exam Results
-                </Link>
+                </Link> */}
                 <Link to="/my-attendance" className={styles.roleLink}>
                   My Attendance
                 </Link>
@@ -136,9 +136,9 @@ const HomePage: React.FC = () => {
                 <Link to="/dashboard" className={styles.roleLink}>
                   Student Attendance
                 </Link>
-                <Link to="/dashboard2" className={styles.roleLink}>
+                {/* <Link to="/dashboard2" className={styles.roleLink}>
                   Exam Results
-                </Link>
+                </Link> */}
                 <Link to="/dashboard3" className={styles.roleLink}>
                   Student Manager
                 </Link>

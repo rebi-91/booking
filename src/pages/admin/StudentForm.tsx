@@ -741,7 +741,7 @@ const openEditModal = async (student: Student) => {
     >
       📅
     </button>
-    <button
+    {/* <button
       style={{
         width: "60px",
         height: "60px",
@@ -769,7 +769,7 @@ const openEditModal = async (student: Student) => {
       }}
     >
       🎓 
-    </button>
+    </button> */}
     <button
       style={{
         width: "60px",

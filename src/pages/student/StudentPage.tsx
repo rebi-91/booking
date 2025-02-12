@@ -791,7 +791,7 @@ function StudentPage() {
               </Col>
               <Col xs="auto" className="ms-auto d-flex flex-column align-items-center">
                 {/* Graduation Cap Button */}
-                <Button
+                {/* <Button
                   variant={isActiveGraduation ? "dark" : "secondary"}
                   className="position-relative z-index-200 end-0 translate-middle-x mt-3 rounded-circle shadow mb-3"
                   style={{ width: "55px", height: "55px", fontSize: "28px" }}
@@ -803,7 +803,7 @@ function StudentPage() {
                   aria-label="Navigate to Grade Page"
                 >
                   🎓
-                </Button>
+                </Button> */}
 
                 {/* Gold Coin Button */}
                 <button
