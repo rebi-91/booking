@@ -11,7 +11,7 @@
 
   /* Centering the container */
   position: absolute;
-  top: 50%;
+  top: 60%;
   left: 50%;
   transform: translate(-50%, -50%);
 
@@ -22,7 +22,7 @@
 .bannerImage {
   display: block;
   margin: 0 auto; /* Centers the image horizontally */
-  transform: rotate(15deg);
+  transform: rotate(0deg);
   transform-origin: center;
   position: relative;
 }
@@ -30,20 +30,50 @@
 /* Styles for Desktop Browsers */
 @media (min-width: 768px) {
   .bannerImage {
-    margin-top: 147px; /* Moves the image further down */
-    transform: rotate(15deg) scale(0.56); /* Rotates and scales the image */
-    left: 5px; /* Slight horizontal adjustment */
+    margin-top: 162px; /* Moves the image further down */
+    transform: rotate(0deg) scale(2.21); /* Rotates and scales the image */
+    left: 0px; /* Slight horizontal adjustment */
+    border-radius: 10px;
   }
 }
 
 /* Styles for Mobile Devices */
 @media (max-width: 767px) {
-  .bannerImage {
-    margin-top: -12px; /* No top margin */
-    transform: rotate(15deg) scale(0.46); /* Different scaling for mobile */
-    left: -50px; /* Significant horizontal adjustment */
+  .container {
+    width: 98%;
+    max-width: 500px;
+    padding: 20px;
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    border-top: 10px solid #3ecf8e; /* Supabase green border */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #ffffff;
+  
+    /* Centering the container */
+    position: absolute;
+    top: 56.2%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  
+    /* Ensures the container doesn't exceed the viewport */
+    box-sizing: border-box;
   }
-}
+  
+    .bannerImage {
+      
+        margin-top: 90px;
+        transform: rotate(0deg) scale(1.25) !important;
+        left: -9px; /* 50px less to the left than before */
+        margin-right: 100px; /* 50px less to the left than before */
+        border-radius: 10px;
+        position: relative;
+     
+      }
+  
+   
+  }
+
 
 .headerText {
   text-align: center;
