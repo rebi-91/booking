@@ -61,7 +61,7 @@ const HomePage: React.FC = () => {
       {/* Conditionally render the banner image if not signed in */}
       {!session && (
         <img
-          src="https://i.imgur.com/V78U5Pg.jpeg"
+          src="https://i.imgur.com/PYQR2W0.jpeg"
           alt="School Banner"
           className={styles.bannerImage}
         />
