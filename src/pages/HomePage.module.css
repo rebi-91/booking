@@ -7,7 +7,7 @@
   padding: 20px;
   background-color: #1e1e1e;
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
   border-top: 10px solid #4966e9; /* Supabase green border */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #ffffff;
@@ -22,24 +22,31 @@
 /* Banner image styling */
 .bannerImage {
   display: block;
-  margin: 0 auto;
-  transform: rotate(0deg);
+  position: absolute;
+  left: 50.3% !important;
+  top: -10%;
+  /* Instead of a fixed pixel margin-top, we use percentage */
+  margin-top: 10%; 
+  transform: translate(-50%, -20%) scale(0.4) !important;
   transform-origin: center;
-  position: relative;
   z-index: 2;
-  border: 8px solid #a3b1ec; 
-  
+  border: 8px solid #a3b1ec;
+  box-shadow: 0 0px 350px 10px #0860f8 !important;
 }
 
 /* When logged in, display the banner behind the container,
    slightly enlarged, faded and shifted upward */
 .signedInBanner {
   position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translate(-50%, -20px) scale(1.1);
+  left: 49.8% !important;
+  /* Use percentage for vertical positioning */
+  top: -7%; 
+  transform: translate(-50%, -20%) scale(0.35) !important;
+  transform-origin: center;
   opacity: 0.5;
   z-index: 1;
+  border: 8px solid #a3b1ec;
+  box-shadow: 0 0px 350px 10px #0860f8 !important;
 }
 
 /* Header text styling */
@@ -153,14 +160,16 @@
 /* Desktop Browser Styles */
 @media (min-width: 768px) {
   .bannerImage {
-    margin-top: 162px;
-    transform: rotate(0deg) scale(2.21);
-    left: 0px;
+    margin-top: 15%; /* Adjust as needed */
+    transform: translate(-50%, -20%) scale(2.21);
+    left: 50%;
     border-radius: 10px;
   }
   /* Signed-in adjustments on desktop */
   .signedInBanner {
-    transform: translate(-50%, -20px) scale(1.1);
+    margin-top: 12%; /* Adjust as needed */
+    transform: translate(-50%, -20%) scale(1.1);
+    left: 50%;
   }
 }
 
@@ -184,22 +193,22 @@
   }
   
   .bannerImage {
-    margin-top: -110px;
-    transform: rotate(0deg) scale(0.4) !important;
-    left: -9px;
-    margin-left: -100px;
+    margin-top: 5%; /* Adjust as needed */
+    transform: translate(-50%, -20%) scale(0.36) !important;
+    left: 50%;
+    margin-top: 10px !important;
     border-radius: 10px;
     position: relative;
     z-index: 2;
     box-shadow: 0 0px 350px 10px #0860f8 !important;
-
   }
   
   .signedInBanner {
+    margin-top: 3%; /* Adjust as needed */
     position: absolute;
     top: 0;
-    left: 73%;
-    transform: translate(-50%, -20px) scale(0.32) !important;
+    left: 50%;
+    transform: translate(-50%, -20%) scale(0.23) !important;
     opacity: 0.5;
     z-index: 1;
     box-shadow: 0 0px 350px 10px #0860f8 !important;
