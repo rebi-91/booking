@@ -194,3 +194,9 @@
   color: #d3d3d3; /* Very faint grey */
     font-size: 0.7rem; 
 }
+
+.student-name {
+  /* Ensure vertical alignment with the checkbox */
+  display: inline-block;
+  vertical-align: middle;
+}

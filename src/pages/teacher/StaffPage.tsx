@@ -259,7 +259,7 @@ function StaffPage() {
       schoolRow.lat,
       schoolRow.long
     );
-    if (distance > 450) {
+    if (distance > 100) {
       throw new Error(
         `You are over 50m from your assigned school. Distance: ${distance.toFixed(1)}m`
       );
