@@ -1,3 +1,6 @@
+/* HomePage.module.css */
+
+/* Main container styling */
 .container {
   width: 100%;
   max-width: 500px;
@@ -5,94 +8,62 @@
   background-color: #1e1e1e;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  border-top: 10px solid #3ecf8e; /* Supabase green border */
+  border-top: 10px solid #4966e9; /* Supabase green border */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #ffffff;
-
-  /* Centering the container */
   position: absolute;
   top: 60%;
   left: 50%;
   transform: translate(-50%, -50%);
-
-  /* Ensures the container doesn't exceed the viewport */
   box-sizing: border-box;
+  z-index: 2; /* Ensure container is above banner */
 }
 
+/* Banner image styling */
 .bannerImage {
   display: block;
-  margin: 0 auto; /* Centers the image horizontally */
+  margin: 0 auto;
   transform: rotate(0deg);
   transform-origin: center;
   position: relative;
+  z-index: 2;
+  border: 8px solid #a3b1ec; 
+  
 }
 
-/* Styles for Desktop Browsers */
-@media (min-width: 768px) {
-  .bannerImage {
-    margin-top: 162px; /* Moves the image further down */
-    transform: rotate(0deg) scale(2.21); /* Rotates and scales the image */
-    left: 0px; /* Slight horizontal adjustment */
-    border-radius: 10px;
-  }
+/* When logged in, display the banner behind the container,
+   slightly enlarged, faded and shifted upward */
+.signedInBanner {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -20px) scale(1.1);
+  opacity: 0.5;
+  z-index: 1;
 }
 
-/* Styles for Mobile Devices */
-@media (max-width: 767px) {
-  .container {
-    width: 98%;
-    max-width: 500px;
-    padding: 20px;
-    background-color: #1e1e1e;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    border-top: 10px solid #3ecf8e; /* Supabase green border */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #ffffff;
-  
-    /* Centering the container */
-    position: absolute;
-    top: 56.2%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  
-    /* Ensures the container doesn't exceed the viewport */
-    box-sizing: border-box;
-  }
-  
-    .bannerImage {
-      
-        margin-top: 90px;
-        transform: rotate(0deg) scale(1.25) !important;
-        left: -9px; /* 50px less to the left than before */
-        margin-right: 100px; /* 50px less to the left than before */
-        border-radius: 10px;
-        position: relative;
-     
-      }
-  
-   
-  }
-
-
+/* Header text styling */
 .headerText {
   text-align: center;
   margin-bottom: 10px;
   color: #3ecf8e;
+  font-size: 1.8em;
 }
 
+/* Subtext styling */
 .subText {
   text-align: center;
   margin-bottom: 20px;
   font-size: 16px;
 }
 
+/* Authentication button styling */
 .authButton {
   width: 100%;
   padding: 10px;
   border-radius: 5px;
   border: none;
-  background-color: #3ecf8e;
+  background-color: #5a72de;
   color: #1e1e1e;
   font-size: 16px;
   cursor: pointer;
@@ -104,14 +75,15 @@
 }
 
 .authButton:hover:not(:disabled) {
-  background-color: #34b47a; /* Darker shade on hover */
+  background-color: #9eb4f3; /* Darker shade on hover */
 }
 
 .authButton:disabled {
-  background-color: #a5d6a7;
+  background-color: #7ba0f5;
   cursor: not-allowed;
 }
 
+/* Role link styling */
 .roleLink {
   width: 100%;
   padding: 10px;
@@ -139,6 +111,7 @@
   width: 100%;
 }
 
+/* Status and error message styling */
 .status {
   text-align: center;
   color: #28a745;
@@ -151,6 +124,7 @@
   margin-top: 10px;
 }
 
+/* Loader spinner styling */
 .loader {
   border: 4px solid #f3f3f3;
   border-top: 4px solid #3ecf8e;
@@ -167,10 +141,67 @@
   }
 }
 
+/* Divider styling */
 .divider {
   width: 70%;
   height: 2px;
-  background-color: #3ecf8e; /* Supabase green */
+  background-color: #344eb4;
   margin: 1em 0;
   border-radius: 100%;
+}
+
+/* Desktop Browser Styles */
+@media (min-width: 768px) {
+  .bannerImage {
+    margin-top: 162px;
+    transform: rotate(0deg) scale(2.21);
+    left: 0px;
+    border-radius: 10px;
+  }
+  /* Signed-in adjustments on desktop */
+  .signedInBanner {
+    transform: translate(-50%, -20px) scale(1.1);
+  }
+}
+
+/* Mobile Device Styles */
+@media (max-width: 767px) {
+  .container {
+    width: 98%;
+    max-width: 500px;
+    padding: 20px;
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    border-top: 10px solid #4966e9;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #ffffff;
+    position: absolute;
+    top: 56.2%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    z-index: 2;
+  }
+  
+  .bannerImage {
+    margin-top: -110px;
+    transform: rotate(0deg) scale(0.4) !important;
+    left: -9px;
+    margin-left: -100px;
+    border-radius: 10px;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 0px 350px 10px #0860f8 !important;
+
+  }
+  
+  .signedInBanner {
+    position: absolute;
+    top: 0;
+    left: 73%;
+    transform: translate(-50%, -20px) scale(0.32) !important;
+    opacity: 0.5;
+    z-index: 1;
+    box-shadow: 0 0px 350px 10px #0860f8 !important;
+  }
 }
