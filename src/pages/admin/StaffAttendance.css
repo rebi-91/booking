@@ -1,0 +1,96 @@
+/* StaffAttendance.css */
+
+/* Container adjustments for mobile responsiveness */
+.staff-attendance-container {
+    padding: 20px;
+  }
+  
+  /* Floating navigation buttons */
+  .floating-nav {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1050;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  /* Customize nav buttons */
+  .nav-btn {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* School name styling */
+  .school-name {
+    font-size: 20px;
+    color: #b0b0b0;
+  }
+  
+  /* Editable text style */
+  .editable-text {
+    text-decoration: underline;
+    color: #3ecf8e;
+    cursor: pointer;
+  }
+  
+  /* Table styling */
+  .staff-table {
+    table-layout: fixed;
+    width: 100%;
+  }
+  
+  .staff-table th,
+  .staff-table td {
+    text-align: center;
+    vertical-align: middle;
+    word-wrap: break-word;
+  }
+  
+  /* Narrow checkbox column */
+  .staff-table th.narrow-col,
+  .staff-table td.narrow-col {
+    width: 20px !important;
+    padding: 0 !important;
+  }
+  
+  /* DatePicker adjustments */
+  .date-picker-wrapper {
+    background-color: #333;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+  
+  /* WhatsApp icon styling for mobile */
+  .whatsapp-icon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  /* Adjust modal colors */
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    background-color: #1e1e1e;
+    color: #fff;
+  }
+  
+  /* Additional responsive tweaks */
+  @media (max-width: 767px) {
+    .staff-attendance-container {
+      padding: 10px;
+    }
+    .nav-btn {
+      width: 50px;
+      height: 50px;
+      font-size: 20px;
+    }
+  }
+  
