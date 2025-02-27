@@ -119,6 +119,9 @@ const HomePage: React.FC = () => {
                 <Link to="/dashboard3" className={styles.roleLink}>
                   Student Manager
                 </Link>
+                <Link to="/dashboard4" className={styles.roleLink}>
+                  Student Fee
+                </Link>
                 <Link to="/dash5" className={styles.roleLink}>
                   Staff Attendance
                 </Link>
