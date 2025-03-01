@@ -210,7 +210,7 @@ const HomePage: React.FC = () => {
       {/* If not logged in, show the video background with rounded corners */}
       {!session ? (
         <video autoPlay loop muted className={styles.backgroundVideo}>
-          <source src="/video1.mp4" type="video/mp4" />
+          <source src="/video.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       ) : (
