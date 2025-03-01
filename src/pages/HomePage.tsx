@@ -214,11 +214,10 @@ const HomePage: React.FC = () => {
           Your browser does not support the video tag.
         </video>
       ) : (
-        <img
-          src="https://i.imgur.com/G6vPcuS.jpeg"
-          alt="School Banner"
-          className={`${styles.bannerImage} ${styles.signedInBanner}`}
-        />
+        <video autoPlay loop muted className={styles.backgroundVideo}>
+          <source src="/video.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       )}
 
       <main className={styles.container}>

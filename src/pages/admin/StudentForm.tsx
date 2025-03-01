@@ -325,41 +325,58 @@ const openEditModal = async (student: Student) => {
   }
 };
 
-  // Update student details
-  const updateStudent = async () => {
-    try {
-      setIsLoading(true);
-      if (!editStudent) return;
+const updateStudent = async () => {
+  try {
+    setIsLoading(true);
+    if (!editStudent) return;
 
-      const {
-        id,
+    const {
+      id,
+      studentName,
+      studentID,
+      studentNumber,
+      guardianNumber,
+      className,
+      section,
+    } = editStudent;
+
+    // Check if the new studentID is available (if it has been changed)
+    const originalStudent = students.find((s) => s.id === id);
+    if (originalStudent && studentID !== originalStudent.studentID) {
+      const { data, error } = await supabase
+        .from("student")
+        .select("id")
+        .eq("studentID", studentID)
+        .eq("school", userSchool);
+
+      if (error) throw error;
+
+      if (data && data.length > 0) {
+        setAlertMessage("Student ID is already taken.");
+        return;
+      }
+    }
+
+    // Update the main student table
+    const { error } = await supabase
+      .from("student")
+      .update({
         studentName,
         studentID,
         studentNumber,
         guardianNumber,
         className,
         section,
-      } = editStudent;
+      })
+      .eq("id", id);
 
-      // Check if the new studentID is available (if it has been changed)
-      const originalStudent = students.find((s) => s.id === id);
-      if (originalStudent && studentID !== originalStudent.studentID) {
-        const { data, error } = await supabase
-          .from("student")
-          .select("id")
-          .eq("studentID", studentID)
-          .eq("school", userSchool);
+    if (error) throw error;
 
-        if (error) throw error;
-
-        if (data && data.length > 0) {
-          setAlertMessage("Student ID is already taken.");
-          return;
-        }
-      }
-
-      const { error } = await supabase
-        .from("student")
+    // Also update the same record in attendance tables C1 through C6
+    const classTimes = ["C1", "C2", "C3", "C4", "C5", "C6"];
+    for (const tableName of classTimes) {
+      const { error: attError } = await supabase
+        .from(tableName)
         .update({
           studentName,
           studentID,
@@ -369,19 +386,21 @@ const openEditModal = async (student: Student) => {
           section,
         })
         .eq("id", id);
-
-      if (error) throw error;
-
-      setAlertMessage("Student updated successfully!");
-      setEditStudent(null);
-      fetchAllStudents(userSchool);
-    } catch (error: any) {
-      console.error("Error updating student:", error.message);
-      setAlertMessage("Error updating student. Please try again.");
-    } finally {
-      setIsLoading(false);
+      if (attError) {
+        console.error(`Error updating ${tableName} for student ${id}:`, attError.message);
+      }
     }
-  };
+
+    setAlertMessage("Student updated successfully!");
+    setEditStudent(null);
+    fetchAllStudents(userSchool);
+  } catch (error: any) {
+    console.error("Error updating student:", error.message);
+    setAlertMessage("Error updating student. Please try again.");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   // Add a new student
   const handleAddStudent = async () => {
@@ -741,35 +760,6 @@ const openEditModal = async (student: Student) => {
     >
       📅
     </button>
-    {/* <button
-      style={{
-        width: "60px",
-        height: "60px",
-        margin: "12px 0",
-        fontSize: "28px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#666",
-        color: "#fff",
-        border: "1px solid #Dfff",
-        borderRadius: "10px",
-        cursor: "pointer",
-        transition: "transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease",
-        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
-      }}
-      onClick={() => navigate("/dashboard2")}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "scale(1.2)";
-        e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.3)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = "scale(1)";
-        e.currentTarget.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.3)";
-      }}
-    >
-      🎓 
-    </button> */}
     <button
       style={{
         width: "60px",

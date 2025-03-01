@@ -454,11 +454,25 @@ function DashBoard() {
         setEditingStudentNameId(null);
         return;
       }
+      // Update the student table
       const { error } = await supabase
         .from("student")
         .update({ studentName: updatedName })
         .eq("id", studentId);
       if (error) throw error;
+  
+      // Also update the same field in attendance tables C1 to C6
+      const classTimes = ["C1", "C2", "C3", "C4", "C5", "C6"];
+      for (const tableName of classTimes) {
+        const { error: attError } = await supabase
+          .from(tableName)
+          .update({ studentName: updatedName }) // assuming the attendance table has a studentName column
+          .eq("id", studentId);
+        if (attError) {
+          console.error(`Error updating ${tableName} for student ${studentId}:`, attError.message);
+        }
+      }
+  
       setEditingStudentNameId(null);
       fetchStudents(userSchool);
       setAlertMessage("Student name updated successfully!");
@@ -467,7 +481,7 @@ function DashBoard() {
       setAlertMessage("Error updating student name. Please try again.");
     }
   };
-
+  
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchTerm(value);
