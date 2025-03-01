@@ -173,6 +173,34 @@
   }
 }
 
+.backgroundVideo {
+  width: 70%;
+  /* Set a fixed height or aspect ratio as needed */
+  max-width: 500px;  /* For example, limit the width if desired */
+  display: block;
+  margin: 0 auto;      /* Centers the video */
+  border-radius: 15px; /* Rounded corners */
+  margin-bottom: 0;    /* Remove any gap below the video */
+  margin-top: 225px;    /* Remove any gap below the video */
+  box-shadow: 0 0px 350px 10px #0860f8 !important;
+}
+
+/* Ensure the container sits exactly below the video */
+.container {
+  margin-top: 0;     /* Adjust if necessary */
+  padding: 20px;
+  box-shadow: 0 0px 350px 10px #0860f8 !important;
+  
+}
+
+/* You may already have styles for bannerImage and signedInBanner */
+.bannerImage {
+  width: 100%;
+  display: block;
+  margin: 0 auto;
+}
+
+
 /* Mobile Device Styles */
 @media (max-width: 767px) {
   .container {
@@ -213,4 +241,32 @@
     z-index: 1;
     box-shadow: 0 0px 350px 10px #0860f8 !important;
   }
+  .backgroundVideo {
+    width: 98%;
+    /* Set a fixed height or aspect ratio as needed */
+    max-width: 600px !important;  /* For example, limit the width if desired */
+    display: block;
+    margin: 0 auto;      /* Centers the video */
+    border-radius: 15px; /* Rounded corners */
+    margin-bottom: 0;    /* Remove any gap below the video */
+    margin-top: 103px;    /* Remove any gap below the video */
+    box-shadow: 0 0px 150px 10px #0860f8 !important;
+  }
+  
+  /* Ensure the container sits exactly below the video */
+  .container {
+    margin-top: 0;     /* Adjust if necessary */
+    padding: 20px;
+    box-shadow: 10px 100px 200px 10px #0860f8 !important;
+    
+  }
+  
+  /* You may already have styles for bannerImage and signedInBanner */
+  .bannerImage {
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+  }
+  
 }
+
