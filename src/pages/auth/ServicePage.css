@@ -1,0 +1,51 @@
+.services-section {
+    background-color: #edf1f7;
+  }
+  
+  /* Card appearance */
+  .service-card {
+    border-radius: 0.75rem;
+    background-color: #ffffff;
+  }
+  
+  /* Slimmer card width */
+  .custom-card-width {
+    width: 85%;
+    max-width: 300px;
+  }
+  
+  /* Hover zoom effect */
+  .zoom-hover {
+    transition: transform 0.3s ease;
+  }
+  
+  .zoom-hover:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Rounded image top corners */
+  .card-img-top {
+    border-top-left-radius: 0.75rem;
+    border-top-right-radius: 0.75rem;
+  }
+  
+  /* Badge styling */
+  .badge {
+    font-size: 0.75rem;
+    padding: 0.4em 0.6em;
+    border-radius: 0.4rem;
+  }
+  
+  /* Tabs/buttons */
+  .btn {
+    font-weight: 500;
+    border-radius: 30px !important;
+    padding: 0.5rem 1.25rem;
+  }
+  
+  /* Title font */
+  h1 {
+    color: #0d1b3e !important;
+    font-weight: 800;
+  }
+  

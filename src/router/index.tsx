@@ -54,6 +54,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import HomePage from "../pages/HomePage.tsx";
 import LoginPage from "../pages/LoginPage.tsx";
+import ServicePage from "../pages/auth/ServicePage.tsx";
 import SignInPage from "../pages/auth/SignInPage.tsx";
 import SignUpPage from "../pages/auth/SignUpPage.tsx";
 import PickSchoolPage from "../pages/auth/PickSchoolPage.tsx";
@@ -90,8 +91,8 @@ const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: "/login",
-        element: <LoginPage />,
+        path: "/services",
+        element: <ServicePage />,
       },
       {
         path: "/sign-in",
