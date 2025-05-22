@@ -138,7 +138,7 @@ const allServices: Service[] = [
       title: 'Blood pressure check',
       img: 'https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Flead-services-agency.fra1.cdn.digitaloceanspaces.com%2F4%2F865410%2FrcaOjteI-1.webp&w=1080&q=75',
       duration: '20 mins',
-      category: 'Private Service',
+      category: 'NHS Service',
       description: 'Detects high blood pressure before it causes problems',
     },
     {
@@ -252,11 +252,11 @@ const ServicePage: React.FC = () => {
       </div>
 
       {/* Services Section */}
-      <section className="services-section py-5" style={{ paddingTop: 0 }}>
+      <section className="services-section py-5">
         <div className="container">
           <div className="row">
             {filtered.map((service) => (
-              <div key={service.id} className="col-md-6 col-lg-4 mb-4 d-flex justify-content-center">
+              <div key={service.id} className="col-md-6 col-lg-4 mb-4" style={{ paddingTop: '30px' }}>
                 <div className="card h-100 shadow-sm border-0 service-card custom-card-width">
                   <div className="position-relative overflow-hidden">
                     <img

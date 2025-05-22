@@ -48,4 +48,14 @@
     color: #0d1b3e !important;
     font-weight: 800;
   }
+ 
   
+  .services-section .row > div {
+    padding-left: 60px !important;
+    padding-right: 0px !important;
+  }
+  
+  /* Reduce only horizontal gutter between columns */
+.services-section .row {
+  --bs-gutter-x: -3rem; /* default is 1.5rem */
+}
