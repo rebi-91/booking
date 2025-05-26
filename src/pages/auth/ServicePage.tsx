@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Header from '../HomePage';
+import Header from '../Header';
 import './ServicePage.css';
 
 interface Service {
@@ -191,118 +191,112 @@ const allServices: Service[] = [
     },
   ];
 
-const tabs = [
-  { key: 'ALL', label: 'All' },
-  { key: 'PRIVATE', label: 'Private Treatments' },
-  { key: 'NHS', label: 'NHS Services' },
-  { key: 'PHARMACY', label: 'Pharmacy First' },
-];
-
-const ServicePage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<string>('ALL');
-
-  const filtered = allServices
-    .filter((s) => {
-      if (activeTab === 'ALL') return true;
-      if (activeTab === 'PRIVATE') return s.category === 'Private Service';
-      if (activeTab === 'NHS') return s.category === 'NHS Service';
-      if (activeTab === 'PHARMACY') return s.category === 'Pharmacy First';
-      return true;
-    })
-    .sort((a, b) => a.title.localeCompare(b.title));
-
-  return (
-    <>
-      <Header />
-
-      <div style={{ paddingTop: 130, backgroundColor: '#ffffff' }}>
-        <div className="container pb-4">
-          <nav aria-label="breadcrumb">
-            <ol className="breadcrumb">
-              <li className="breadcrumb-item">
-                <Link to="/">Home</Link>
-              </li>
-              <li className="breadcrumb-item active" aria-current="page">
-                <Link to="/services">Services</Link>
-              </li>
-            </ol>
-          </nav>
-
-          <h1 className="mb-3 fw-bold" style={{ paddingTop: 30, fontSize: '2.2rem', color: '#0d1b3e' }}>
-            All treatments and services
-          </h1>
-          <p className="mb-4 text-muted" style={{ paddingTop: 20 }}>
-            To get started, choose your treatment, book an appointment and come visit us in store.
-          </p>
-
-          <div className="mb-0" style={{ paddingTop: 20, paddingBottom: 0 }}>
-            {tabs.map((tab) => (
-              <button
-                key={tab.key}
-                className={`btn me-2 mb-1 ${
-                  activeTab === tab.key ? 'btn-dark text-white' : 'btn-outline-secondary'
-                }`}
-                onClick={() => setActiveTab(tab.key)}
-              >
-                {tab.label}
-              </button>
-            ))}
+  const tabs = [
+    { key: 'ALL', label: 'All' },
+    { key: 'PRIVATE', label: 'Private Treatments' },
+    { key: 'NHS', label: 'NHS Services' },
+    { key: 'PHARMACY', label: 'Pharmacy First' },
+  ];
+  
+  const ServicePage: React.FC = () => {
+    const [activeTab, setActiveTab] = useState<string>('ALL');
+  
+    const filtered = allServices
+      .filter((s) => {
+        if (activeTab === 'ALL') return true;
+        if (activeTab === 'PRIVATE') return s.category === 'Private Service';
+        if (activeTab === 'NHS') return s.category === 'NHS Service';
+        if (activeTab === 'PHARMACY') return s.category === 'Pharmacy First';
+        return true;
+      })
+      .sort((a, b) => a.title.localeCompare(b.title));
+  
+    return (
+      <>
+        <Header />
+  
+        <div style={{ paddingTop: 110, backgroundColor: '#ffffff' }}>
+          <div className="container pb-2  ">
+            {/* Custom breadcrumb / path */}
+            <nav className="page-path">
+              <Link to="/">Home</Link>
+              <span className="sep">›</span>
+              <span className="current">Services</span>
+            </nav>
+  
+            {/* Page title & subtitle */}
+            <h1  className="page-title">All treatments and services</h1>
+            <p className="page-subtitle">
+              To get started, choose your treatment, book an appointment and come visit us in store.
+            </p>
+  
+            {/* Tabs */}
+            <div className="tabs">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.key}
+                  className={`tab-btn ${activeTab === tab.key ? 'active' : ''}`}
+                  onClick={() => setActiveTab(tab.key)}
+                >
+                  {tab.label.toUpperCase()}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-
-      {/* Services Section */}
-      <section className="services-section py-5">
-        <div className="container">
-          <div className="row">
-            {filtered.map((service) => (
-              <div key={service.id} className="col-md-6 col-lg-4 mb-4" style={{ paddingTop: '30px' }}>
-                <div className="card h-100 shadow-sm border-0 service-card custom-card-width">
-                  <div className="position-relative overflow-hidden">
-                    <img
-                      src={service.img}
-                      className="card-img-top zoom-hover"
-                      alt={service.title}
-                      style={{ height: '220px', objectFit: 'cover' }}
-                    />
-                    <span
-                      className="position-absolute"
-                      style={{
-                        bottom: '0.5rem',
-                        left: '0.5rem',
-                        background: 'rgba(0, 0, 0, 0)',
-                        color: '#fff',
-                        padding: '0.25rem 0.5rem',
-                        borderRadius: 4,
-                        fontSize: '0.8rem',
-                      }}
-                    >
-                      ⏱ {service.duration}
-                    </span>
-                  </div>
-                  <div className="card-body">
-                    <span
-                      className={`badge mb-3 ${
-                        service.category === 'Private Service'
-                          ? 'bg-primary'
-                          : service.category === 'NHS Service'
-                          ? 'bg-info text-dark'
-                          : 'bg-success'
-                      }`}
-                    >
-                      {service.category}
-                    </span>
-                    <h5 className="card-title mb-2">{service.title}</h5>
-                    <p className="card-text text-muted mb-2">{service.description}</p>
+  
+        {/* Services Section */}
+        <section className="services-section py-5">
+          <div className="container">
+            <div className="row">
+              {filtered.map((service) => (
+                <div key={service.id} className="col-md-6 col-lg-4 mb-4" style={{ paddingTop: '30px' }}>
+                  <div className="card h-100 shadow-sm border-0 service-card custom-card-width">
+                    <div className="position-relative overflow-hidden">
+                      <img
+                        src={service.img}
+                        className="card-img-top zoom-hover"
+                        alt={service.title}
+                        style={{ height: '220px', objectFit: 'cover' }}
+                      />
+                      <span
+                        className="position-absolute"
+                        style={{
+                          bottom: '0.5rem',
+                          left: '0.5rem',
+                          background: 'rgba(0, 0, 0, 0)',
+                          color: '#fff',
+                          padding: '0.25rem 0.5rem',
+                          borderRadius: 4,
+                          fontSize: '0.8rem',
+                        }}
+                      >
+                        ⏱ {service.duration}
+                      </span>
+                    </div>
+                    <div className="card-body">
+                      <span
+                        className={`badge mb-3 ${
+                          service.category === 'Private Service'
+                            ? 'bg-primary'
+                            : service.category === 'NHS Service'
+                            ? 'bg-info text-dark'
+                            : 'bg-success'
+                        }`}
+                      >
+                        {service.category}
+                      </span>
+                      <h5 className="card-title mb-2">{service.title}</h5>
+                      <p className="card-text text-muted mb-2">{service.description}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
-    </>
-  );
-};
-
-export default ServicePage;
+        </section>
+      </>
+    );
+  };
+  
+  export default ServicePage;

@@ -1,0 +1,16 @@
+/* Header.css */
+
+/* Make all elements use border-box sizing */
+* {
+    box-sizing: border-box;
+  }
+  
+  /* Top bar wrapper: centers the content, sets max width, and adds vertical + horizontal padding */
+  ._top-bar-wrapper__Y25dN {
+    max-width: 1184px;
+    width: 100%;
+    display: flex;
+    padding: 0.65rem 1rem;      /* 2.5rem top & bottom */
+    margin: auto 5rem !important;    /* auto top/bottom, 2.5rem left/right */
+  }
+  
