@@ -1,42 +1,156 @@
 /* HomePage.css */
 
-.pt-header {
-  padding-top: 100px; /* header + top-bar height */
-}
-
-.btn-start {
-  background-color: #00D364;
-  color: #fff;
-  font-weight: bold;
-  padding: 0.6rem 1.2rem;
-  border: none;
-}
-
-.google-logo {
-  height: 24px;
-  margin-right: 0.5rem;
-}
-
-/* Hero cards hidden below 768px */
-@media (max-width: 767px) {
-  .hero-cards {
-    display: none !important;
+/* Prevent horizontal scrolling except inside carousel,
+   and disable vertical overscroll bounce (no white “pull-up” at bottom) */
+   html, body {
+    overflow-x: hidden;
+    overscroll-behavior-y: none;
+    margin-top: -35px;
+    margin-bottom: 50px !important;
+    padding: 7px;
   }
+  
+  .pt-header {
+    padding-top: 100px; /* header + top-bar height */
+  }
+  
+  .btn-start {
+    background-color: #0eeae6 !important;
+    color: #1f2f78 !important;
+    font-weight: 500 !important;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 0.5rem; /* Rounded corners */
+  }
+  
+  /* Hero cards hidden below 768px */
+  @media (max-width: 767px) {
+    .hero-cards {
+      display: none !important;
+    }
+  }
+  
+  /* Carousel container styling */
+  .pharmacy-first-carousel .pharmacy-first-track {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    gap: 16px;
+  }
+  
+  .pharmacy-first-carousel .pharmacy-first-track > .card {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+  }
+  
+  /* hide scrollbar on WebKit */
+  .pharmacy-first-carousel .pharmacy-first-track::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Google logo next to rating */
+  .google-logo {
+    height: 24px;
+    margin-right: 0.5rem;
+  }
+  
+  /* Ensure no extra white space appears when dragging up/down */
+  body {
+    background-color: #fff;
+  }
+  
+  /* (Optional) If you want to ensure individual scrollable areas inside the page still work normally,
+     you can allow overscroll within them explicitly. For example: */
+  /*
+  .some-scrollable-container {
+    overscroll-behavior-y: contain;
+  }
+  */
+  /* Add to HomePage.css */
+
+/* Container styling */
+.find-us {
+  background-color: #f9f9fa;        /* light gray background */
+  border-radius: 0.75rem;
+  padding: 2rem 1rem;
 }
 
-/* Carousel: horizontal swipe only */
-.pharmacy-first-carousel .pharmacy-first-track {
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  scroll-snap-type: x mandatory;
-}
-.pharmacy-first-carousel .pharmacy-first-track > .card {
-  scroll-snap-align: start;
-  flex-shrink: 0;
+/* Section title */
+.find-us h2 {
+  color: rgb(28, 43, 57);
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
 }
 
-/* hide scrollbar on WebKit */
-.pharmacy-first-carousel .pharmacy-first-track::-webkit-scrollbar {
-  display: none;
+/* Left column “card” look */
+.find-us .col-md-6:first-child {
+  background-color: #ffffff;
+  border: 1px solid #e2e2e5;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Paragraph text in left column */
+.find-us .col-md-6:first-child p {
+  color: rgb(48, 48, 51);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+/* Strong labels (Phone, Email, etc.) */
+.find-us .col-md-6:first-child strong {
+  color: rgb(28, 43, 57);
+}
+
+/* Hours list styling: transform inline <br> into spacing */
+/* Ensure “Hours:” label is inline so that the single <br> only moves to the next line once */
+.find-us .col-md-6:first-child p:last-child strong {
+  display: inline-block; /* was previously block, which added an extra break */
+  margin-bottom: 0.25rem !important;
+}
+
+/* Remove any default margin on the paragraph to avoid extra gap */
+.find-us .col-md-6:first-child p {
+  margin: 0 0 1rem; /* keep bottom margin for spacing from next paragraph, but no top margin */
+}
+
+/* Tighten line-height for the hours text lines */
+.find-us .col-md-6:first-child p:last-child {
+  line-height: 1.4;
+}
+
+
+/* Right column (map iframe) wrapper */
+.find-us .col-md-6:last-child {
+  margin-bottom: 1.5rem !important;
+}
+
+/* Map iframe styling */
+.find-us iframe {
+  border: 1px solid #e2e2e5;
+  border-radius: 0.5rem;
+  width: 100%;
+  height: 350px;           /* slightly taller for better visibility */
+  margin-bottom: 20px;     /* space below iframe */
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  .find-us {
+    padding: 1.5rem 0.5rem;
+  }
+  .find-us h2 {
+    font-size: 1.75rem;
+  }
+  .find-us .col-md-6:first-child {
+    padding: 1rem;
+  }
+  .find-us iframe {
+    height: 300px;
+  }
 }

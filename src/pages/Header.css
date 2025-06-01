@@ -1,116 +1,190 @@
-/* Reset */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-/* ===== MOBILE HEADER ===== */
 .mobile-header {
   position: fixed;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 56px;
-  background: #fff;
-  border-bottom: 1px solid #eee;
+  background: #ffffff;
+  /* border-bottom: 1px solid #eeeeee; */ /* remove this */
+  box-shadow: 0 15px 20px rgba(113, 219, 243, 0.252) !important; /* subtle shadow */
   display: flex;
   align-items: center;
   z-index: 1050;
 }
 
-/* Logo */
+
 .mobile-logo {
-  height: 26px;
+  height: 28px;
   object-fit: contain;
-  margin-right: '30';
+  margin-left: 1rem;
 }
 
-/* Phone Icon */
 .call-icon {
-  font-size: 1.5rem;
-  color: rgb(28,43,57);
-  text-decoration: none;
+  margin-left: 1.05rem;
+  display: flex;
+  align-items: center;
+}
+.call-icon img {
+  height: 24px;
+  width: 24px;
 }
 
-/* Hamburger */
-.hamburger {
+.mobile-header .flex-fill {
+  flex: 1;
+}
+
+.hamburger-btn {
   background: none;
   border: none;
-  padding: 0.5rem;
+  padding: 0px !important;
+  margin-right: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.15s ease;
+  width: 36px !important;
+  height: 36px !important;
+  outline: none;
 }
-.burger-icon {
-  width: 24px; height: 2px;
-  background: rgb(28,43,57);
-  position: relative;
+.hamburger-btn:focus {
+  outline: none;
+  box-shadow: none;
 }
-.burger-icon::before,
-.burger-icon::after {
-  content: '';
-  position: absolute;
-  width: 24px;
-  height: 2px;
-  background: rgb(28,43,57);
+.hamburger-btn:active {
+  background-color: rgba(0, 0, 0, 0.1);
 }
-.burger-icon::before { top: -6px; }
-.burger-icon::after { top: 6px; }
-
-/* X icon */
-.close-x {
-  font-size: 1.5rem;
-  color: rgb(28,43,57);
+.hamburger-btn img.icon-hamburger,
+.hamburger-btn img.icon-close {
+  width: 24px !important;
+  height: 24px !important;
 }
 
-/* ===== MOBILE DRAWER ===== */
 .mobile-drawer {
   position: fixed;
-  top: 56px; /* below header */
-  left: 0; right: 0;
+  top: 56px;
+  left: 0;
+  right: 0;
   bottom: 0;
-  background: #fff;
+  background: #ffffff;
   overflow-y: auto;
-  overflow-x: hidden;
   z-index: 1040;
+  animation: slideDown 0.25s ease forwards;
+}
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
-/* Panel animation */
-.panel {
-  opacity: 0;
-  transform: translateX(20px);
-  animation: panel-in 0.3s forwards;
-}
-@keyframes panel-in {
-  to { opacity: 1; transform: translateX(0); }
-}
-
-/* List items */
 .mobile-list {
   list-style: none;
-  padding: 1rem;
+  padding: 0 1rem;
 }
-.mobile-list li,
+
+.mobile-back {
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #00427b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 1rem;
+  margin-bottom: 1.25rem;
+  padding-left: 0.25rem;
+}
+.back-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 0.3rem;
+}
+
 .mobile-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid #f0f0f0;
-  color: rgb(28,43,57);
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-/* Back header */
-.mobile-back {
+  font-size: 1.05rem;
   font-weight: 600;
-  padding-bottom: 0.75rem;
+  color: #092a95;
+  padding: 1.2rem 0.5rem;
+  border-bottom: none;
+  margin-top: 0.6rem;
   cursor: pointer;
 }
-
-/* Chevron */
-.chevron-90 {
-  width: 14px;
-  transform: rotate(-90deg);
+.chevron-icon {
+  width: 20px;
+  height: 20px;
   opacity: 0.6;
+}
+.mobile-item:active {
+  background-color: #f2f2f2;
+  border-radius: 8px;
+}
+
+@media (min-width: 768px) {
+  .mobile-header,
+  .mobile-drawer {
+    display: none;
+  }
+}
+
+.desktop-logo {
+  height: 40px;
+}
+
+.desktop-phone-icon {
+  height: 18px;
+  width: 18px;
+  vertical-align: middle;
+  margin-right: 0.4rem;
+}
+
+/* ===== DESKTOP NAVBAR (MD & UP) ===== */
+@media (min-width: 768px) {
+  .mobile-header,
+  .mobile-drawer {
+    display: none;
+  }
+}
+
+.navbar .dropdown-toggle::after {
+  margin-left: 0.25rem;
+  vertical-align: 0.125em;
+  border-top: 0.3em solid;
+  border-right: 0.3em solid transparent;
+  border-left: 0.3em solid transparent;
+}
+
+.desktop-logo {
+  height: 40px;
+}
+
+.desktop-phone-icon {
+  height: 18px;
+  width: 18px;
+  vertical-align: middle;
+  margin-right: 0.4rem;
+}
+
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu > .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-left: 0.1rem;
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
 }
