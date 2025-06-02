@@ -1,0 +1,323 @@
+/* BookAppointment.css */
+
+/* ---------- RESET & BASE ---------- */
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+.page-wrapper {
+  padding-top: 100px; /* push content under Header */
+  background-color: #ffffff;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* ---------- ROUNDED BACK BUTTON ---------- */
+.round-back, .back-btn {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: #1b1b1b;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.round-back:hover, .back-btn:hover {
+  background-color: #f2f2f2;
+}
+
+/* ---------- TITLE ---------- */
+.booking-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #1a2453;
+}
+
+/* ---------- CATEGORY TOGGLE BUTTONS ---------- */
+.category-btn {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border: 2px solid #007bff;
+  border-radius: 0.5rem;
+  background-color: white;
+  color: #007bff;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.category-btn.active {
+  background-color: #001f3f; /* navy */
+  color: white;
+}
+
+.category-btn:hover:not(.active) {
+  background-color: #e9f2ff;
+}
+
+/* ---------- FULL-WIDTH DROPDOWN ---------- */
+.form-select {
+  width: 100%;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  font-size: 0.95rem;
+  border: 1px solid #ccc;
+}
+
+/* ---------- CALENDAR CONTAINER ---------- */
+.calendar-container {
+  padding-left: 0.95rem;
+  padding-right: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+/* ---------- BOXED CALENDAR HEADER ---------- */
+.calendar-header-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  background-color: #f9f9f9;
+  margin-bottom: 1rem;
+}
+
+.header-arrow {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #1b1b1b;
+  cursor: pointer;
+  width: 2rem;
+  text-align: center;
+  padding: 0;
+}
+
+.header-arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.header-month {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #1b1b1b;
+}
+
+/* ---------- WEEKDAY ROW ---------- */
+.weekday-row .col-1 {
+  padding-left: 10px !important;
+  padding-right: 41px !important;
+  font-weight: 600;
+  color: #555;
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+/* ---------- CALENDAR GRID ---------- */
+.calendar-grid {
+  margin-left: 0;
+  margin-right: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.calendar-grid .col-1 {
+  flex: 0 0 14.285714%; /* 1/7 */
+  max-width: 14.285714%;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-bottom: 0.5rem;
+}
+
+/* ---------- DAY BUTTONS ---------- */
+.day-btn {
+  width: 100%;
+  aspect-ratio: 1; /* perfect square */
+  background-color: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  color: #1b1b1b;
+  font-size: 0.8rem !important;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.day-btn:hover:not(:disabled):not(.selected-day):not(.today-day) {
+  background-color: #ececec;
+}
+
+.selected-day {
+  background-color: #1a2453 !important;
+  color: #ffffff !important;
+}
+
+.today-day {
+  background-color: #f2f2f2 !important;
+  color: #1b1b1b !important;
+}
+
+.past-day {
+  background-color: #f2f2f2 !important;
+  color: #999 !important;
+  border-color: #ddd;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* ---------- TIME SLOTS ---------- */
+.times-container {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.selected-date-label {
+  position: sticky !important;
+  top: 55px !important;
+  height: 45px;
+  background-color: #ffffff;
+  z-index: 10;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #1a2453 !important;
+  padding-top: 0.5rem; /* optional: give a little breathing room */
+}
+
+.time-row .col-12 {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.time-slot-btn {
+  width: 100%;
+  background-color: #cae2fa !important;
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #1b1b1b;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.time-slot-btn:hover {
+  background-color: #ececec;
+}
+
+.selected-time {
+  background-color: #133378 !important;
+  color: #ffffff !important;
+}
+
+.select-date-text {
+  text-align: center;
+  color: #888;
+  font-style: italic;
+  margin-top: 1rem;
+}
+
+/* ---------- FULL-PAGE FORM ---------- */
+.form-fullpage {
+  position: relative;
+  background-color: #ffffff;
+  padding: 1rem;
+}
+
+.form-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1b1b1b;
+}
+
+.booking-details {
+  margin-bottom: 1.5rem;
+}
+
+.booking-details .detail-row {
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+/* ---------- BOOKING FORM ---------- */
+.booking-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.booking-form .form-label {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  color: #444;
+}
+
+.booking-form .form-control {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.booking-form .submit-btn {
+  background-color: #1b1b1b;
+  color: #fff;
+  font-size: 1rem;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: auto;
+  transition: background-color 0.2s;
+}
+
+.booking-form .submit-btn:hover {
+  background-color: #333;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 576px) {
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  .day-btn {
+    font-size: 0.8rem;
+  }
+  .time-slot-btn {
+    padding: 0.65rem 0.75rem;
+    font-size: 0.9rem;
+  }
+  .round-back, .back-btn {
+    width: 2rem;
+    height: 2rem;
+    font-size: 1rem;
+  }
+}

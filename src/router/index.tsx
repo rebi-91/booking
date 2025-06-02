@@ -1,60 +1,10 @@
-// import { createBrowserRouter } from "react-router-dom";
-// import HomePage from "../pages/HomePage.tsx";
-// import SignInPage from "../pages/auth/SignInPage.tsx";
-// import SignUpPage from "../pages/auth/SignUpPage.tsx";
-// import ProtectedPage from "../pages/ProtectedPage.tsx";
-// import NotFoundPage from "../pages/404Page.tsx";
-// import AuthProtectedRoute from "./AuthProtectedRoute.tsx";
-// import Providers from "../Providers.tsx";
-// import PickSchoolPage from "../pages/PickSchoolPage.tsx"; // Import the PickSchoolPage component
 
-// const router = createBrowserRouter([
-//   // I recommend you reflect the routes here in the pages folder
-//   {
-//     path: "/",
-//     element: <Providers />,
-//     children: [
-//       // Public routes
-//       {
-//         path: "/",
-//         element: <HomePage />,
-//       },
-//       {
-//         path: "/auth/sign-in",
-//         element: <SignInPage />,
-//       },
-//       {
-//         path: "/auth/sign-up",
-//         element: <SignUpPage />,
-//       },
-//       {
-//         path: "/pick-school",
-//         element: <PickSchoolPage />, // Add PickSchoolPage route
-//       },
-//       // Auth Protected routes
-//       {
-//         path: "/",
-//         element: <AuthProtectedRoute />,
-//         children: [
-//           {
-//             path: "/protected",
-//             element: <ProtectedPage />,
-//           },
-//         ],
-//       },
-//     ],
-//   },
-//   {
-//     path: "*",
-//     element: <NotFoundPage />,
-//   },
-// ]);
-
-// export default router;
 import { createBrowserRouter } from "react-router-dom";
 import HomePage from "../pages/HomePage.tsx";
 import LoginPage from "../pages/LoginPage.tsx";
 import ServicePage from "../pages/auth/ServicePage.tsx";
+import BookingPage from "../pages/auth/BookingPage.tsx"; 
+import BookAppointment from "../pages/auth/BookAppointment.tsx"; 
 import SignInPage from "../pages/auth/SignInPage.tsx";
 import SignUpPage from "../pages/auth/SignUpPage.tsx";
 import PickSchoolPage from "../pages/auth/PickSchoolPage.tsx";
@@ -93,6 +43,14 @@ const router = createBrowserRouter([
       {
         path: "/services",
         element: <ServicePage />,
+      },
+      {
+        path: "/book/:id",
+        element: <BookingPage />,
+      },
+      {
+        path: "/book",
+        element: <BookAppointment />,
       },
       {
         path: "/sign-in",

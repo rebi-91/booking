@@ -1,12 +1,17 @@
-/* src/pages/ServicePage.css */
+/* Reset browser margin/padding so nothing on <html> or <body> leaves a gap */
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
 
 /* === CSS Variables for easy tweaking === */
 :root {
   --page-padding-top: 110px;
   --breadcrumb-margin-top: 2.7rem;
   --breadcrumb-font-size: 0.9rem;
-  --breadcrumb-color: #0d1b3e;
-  --breadcrumb-sep-color: #677294;
+  --breadcrumb-color: #313030f6;
+  --breadcrumb-sep-color: #313030;
 
   --title-font-size: 2.5rem;
   --title-line-height: 1.1;
@@ -35,11 +40,10 @@
   --card-max-width: 300px;
 }
 
-/* zero out default container padding for full-width alignment */
-.container,
+/* Since we’re using container-fluid px-0 everywhere, explicitly zero out any leftover padding */
 .container-fluid {
-  padding-left: 0;
-  padding-right: 0;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 /* wrapper to push content under fixed header */
@@ -118,48 +122,61 @@
 
 /* ===== Services Section ===== */
 .services-section {
-  background-color: var(--services-bg);
+  background-color: var(--services-bg) !important;
 }
+
+/* The actual card styling */
 .service-card {
   border-radius: var(--card-radius);
   background-color: var(--card-bg);
+  /* custom-card-width kicks in: width: 85%; max-width: 300px */
 }
-.custom-card-width {
-  width: var(--card-width);
-  max-width: var(--card-max-width);
+
+/* On very small screens (under 576px), force the cards to be 100% of their parent column */
+@media (max-width: 575.98px) {
+  .custom-card-width {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
 }
+
+/* If the column is col-12, remove any padding so it truly spans edge-to-edge */
+@media (max-width: 767.98px) {
+  .col-12 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+/* Zoom hover effect (retained from your original) */
 .zoom-hover {
   transition: transform 0.3s ease;
 }
 .zoom-hover:hover {
   transform: scale(1.05);
 }
-.card-img-top {
-  border-top-left-radius: var(--card-radius);
-  border-top-right-radius: var(--card-radius);
-}
-/* duration badge */
+
+/* Duration badge (unchanged from your version) */
 .duration-badge {
   position: absolute;
   bottom: 0.5rem;
   left: 0.5rem;
-  background: transparent;
+  background: rgba(0, 0, 0, 0.6);
   color: #fff;
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   font-size: 0.8rem;
 }
-/* badge styling */
+
+/* Badge styling (unchanged) */
 .badge {
   font-size: 0.75rem;
   padding: 0.4em 0.6em;
   border-radius: 0.4rem;
 }
-/* grid gutter tweaks */
+
+/* Remove any custom gutter overrides on .row > div */
 .services-section .row > div {
-  padding-left: 60px !important;
+  padding-left: 0 !important;
   padding-right: 0 !important;
-}
-.services-section .row {
-  --bs-gutter-x: -3rem;
 }
