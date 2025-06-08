@@ -1,4 +1,3 @@
-// src/pages/BookAppointment.tsx
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../Header";
@@ -10,6 +9,7 @@ interface Service {
   title: string;
 }
 
+// NHS vs Private service lists
 const NHS_SERVICES: Service[] = [
   { id: 2, title: "Sinusitis" },
   { id: 5, title: "Sore Throat" },
@@ -58,6 +58,7 @@ const ALL_SERVICES_MAP: Record<number, string> = {
   21: "Erectile Dysfunction",
 };
 
+// generate 20-minute time slots between two times
 function generateTimeSlots(
   startHour: number,
   startMin: number,
@@ -79,6 +80,7 @@ function generateTimeSlots(
   return slots;
 }
 
+// pick daily slots by category
 function slotsForDayAndCategory(
   dayIndex: number,
   category: "NHS" | "Private"
@@ -117,6 +119,7 @@ function slotsForDayAndCategory(
   }
 }
 
+// fetch booked slots from Supabase
 async function fetchExistingBookings(
   dateISO: string,
   category: "NHS" | "Private"
@@ -137,8 +140,15 @@ async function fetchExistingBookings(
 const BookAppointment: React.FC = () => {
   const navigate = useNavigate();
 
+  // --------------------------------
+  // 1) new toggle between calendar & form
+  // --------------------------------
+  const [view, setView] = useState<"calendar" | "form">("calendar");
+
   const [category, setCategory] = useState<"NHS" | "Private">("NHS");
-  const [selectedServiceId, setSelectedServiceId] = useState<number | null>(null);
+  const [selectedServiceId, setSelectedServiceId] = useState<number | null>(
+    null
+  );
 
   const today = new Date();
   const [displayYear, setDisplayYear] = useState(today.getFullYear());
@@ -152,30 +162,28 @@ const BookAppointment: React.FC = () => {
   const [patientPhone, setPatientPhone] = useState("");
   const [patientEmail, setPatientEmail] = useState("");
 
-  // Ref for the date header above the time slots:
+  // Ref for sticky date header
   const timeSlotRef = useRef<HTMLDivElement | null>(null);
 
-  // Load available time slots when selectedDate or category changes
+  // reload slots when date or category changes
   useEffect(() => {
     async function loadSlots() {
       if (!selectedDate) {
         setAvailableTimes([]);
         return;
       }
-      const dow = selectedDate.getDay(); // 0=Sun…6=Sat
+      const dow = selectedDate.getDay();
       const allSlots = slotsForDayAndCategory(dow, category);
       const dateISO = selectedDate.toISOString().split("T")[0];
       const booked = await fetchExistingBookings(dateISO, category);
-      const freeSlots = allSlots.filter((t) => !booked.includes(t));
-      setAvailableTimes(freeSlots);
+      setAvailableTimes(allSlots.filter((t) => !booked.includes(t)));
     }
     loadSlots();
   }, [selectedDate, category]);
 
-  // Scroll the "selected-date-label" into view whenever a date is chosen
+  // scroll label into view
   useEffect(() => {
     if (selectedDate && timeSlotRef.current) {
-      // Slight delay to ensure the slots have rendered, then scroll:
       setTimeout(() => {
         timeSlotRef.current!.scrollIntoView({
           behavior: "smooth",
@@ -185,17 +193,17 @@ const BookAppointment: React.FC = () => {
     }
   }, [selectedDate]);
 
-  // Calendar calculations:
+  // calendar computations
   const firstOfMonth = new Date(displayYear, displayMonth, 1);
-  const jsWeekday = firstOfMonth.getDay(); // 0=Sun…6=Sat
-  const firstColumnIndex = (jsWeekday + 6) % 7; // shift so Mon=0…Sun=6
+  const jsWeekday = firstOfMonth.getDay();
+  const firstColumnIndex = (jsWeekday + 6) % 7;
   const daysInMonth = new Date(displayYear, displayMonth + 1, 0).getDate();
 
-  // Navigate to previous month (unless already at current)
   const handlePrevMonth = () => {
     if (
       displayYear > today.getFullYear() ||
-      (displayYear === today.getFullYear() && displayMonth > today.getMonth())
+      (displayYear === today.getFullYear() &&
+        displayMonth > today.getMonth())
     ) {
       const prev = new Date(displayYear, displayMonth - 1, 1);
       setDisplayYear(prev.getFullYear());
@@ -204,7 +212,6 @@ const BookAppointment: React.FC = () => {
       setChosenTime(null);
     }
   };
-  // Navigate to next month
   const handleNextMonth = () => {
     const next = new Date(displayYear, displayMonth + 1, 1);
     setDisplayYear(next.getFullYear());
@@ -215,19 +222,20 @@ const BookAppointment: React.FC = () => {
   const isShowingCurrentMonth =
     displayYear === today.getFullYear() && displayMonth === today.getMonth();
 
-  // When a calendar day is clicked:
   const handleDayClick = (day: number) => {
     const dt = new Date(displayYear, displayMonth, day);
     setSelectedDate(dt);
     setChosenTime(null);
   };
 
-  // When a time slot is clicked:
+  // --------------------------------
+  // 2) when time is clicked, swap to form
+  // --------------------------------
   const handleTimeClick = (time: string) => {
     setChosenTime(time);
+    setView("form");
   };
 
-  // Submit booking form to Supabase
   const handleBookingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedDate || !chosenTime || selectedServiceId === null) return;
@@ -235,28 +243,25 @@ const BookAppointment: React.FC = () => {
     const dateISO = selectedDate.toISOString().split("T")[0];
     const serviceTitle = ALL_SERVICES_MAP[selectedServiceId] || "";
 
-    try {
-      const { error } = await supabase.from("bookings").insert([
-        {
-          date: dateISO,
-          start_time: chosenTime,
-          cat: category,
-          service: serviceTitle,
-          patientName: patientName,
-          telNumber: patientPhone,
-          email: patientEmail,
-        },
-      ]);
-      if (error) throw error;
+    const { error } = await supabase.from("bookings").insert([
+      {
+        date: dateISO,
+        start_time: chosenTime,
+        cat: category,
+        service: serviceTitle,
+        patientName,
+        telNumber: patientPhone,
+        email: patientEmail,
+      },
+    ]);
+    if (error) {
+      alert("Error saving booking: " + error.message);
+    } else {
       alert("Booking confirmed!");
       navigate("/");
-    } catch (err: any) {
-      alert("Error saving booking: " + err.message);
-      console.error(err);
     }
   };
 
-  // Format the header text under the time slots (“Tuesday 10 Jun 2025” etc.)
   const footerText =
     selectedDate &&
     selectedDate.toLocaleDateString("en-GB", {
@@ -272,11 +277,10 @@ const BookAppointment: React.FC = () => {
 
       <div className="page-wrapper">
         <div className="container py-3">
-          {/* Rounded back button */}
+          {/* Back & title */}
           <button className="round-back" onClick={() => navigate(-1)}>
             ←
           </button>
-
           <h2 className="booking-title mb-4">Book an Appointment</h2>
 
           {/* Category toggle */}
@@ -288,24 +292,28 @@ const BookAppointment: React.FC = () => {
                 setSelectedServiceId(null);
                 setSelectedDate(null);
                 setChosenTime(null);
+                setView("calendar");
               }}
             >
               NHS
             </button>
             <button
-              className={`category-btn ${category === "Private" ? "active" : ""}`}
+              className={`category-btn ${
+                category === "Private" ? "active" : ""
+              }`}
               onClick={() => {
                 setCategory("Private");
                 setSelectedServiceId(null);
                 setSelectedDate(null);
                 setChosenTime(null);
+                setView("calendar");
               }}
             >
               Private
             </button>
           </div>
 
-          {/* Service dropdown */}
+          {/* Service selector */}
           {category === "NHS" && (
             <select
               className="form-select mb-4"
@@ -314,6 +322,7 @@ const BookAppointment: React.FC = () => {
                 setSelectedServiceId(Number(e.target.value));
                 setSelectedDate(null);
                 setChosenTime(null);
+                setView("calendar");
               }}
             >
               <option value="" disabled>
@@ -334,6 +343,7 @@ const BookAppointment: React.FC = () => {
                 setSelectedServiceId(Number(e.target.value));
                 setSelectedDate(null);
                 setChosenTime(null);
+                setView("calendar");
               }}
             >
               <option value="" disabled>
@@ -347,12 +357,11 @@ const BookAppointment: React.FC = () => {
             </select>
           )}
 
-          {/* Calendar + Time Slots */}
-          {selectedServiceId !== null && (
+          {/* CALENDAR & TIME SLOTS */}
+          {view === "calendar" && selectedServiceId !== null && (
             <>
-              {/* Calendar Container */}
+              {/* Calendar */}
               <div className="calendar-container">
-                {/* BOXED HEADER */}
                 <div className="calendar-header-box">
                   <button
                     className="btn header-arrow"
@@ -374,54 +383,69 @@ const BookAppointment: React.FC = () => {
                     ›
                   </button>
                 </div>
-
                 <div className="row text-center weekday-row">
-                  {["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"].map((wd) => (
-                    <div key={wd} className="col-1 px-0">
-                      {wd}
-                    </div>
-                  ))}
+                  {["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"].map(
+                    (wd) => (
+                      <div key={wd} className="col-1 px-0">
+                        {wd}
+                      </div>
+                    )
+                  )}
                 </div>
-
                 <div className="row calendar-grid">
                   {Array.from({ length: firstColumnIndex }).map((_, idx) => (
                     <div key={`empty-${idx}`} className="col-1 px-0" />
                   ))}
-                  {Array.from({ length: daysInMonth }, (_, i) => i + 1).map((day) => {
-                    const thisDate = new Date(displayYear, displayMonth, day);
-                    const dateInPast =
-                      thisDate < new Date(today.getFullYear(), today.getMonth(), today.getDate());
-                    const isSelected =
-                      selectedDate && thisDate.toDateString() === selectedDate.toDateString();
-                    let dayClass = "";
-                    if (isSelected) {
-                      dayClass = "selected-day";
-                    } else if (thisDate.toDateString() === today.toDateString()) {
-                      dayClass = "today-day";
-                    }
+                  {Array.from({ length: daysInMonth }, (_, i) => i + 1).map(
+                    (day) => {
+                      const thisDate = new Date(
+                        displayYear,
+                        displayMonth,
+                        day
+                      );
+                      const dateInPast =
+                        thisDate <
+                        new Date(
+                          today.getFullYear(),
+                          today.getMonth(),
+                          today.getDate()
+                        );
+                      const isSelected =
+                        selectedDate &&
+                        thisDate.toDateString() ===
+                          selectedDate.toDateString();
+                      let dayClass = "";
+                      if (isSelected) dayClass = "selected-day";
+                      else if (
+                        thisDate.toDateString() === today.toDateString()
+                      )
+                        dayClass = "today-day";
 
-                    return (
-                      <div key={day} className="col-1 px-0">
-                        <button
-                          onClick={() => !dateInPast && handleDayClick(day)}
-                          className={`btn day-btn ${
-                            dateInPast ? "past-day" : dayClass
-                          }`}
-                          disabled={dateInPast}
-                        >
-                          {day}
-                        </button>
-                      </div>
-                    );
-                  })}
+                      return (
+                        <div key={day} className="col-1 px-0">
+                          <button
+                            onClick={() =>
+                              !dateInPast && handleDayClick(day)
+                            }
+                            className={`btn day-btn ${
+                              dateInPast ? "past-day" : dayClass
+                            }`}
+                            disabled={dateInPast}
+                          >
+                            {day}
+                          </button>
+                        </div>
+                      );
+                    }
+                  )}
                 </div>
               </div>
 
               <hr />
 
+              {/* Time slots */}
               {selectedDate ? (
                 <div className="times-container">
-                  {/* Attach ref here so this label scrolls into view */}
                   <div
                     className="selected-date-label"
                     ref={timeSlotRef}
@@ -460,85 +484,97 @@ const BookAppointment: React.FC = () => {
             </>
           )}
 
-          {/* Confirm Your Booking Form */}
-          {chosenTime && selectedDate && selectedServiceId !== null && (
-            <div className="form-fullpage">
-              <div className="form-header">
-                <button
-                  className="back-btn"
-                  onClick={() => {
-                    setChosenTime(null);
-                  }}
+          {/* CONFIRM BOOKING FORM */}
+          {view === "form" &&
+            selectedDate &&
+            chosenTime &&
+            selectedServiceId !== null && (
+              <div className="form-fullpage">
+                <div className="form-header">
+                  <button
+                    className="back-btn"
+                    onClick={() => {
+                      setView("calendar");
+                      setChosenTime(null);
+                    }}
+                  >
+                    ←
+                  </button>
+                  <span className="form-title">Confirm Your Booking</span>
+                </div>
+
+                <div className="booking-details">
+                  <div className="detail-row">
+                    <strong>Category:</strong> {category}
+                  </div>
+                  <div className="detail-row">
+                    <strong>Service:</strong>{" "}
+                    {ALL_SERVICES_MAP[selectedServiceId]}
+                  </div>
+                  <div className="detail-row">
+                    <strong>Date:</strong>{" "}
+                    {selectedDate.toLocaleDateString("en-GB", {
+                      weekday: "long",
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </div>
+                  <div className="detail-row">
+                    <strong>Time:</strong> {chosenTime}
+                  </div>
+                </div>
+
+                <form
+                  className="booking-form"
+                  onSubmit={handleBookingSubmit}
                 >
-                  ←
-                </button>
-                <span className="form-title">Confirm Your Booking</span>
+                  <label htmlFor="patientName" className="form-label">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    id="patientName"
+                    className="form-control"
+                    value={patientName}
+                    onChange={(e) => setPatientName(e.target.value)}
+                    required
+                  />
+
+                  <label htmlFor="patientPhone" className="form-label">
+                    Phone
+                  </label>
+                  <input
+                    type="tel"
+                    id="patientPhone"
+                    className="form-control"
+                    value={patientPhone}
+                    onChange={(e) =>
+                      setPatientPhone(e.target.value)
+                    }
+                    required
+                  />
+
+                  <label htmlFor="patientEmail" className="form-label">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="patientEmail"
+                    className="form-control"
+                    value={patientEmail}
+                    onChange={(e) =>
+                      setPatientEmail(e.target.value)
+                    }
+                    required
+                  />
+
+                  <button type="submit" className="submit-btn">
+                    Confirm Booking
+                  </button>
+                </form>
               </div>
-
-              <div className="booking-details">
-                <div className="detail-row">
-                  <strong>Category:</strong> {category}
-                </div>
-                <div className="detail-row">
-                  <strong>Service:</strong> {ALL_SERVICES_MAP[selectedServiceId]}
-                </div>
-                <div className="detail-row">
-                  <strong>Date:</strong>{" "}
-                  {selectedDate.toLocaleDateString("en-GB", {
-                    weekday: "long",
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                  })}
-                </div>
-                <div className="detail-row">
-                  <strong>Time:</strong> {chosenTime}
-                </div>
-              </div>
-
-              <form className="booking-form" onSubmit={handleBookingSubmit}>
-                <label htmlFor="patientName" className="form-label">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  id="patientName"
-                  className="form-control"
-                  value={patientName}
-                  onChange={(e) => setPatientName(e.target.value)}
-                  required
-                />
-
-                <label htmlFor="patientPhone" className="form-label">
-                  Phone
-                </label>
-                <input
-                  type="tel"
-                  id="patientPhone"
-                  className="form-control"
-                  value={patientPhone}
-                  onChange={(e) => setPatientPhone(e.target.value)}
-                  required
-                />
-
-                <label htmlFor="patientEmail" className="form-label">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="patientEmail"
-                  className="form-control"
-                  value={patientEmail}
-                  onChange={(e) => setPatientEmail(e.target.value)}
-                  required
-                />
-
-                <button type="submit" className="submit-btn">
-                  Confirm Booking
-                </button>
-              </form>
-            </div>
-          )}
+            )}
         </div>
       </div>
     </>
@@ -546,6 +582,554 @@ const BookAppointment: React.FC = () => {
 };
 
 export default BookAppointment;
+// // src/pages/BookAppointment.tsx
+// import React, { useEffect, useState, useRef } from "react";
+// import { useNavigate } from "react-router-dom";
+// import Header from "../Header";
+// import "./BookAppointment.css";
+// import supabase from "../../supabase";
+
+// interface Service {
+//   id: number;
+//   title: string;
+// }
+
+// const NHS_SERVICES: Service[] = [
+//   { id: 2, title: "Sinusitis" },
+//   { id: 5, title: "Sore Throat" },
+//   { id: 8, title: "Earache" },
+//   { id: 9, title: "Infected Insect Bite" },
+//   { id: 12, title: "Impetigo" },
+//   { id: 16, title: "Shingles" },
+//   { id: 6, title: "Uncomplicated UTI (Women)" },
+//   { id: 22, title: "Blood Pressure Check" },
+//   { id: 14, title: "Emergency Contraception" },
+//   { id: 15, title: "Flu Vaccination" },
+//   { id: 17, title: "COVID-19 Vaccination" },
+// ];
+
+// const PRIVATE_SERVICES: Service[] = [
+//   { id: 19, title: "Microsuction Earwax Removal" },
+//   { id: 13, title: "Weight Loss Clinic" },
+//   { id: 11, title: "Private Flu Jab" },
+//   { id: 10, title: "Period Delay" },
+//   { id: 1, title: "Altitude Sickness" },
+//   { id: 6, title: "Vitamin B12 Injection" },
+//   { id: 7, title: "Hair Loss" },
+//   { id: 18, title: "Chickenpox Vaccine" },
+//   { id: 21, title: "Erectile Dysfunction" },
+// ];
+
+// const ALL_SERVICES_MAP: Record<number, string> = {
+//   1: "Altitude Sickness",
+//   2: "Sinusitis",
+//   5: "Sore Throat",
+//   8: "Earache",
+//   9: "Infected Insect Bite",
+//   12: "Impetigo",
+//   16: "Shingles",
+//   6: "Uncomplicated UTI (Women)",
+//   22: "Blood Pressure Check",
+//   14: "Emergency Contraception",
+//   15: "Flu Vaccination",
+//   17: "COVID-19 Vaccination",
+//   19: "Microsuction Earwax Removal",
+//   13: "Weight Loss Clinic",
+//   11: "Private Flu Jab",
+//   10: "Period Delay",
+//   7: "Hair Loss",
+//   18: "Chickenpox Vaccine",
+//   21: "Erectile Dysfunction",
+// };
+
+// function generateTimeSlots(
+//   startHour: number,
+//   startMin: number,
+//   endHour: number,
+//   endMin: number
+// ): string[] {
+//   const slots: string[] = [];
+//   let current = new Date();
+//   current.setHours(startHour, startMin, 0, 0);
+//   const end = new Date();
+//   end.setHours(endHour, endMin, 0, 0);
+
+//   while (current <= end) {
+//     const hh = current.getHours().toString().padStart(2, "0");
+//     const mm = current.getMinutes().toString().padStart(2, "0");
+//     slots.push(`${hh}:${mm}`);
+//     current = new Date(current.getTime() + 20 * 60 * 1000);
+//   }
+//   return slots;
+// }
+
+// function slotsForDayAndCategory(
+//   dayIndex: number,
+//   category: "NHS" | "Private"
+// ): string[] {
+//   if (category === "NHS") {
+//     switch (dayIndex) {
+//       case 1:
+//       case 2:
+//       case 3:
+//       case 4:
+//         return generateTimeSlots(9, 30, 17, 10);
+//       case 5:
+//         return [
+//           ...generateTimeSlots(9, 30, 12, 10),
+//           ...generateTimeSlots(15, 30, 17, 10),
+//         ];
+//       default:
+//         return [];
+//     }
+//   } else {
+//     switch (dayIndex) {
+//       case 1:
+//       case 2:
+//       case 3:
+//         return generateTimeSlots(9, 30, 17, 10);
+//       case 4:
+//         return [];
+//       case 5:
+//         return [
+//           ...generateTimeSlots(9, 30, 12, 10),
+//           ...generateTimeSlots(15, 0, 17, 10),
+//         ];
+//       default:
+//         return [];
+//     }
+//   }
+// }
+
+// async function fetchExistingBookings(
+//   dateISO: string,
+//   category: "NHS" | "Private"
+// ): Promise<string[]> {
+//   const { data, error } = await supabase
+//     .from("bookings")
+//     .select("start_time")
+//     .eq("date", dateISO)
+//     .eq("cat", category);
+
+//   if (error) {
+//     console.error("Supabase fetch error:", error.message);
+//     return [];
+//   }
+//   return (data as { start_time: string }[]).map((row) => row.start_time);
+// }
+
+// const BookAppointment: React.FC = () => {
+//   const navigate = useNavigate();
+
+//   const [category, setCategory] = useState<"NHS" | "Private">("NHS");
+//   const [selectedServiceId, setSelectedServiceId] = useState<number | null>(null);
+
+//   const today = new Date();
+//   const [displayYear, setDisplayYear] = useState(today.getFullYear());
+//   const [displayMonth, setDisplayMonth] = useState(today.getMonth());
+//   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+//   const [availableTimes, setAvailableTimes] = useState<string[]>([]);
+//   const [chosenTime, setChosenTime] = useState<string | null>(null);
+
+//   const [patientName, setPatientName] = useState("");
+//   const [patientPhone, setPatientPhone] = useState("");
+//   const [patientEmail, setPatientEmail] = useState("");
+
+//   // Ref for the date header above the time slots:
+//   const timeSlotRef = useRef<HTMLDivElement | null>(null);
+
+//   // Load available time slots when selectedDate or category changes
+//   useEffect(() => {
+//     async function loadSlots() {
+//       if (!selectedDate) {
+//         setAvailableTimes([]);
+//         return;
+//       }
+//       const dow = selectedDate.getDay(); // 0=Sun…6=Sat
+//       const allSlots = slotsForDayAndCategory(dow, category);
+//       const dateISO = selectedDate.toISOString().split("T")[0];
+//       const booked = await fetchExistingBookings(dateISO, category);
+//       const freeSlots = allSlots.filter((t) => !booked.includes(t));
+//       setAvailableTimes(freeSlots);
+//     }
+//     loadSlots();
+//   }, [selectedDate, category]);
+
+//   // Scroll the "selected-date-label" into view whenever a date is chosen
+//   useEffect(() => {
+//     if (selectedDate && timeSlotRef.current) {
+//       // Slight delay to ensure the slots have rendered, then scroll:
+//       setTimeout(() => {
+//         timeSlotRef.current!.scrollIntoView({
+//           behavior: "smooth",
+//           block: "start",
+//         });
+//       }, 100);
+//     }
+//   }, [selectedDate]);
+
+//   // Calendar calculations:
+//   const firstOfMonth = new Date(displayYear, displayMonth, 1);
+//   const jsWeekday = firstOfMonth.getDay(); // 0=Sun…6=Sat
+//   const firstColumnIndex = (jsWeekday + 6) % 7; // shift so Mon=0…Sun=6
+//   const daysInMonth = new Date(displayYear, displayMonth + 1, 0).getDate();
+
+//   // Navigate to previous month (unless already at current)
+//   const handlePrevMonth = () => {
+//     if (
+//       displayYear > today.getFullYear() ||
+//       (displayYear === today.getFullYear() && displayMonth > today.getMonth())
+//     ) {
+//       const prev = new Date(displayYear, displayMonth - 1, 1);
+//       setDisplayYear(prev.getFullYear());
+//       setDisplayMonth(prev.getMonth());
+//       setSelectedDate(null);
+//       setChosenTime(null);
+//     }
+//   };
+//   // Navigate to next month
+//   const handleNextMonth = () => {
+//     const next = new Date(displayYear, displayMonth + 1, 1);
+//     setDisplayYear(next.getFullYear());
+//     setDisplayMonth(next.getMonth());
+//     setSelectedDate(null);
+//     setChosenTime(null);
+//   };
+//   const isShowingCurrentMonth =
+//     displayYear === today.getFullYear() && displayMonth === today.getMonth();
+
+//   // When a calendar day is clicked:
+//   const handleDayClick = (day: number) => {
+//     const dt = new Date(displayYear, displayMonth, day);
+//     setSelectedDate(dt);
+//     setChosenTime(null);
+//   };
+
+//   // When a time slot is clicked:
+//   const handleTimeClick = (time: string) => {
+//     setChosenTime(time);
+//   };
+
+//   // Submit booking form to Supabase
+//   const handleBookingSubmit = async (e: React.FormEvent) => {
+//     e.preventDefault();
+//     if (!selectedDate || !chosenTime || selectedServiceId === null) return;
+
+//     const dateISO = selectedDate.toISOString().split("T")[0];
+//     const serviceTitle = ALL_SERVICES_MAP[selectedServiceId] || "";
+
+//     try {
+//       const { error } = await supabase.from("bookings").insert([
+//         {
+//           date: dateISO,
+//           start_time: chosenTime,
+//           cat: category,
+//           service: serviceTitle,
+//           patientName: patientName,
+//           telNumber: patientPhone,
+//           email: patientEmail,
+//         },
+//       ]);
+//       if (error) throw error;
+//       alert("Booking confirmed!");
+//       navigate("/");
+//     } catch (err: any) {
+//       alert("Error saving booking: " + err.message);
+//       console.error(err);
+//     }
+//   };
+
+//   // Format the header text under the time slots (“Tuesday 10 Jun 2025” etc.)
+//   const footerText =
+//     selectedDate &&
+//     selectedDate.toLocaleDateString("en-GB", {
+//       weekday: "long",
+//       day: "numeric",
+//       month: "short",
+//       year: "numeric",
+//     });
+
+//   return (
+//     <>
+//       <Header />
+
+//       <div className="page-wrapper">
+//         <div className="container py-3">
+//           {/* Rounded back button */}
+//           <button className="round-back" onClick={() => navigate(-1)}>
+//             ←
+//           </button>
+
+//           <h2 className="booking-title mb-4">Book an Appointment</h2>
+
+//           {/* Category toggle */}
+//           <div className="d-flex gap-2 mb-4 category-toggle">
+//             <button
+//               className={`category-btn ${category === "NHS" ? "active" : ""}`}
+//               onClick={() => {
+//                 setCategory("NHS");
+//                 setSelectedServiceId(null);
+//                 setSelectedDate(null);
+//                 setChosenTime(null);
+//               }}
+//             >
+//               NHS
+//             </button>
+//             <button
+//               className={`category-btn ${category === "Private" ? "active" : ""}`}
+//               onClick={() => {
+//                 setCategory("Private");
+//                 setSelectedServiceId(null);
+//                 setSelectedDate(null);
+//                 setChosenTime(null);
+//               }}
+//             >
+//               Private
+//             </button>
+//           </div>
+
+//           {/* Service dropdown */}
+//           {category === "NHS" && (
+//             <select
+//               className="form-select mb-4"
+//               value={selectedServiceId ?? ""}
+//               onChange={(e) => {
+//                 setSelectedServiceId(Number(e.target.value));
+//                 setSelectedDate(null);
+//                 setChosenTime(null);
+//               }}
+//             >
+//               <option value="" disabled>
+//                 Select NHS Service
+//               </option>
+//               {NHS_SERVICES.map((svc) => (
+//                 <option key={svc.id} value={svc.id}>
+//                   {svc.title}
+//                 </option>
+//               ))}
+//             </select>
+//           )}
+//           {category === "Private" && (
+//             <select
+//               className="form-select mb-4"
+//               value={selectedServiceId ?? ""}
+//               onChange={(e) => {
+//                 setSelectedServiceId(Number(e.target.value));
+//                 setSelectedDate(null);
+//                 setChosenTime(null);
+//               }}
+//             >
+//               <option value="" disabled>
+//                 Select Private Service
+//               </option>
+//               {PRIVATE_SERVICES.map((svc) => (
+//                 <option key={svc.id} value={svc.id}>
+//                   {svc.title}
+//                 </option>
+//               ))}
+//             </select>
+//           )}
+
+//           {/* Calendar + Time Slots */}
+//           {selectedServiceId !== null && (
+//             <>
+//               {/* Calendar Container */}
+//               <div className="calendar-container">
+//                 {/* BOXED HEADER */}
+//                 <div className="calendar-header-box">
+//                   <button
+//                     className="btn header-arrow"
+//                     onClick={handlePrevMonth}
+//                     disabled={isShowingCurrentMonth}
+//                   >
+//                     ‹
+//                   </button>
+//                   <span className="header-month">
+//                     {new Date(displayYear, displayMonth).toLocaleDateString(
+//                       "en-GB",
+//                       { month: "long", year: "numeric" }
+//                     )}
+//                   </span>
+//                   <button
+//                     className="btn header-arrow"
+//                     onClick={handleNextMonth}
+//                   >
+//                     ›
+//                   </button>
+//                 </div>
+
+//                 <div className="row text-center weekday-row">
+//                   {["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"].map((wd) => (
+//                     <div key={wd} className="col-1 px-0">
+//                       {wd}
+//                     </div>
+//                   ))}
+//                 </div>
+
+//                 <div className="row calendar-grid">
+//                   {Array.from({ length: firstColumnIndex }).map((_, idx) => (
+//                     <div key={`empty-${idx}`} className="col-1 px-0" />
+//                   ))}
+//                   {Array.from({ length: daysInMonth }, (_, i) => i + 1).map((day) => {
+//                     const thisDate = new Date(displayYear, displayMonth, day);
+//                     const dateInPast =
+//                       thisDate < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+//                     const isSelected =
+//                       selectedDate && thisDate.toDateString() === selectedDate.toDateString();
+//                     let dayClass = "";
+//                     if (isSelected) {
+//                       dayClass = "selected-day";
+//                     } else if (thisDate.toDateString() === today.toDateString()) {
+//                       dayClass = "today-day";
+//                     }
+
+//                     return (
+//                       <div key={day} className="col-1 px-0">
+//                         <button
+//                           onClick={() => !dateInPast && handleDayClick(day)}
+//                           className={`btn day-btn ${
+//                             dateInPast ? "past-day" : dayClass
+//                           }`}
+//                           disabled={dateInPast}
+//                         >
+//                           {day}
+//                         </button>
+//                       </div>
+//                     );
+//                   })}
+//                 </div>
+//               </div>
+
+//               <hr />
+
+//               {selectedDate ? (
+//                 <div className="times-container">
+//                   {/* Attach ref here so this label scrolls into view */}
+//                   <div
+//                     className="selected-date-label"
+//                     ref={timeSlotRef}
+//                   >
+//                     {footerText}
+//                   </div>
+//                   <div className="row gx-0 time-row">
+//                     {availableTimes.length > 0 ? (
+//                       availableTimes.map((t) => {
+//                         const isChosen = chosenTime === t;
+//                         return (
+//                           <div key={t} className="col-12 px-0 mb-2">
+//                             <button
+//                               className={`btn time-slot-btn ${
+//                                 isChosen ? "selected-time" : ""
+//                               }`}
+//                               onClick={() => handleTimeClick(t)}
+//                             >
+//                               {t}
+//                             </button>
+//                           </div>
+//                         );
+//                       })
+//                     ) : (
+//                       <p className="select-date-text">
+//                         No available slots for this date.
+//                       </p>
+//                     )}
+//                   </div>
+//                 </div>
+//               ) : (
+//                 <p className="select-date-text">
+//                   Select a date to see available times
+//                 </p>
+//               )}
+//             </>
+//           )}
+
+//           {/* Confirm Your Booking Form */}
+//           {chosenTime && selectedDate && selectedServiceId !== null && (
+//             <div className="form-fullpage">
+//               <div className="form-header">
+//                 <button
+//                   className="back-btn"
+//                   onClick={() => {
+//                     setChosenTime(null);
+//                   }}
+//                 >
+//                   ←
+//                 </button>
+//                 <span className="form-title">Confirm Your Booking</span>
+//               </div>
+
+//               <div className="booking-details">
+//                 <div className="detail-row">
+//                   <strong>Category:</strong> {category}
+//                 </div>
+//                 <div className="detail-row">
+//                   <strong>Service:</strong> {ALL_SERVICES_MAP[selectedServiceId]}
+//                 </div>
+//                 <div className="detail-row">
+//                   <strong>Date:</strong>{" "}
+//                   {selectedDate.toLocaleDateString("en-GB", {
+//                     weekday: "long",
+//                     day: "numeric",
+//                     month: "short",
+//                     year: "numeric",
+//                   })}
+//                 </div>
+//                 <div className="detail-row">
+//                   <strong>Time:</strong> {chosenTime}
+//                 </div>
+//               </div>
+
+//               <form className="booking-form" onSubmit={handleBookingSubmit}>
+//                 <label htmlFor="patientName" className="form-label">
+//                   Name
+//                 </label>
+//                 <input
+//                   type="text"
+//                   id="patientName"
+//                   className="form-control"
+//                   value={patientName}
+//                   onChange={(e) => setPatientName(e.target.value)}
+//                   required
+//                 />
+
+//                 <label htmlFor="patientPhone" className="form-label">
+//                   Phone
+//                 </label>
+//                 <input
+//                   type="tel"
+//                   id="patientPhone"
+//                   className="form-control"
+//                   value={patientPhone}
+//                   onChange={(e) => setPatientPhone(e.target.value)}
+//                   required
+//                 />
+
+//                 <label htmlFor="patientEmail" className="form-label">
+//                   Email
+//                 </label>
+//                 <input
+//                   type="email"
+//                   id="patientEmail"
+//                   className="form-control"
+//                   value={patientEmail}
+//                   onChange={(e) => setPatientEmail(e.target.value)}
+//                   required
+//                 />
+
+//                 <button type="submit" className="submit-btn">
+//                   Confirm Booking
+//                 </button>
+//               </form>
+//             </div>
+//           )}
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
+
+// export default BookAppointment;
 
 
 // import React, { useEffect, useState } from "react";

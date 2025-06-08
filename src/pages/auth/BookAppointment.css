@@ -1,5 +1,3 @@
-/* BookAppointment.css */
-
 /* ---------- RESET & BASE ---------- */
 html, body {
   margin: 0;
@@ -63,7 +61,7 @@ html, body {
 }
 
 .category-btn.active {
-  background-color: #001f3f; /* navy */
+  background-color: #001f3f;
   color: white;
 }
 
@@ -78,6 +76,7 @@ html, body {
   padding: 0.5rem;
   font-size: 0.95rem;
   border: 1px solid #ccc;
+  margin-bottom: 1rem;
 }
 
 /* ---------- CALENDAR CONTAINER ---------- */
@@ -198,7 +197,7 @@ html, body {
   font-weight: 500;
   margin-bottom: 0.5rem;
   color: #1a2453 !important;
-  padding-top: 0.5rem; /* optional: give a little breathing room */
+  padding-top: 0.5rem;
 }
 
 .time-row .col-12 {
