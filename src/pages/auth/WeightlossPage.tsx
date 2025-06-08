@@ -251,7 +251,9 @@ const WeightlossPage: React.FC = () => {
 
         {/* Science-backed Section */}
         <section className="container science-backed">
+        <div className="benefitsTitle">
           <h2>Weight loss, backed by science</h2>
+          </div>
           <div className="cards-grid benefits-grid">
             {benefits.map((benefit, idx) => (
               <div key={idx} className="benefit-card">
