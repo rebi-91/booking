@@ -5,13 +5,13 @@
    html, body {
     overflow-x: hidden;
     overscroll-behavior-y: none;
-    margin-top: -35px;
+    margin-top: 0px !important;
     margin-bottom: 50px !important;
     padding: 7px;
   }
   
   .pt-header {
-    padding-top: 100px; /* header + top-bar height */
+    padding-top: 40px !important; /* header + top-bar height */
   }
   
   .btn-start {
@@ -27,7 +27,24 @@
   @media (max-width: 767px) {
     .hero-cards {
       display: none !important;
+
     }
+
+    /* New "Select" button in weight-loss container */
+.weight-select-btn {
+  background-color: cyan;
+  color: #001F54;
+  border: none;
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.weight-select-btn:hover {
+  background-color: #b2ffff;
+}
+
   }
   
   /* Carousel container styling */

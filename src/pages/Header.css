@@ -76,6 +76,7 @@
   overflow-y: auto;
   z-index: 1040;
   animation: slideDown 0.25s ease forwards;
+   background-color: #b8eff4;
 }
 @keyframes slideDown {
   from {
@@ -89,6 +90,7 @@
 .mobile-list {
   list-style: none;
   padding: 0 1rem;
+  background-color:  #b8eff4;
 }
 
 .mobile-back {
@@ -115,7 +117,9 @@
   align-items: center;
   font-size: 1.05rem;
   font-weight: 600;
-  color: #092a95;
+  color: #24e4ee;
+  border-radius: 10px;
+  background-color: #103067;
   padding: 1.2rem 0.5rem;
   border-bottom: none;
   margin-top: 0.6rem;

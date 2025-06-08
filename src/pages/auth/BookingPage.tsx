@@ -639,7 +639,8 @@
 // };
 
 // export default BookingPage;
-import React, { useEffect, useState, useRef } from 'react';
+
+import React, { useLayoutEffect, useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../Header';
 import './BookingPage.css';
@@ -673,14 +674,14 @@ const sampleServices: Record<number, Service> = {
     title: 'Travel Consultation',
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: '£10.00',
+    price: 'varies',
   },
   4: {
     id: 4,
     title: 'Travel vaccine',
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: '£10.00',
+    price: 'varies',
   },
   5: {
     id: 5,
@@ -740,21 +741,21 @@ const sampleServices: Record<number, Service> = {
   },
   13: {
     id: 13,
-    title: 'Weight loss clinic',
+    title: 'Weight Loss',
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
     price: '£10.00',
   },
   14: {
     id: 14,
-    title: 'Emergency contraception',
+    title: 'Contraception (including Emergency)',
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
     price: 'Free NHS',
   },
   15: {
     id: 15,
-    title: 'Flu vaccination',
+    title: 'Flu Vaccination',
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
     price: 'Free NHS',
@@ -1042,6 +1043,12 @@ const BookingPage: React.FC = () => {
       day: 'numeric',
       month: 'short',
     });
+
+    useLayoutEffect(() => {
+      // force scroll to absolute top before paint
+      window.scrollTo(0, 0);
+    }, []);
+    
 
   return (
     <>

@@ -7,7 +7,7 @@ body {
 }
 
 .page-wrapper {
-  padding-top: 100px !important; /* push content under Header */
+  padding-top: 70px !important; /* push content under Header */
   background-color: #ffffff;
   min-height: 100vh;
 }

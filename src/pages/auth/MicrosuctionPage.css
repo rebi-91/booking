@@ -1,0 +1,334 @@
+/* src/pages/auth/MicrosuctionPage.css */
+
+/*==============================
+  Variables & Base Reset
+==============================*/
+:root {
+  --clr-primary:   #2185e2;
+  --clr-accent:    #00D364;
+  --clr-muted:     #4A5568;
+  --clr-border:    #E2E8F0;
+  --clr-lightbg:   #F8F9FA;
+  --clr-bg:        #ffffff;
+  --header-height: 4rem;
+  --radius:        0.375rem;
+  --gap:           1rem;
+  --transition:    0.2s;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0; padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--clr-primary);
+  background-color: var(--clr-bg);
+  scroll-behavior: smooth;
+}
+
+/*==============================
+  Layout Helpers
+==============================*/
+.container {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 1.1rem !important;
+}
+
+.pt-header {
+  padding-top: var(--header-height);
+}
+
+/*==============================
+  Breadcrumb / Page Path
+==============================*/
+.breadcrumb-wrapper {
+  background-color: #000;
+  padding: 0rem 0 0 0.5rem;
+  align-items: center !important;
+}
+
+.page-path {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.9rem;
+  color: rgba(246,236,236,0.96);
+  margin: 0;
+}
+
+.page-path a {
+  color: inherit;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--transition);
+}
+
+.page-path a:hover {
+  color: var(--clr-primary);
+}
+
+.page-path .sep {
+  margin: 0 0.5rem;
+  color: #999;
+}
+
+.page-path .current {
+  color: var(--clr-primary);
+}
+
+/*==============================
+  Section Titles
+==============================*/
+.page-title {
+  font-size: 2rem;
+  line-height: 1.2;
+  font-weight: 700;
+  margin: 0 0 var(--gap) 0;
+  color: var(--clr-primary);
+  padding-top: 16px; /* ensure no extra padding */
+  text-align: left !important;
+  color: #0742b0;
+}
+.page-title--coleshill {
+  color: #00C658;;  }
+.hero-title {
+  font-size: 1.6rem !important;
+  line-height: 1.2;
+  font-weight: 700;
+  margin: 0 0 var(--gap) 0;
+  color: var(--clr-primary);
+  padding-top: 16px; /* ensure no extra padding */
+ 
+}
+
+/* Remove any decorative underline/after-rule */
+.page-title::after,
+.section-heading::after {
+  content: none;
+}
+
+/*==============================
+  Hero / Intro
+==============================*/
+.hero-section {
+  text-align: center;
+  padding: var(--gap) 0 3rem;
+}
+
+.hero-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem auto 2rem;
+  max-width: 480px;
+  text-align: left;
+  color:  #677792;
+}
+
+.hero-bullets li {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.hero-bullets li::before {
+  content: '✓';
+  color: var(--clr-accent);
+  margin-right: 0.5rem;
+}
+
+/* CTA */
+.btn-accent {
+  background-color: #8ae7e1 !important;
+  color: #03288b !important;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background-color var(--transition);
+  margin-bottom: 2rem;
+}
+
+.btn-accent:hover {
+  background-color: #75f8ef !important;
+}
+
+/* Hero image */
+.hero-image-wrap {
+  margin: 2rem auto 1.5rem;
+  max-width: 400px;
+}
+
+.hero-image {
+  width: 100%;
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Rating */
+.rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+.rating span {
+  font-weight: 500;
+}
+
+/*==============================
+  About / FAQ Section
+==============================*/
+.about-section {
+  padding: 3rem 0;
+}
+
+/* Section heading */
+.section-heading {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--clr-primary);
+  text-align: center;
+  margin-bottom: 1rem;
+  border: none;    /* remove any bottom border */
+  padding: 0;      /* remove extra padding */
+}
+
+/* Subtext */
+.section-subtext {
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+  color: var(--clr-muted);
+  text-align: center;
+}
+
+/* FAQ accordion */
+.accordion {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.accordion-item {
+  background: var(--clr-lightbg);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius);
+  margin-bottom: 1rem;
+  overflow: hidden;
+  transition: box-shadow var(--transition);
+}
+
+.accordion-item:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  cursor: pointer;
+  background: var(--clr-lightbg);
+  transition: background var(--transition);
+}
+
+.accordion-header.open {
+  background: #E2E8F0;
+}
+
+.accordion-question {
+  flex: 1;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--clr-primary);
+}
+
+.accordion-caret {
+  width: 1rem;
+  height: 1rem;
+  transition: transform var(--transition);
+}
+
+.accordion-body {
+  display: none;
+  padding: 1rem;
+  background: var(--clr-bg);
+  border-top: 1px solid #E9ECEF;
+  color: var(--clr-muted);
+  line-height: 1.6;
+}
+
+.accordion-body.show {
+  display: block;
+}
+
+/*==============================
+  Lists & Steps
+==============================*/
+.why-list,
+.before-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto 1.5rem;
+  max-width: 480px;
+}
+
+.why-list li,
+.before-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--clr-primary);
+}
+
+.why-list li::before,
+.before-list li::before {
+  content: '•';
+  color: var(--clr-accent);
+  position: absolute;
+  left: 0;
+}
+
+.steps-row {
+  display: grid;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.steps-row {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.step h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--clr-primary);
+  margin-bottom: 0.5rem;
+}
+
+.step p {
+  color: var(--clr-muted);
+  line-height: 1.5;
+}
+
+/*==============================
+  Responsive Tweaks
+==============================*/
+@media (max-width: 768px) {
+  .page-title,
+  .hero-title {
+    font-size: 1.75rem;
+    text-align: center;
+  }
+
+  .btn-accent {
+    width: 100%;
+  }
+}
+ 

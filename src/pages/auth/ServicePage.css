@@ -1,182 +1,103 @@
-/* Reset browser margin/padding so nothing on <html> or <body> leaves a gap */
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
+/* src/pages/auth/ServicePage.css */
 
-/* === CSS Variables for easy tweaking === */
+/*--------------------------------------
+  Variables & Reset
+--------------------------------------*/
 :root {
-  --page-padding-top: 110px;
-  --breadcrumb-margin-top: 2.7rem;
-  --breadcrumb-font-size: 0.9rem;
-  --breadcrumb-color: #313030f6;
-  --breadcrumb-sep-color: #313030;
-
-  --title-font-size: 2.5rem;
-  --title-line-height: 1.1;
-  --title-weight: 800;
-  --title-color: #0d1b3e;
-  --title-margin: 2.3rem 0 2.5rem 0;
-
-  --subtitle-font-size: 1.1rem;
-  --subtitle-color: #677294;
-
-  --tab-gap: 0.75rem;
-  --tab-padding: 0.6rem 1.2rem;
-  --tab-radius: 2rem;
-  --tab-font-size: 0.95rem;
-  --tab-font-weight: 500;
-  --tab-bg: #f2f2f2;
-  --tab-color: #0d1b3e;
-  --tab-active-bg: #0d1b3e;
-  --tab-active-color: #1ee0c5;
-  --tab-hover-bg: #e0e0e0;
-
-  --services-bg: #edf1f7;
-  --card-bg: #ffffff;
-  --card-radius: 0.75rem;
-  --card-width: 85%;
-  --card-max-width: 300px;
+  --header-offset: 4rem;
+  --gap: 1rem;
+  --clr-bg-light: #edf1f7;
+  --clr-text: #0d1b3e;
+  --clr-muted: #677294;
+  --clr-tab-bg: #f2f2f2;
+  --clr-tab-active-bg: #0d1b3e;
+  --clr-tab-active: #1ee0c5;
 }
 
-/* Since we’re using container-fluid px-0 everywhere, explicitly zero out any leftover padding */
-.container-fluid {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-}
+html, body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
 
-/* wrapper to push content under fixed header */
+/*--------------------------------------
+  Layout Helpers
+--------------------------------------*/
 .page-wrapper {
-  padding-top: var(--page-padding-top);
-  background-color: #ffffff;
+  padding-top: var(--header-offset);
+  background: #fff;
 }
+.container { max-width: 720px; margin: 0 auto; padding: 0 1rem; }
+.container-fluid { padding: 0 !important; }
 
-/* ===== Breadcrumb / Page Path ===== */
+/*--------------------------------------
+  Breadcrumb
+--------------------------------------*/
 .page-path {
-  display: inline-flex;
-  align-items: center;
-  font-size: var(--breadcrumb-font-size);
-  color: var(--breadcrumb-color);
-  margin-top: var(--breadcrumb-margin-top);
+  display: inline-flex; align-items: center;
+  font-size: 0.9rem; color: var(--clr-muted);
+  margin-top: var(--gap);
 }
-.page-path a {
-  color: inherit;
-  text-decoration: none;
-}
-.page-path .sep {
-  margin: 0 0.5rem;
-  color: var(--breadcrumb-sep-color);
-}
-.page-path .current {
-  color: var(--breadcrumb-sep-color);
-}
+.page-path a { text-decoration: none; color: inherit; }
+.page-path .sep { margin: 0 0.5rem; }
+.page-path .current { font-weight: 500; }
 
-/* ===== Title & Subtitle ===== */
+/*--------------------------------------
+  Headings & Intro
+--------------------------------------*/
 .page-title {
-  margin: var(--title-margin) !important;
-  padding-left: 0 !important;
-  text-align: left !important;
-  font-size: var(--title-font-size) !important;
-  line-height: var(--title-line-height);
-  font-weight: var(--title-weight);
-  color: var(--title-color);
+  font-size: 2.5rem; font-weight: 800; line-height: 1.1;
+  margin: var(--gap) 0 1rem;
+  color: var(--clr-text);
 }
 .page-subtitle {
-  margin-bottom: 1.5rem;
-  font-size: var(--subtitle-font-size);
-  color: var(--subtitle-color);
-  max-width: 600px;
-  line-height: 1.6;
+  font-size: 1.1rem; color: var(--clr-muted);
+  margin-bottom: 2rem; max-width: 600px;
 }
 
-/* ===== Tabs ===== */
+/*--------------------------------------
+  Tabs
+--------------------------------------*/
 .tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--tab-gap);
-  margin-bottom: 2rem;
+  display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 2rem;
 }
 .tab-btn {
-  display: inline-block;
-  width: auto;
-  min-width: 0;
-  white-space: nowrap;
-  padding: var(--tab-padding);
-  border: none;
-  border-radius: var(--tab-radius);
-  font-size: var(--tab-font-size);
-  font-weight: var(--tab-font-weight);
-  background-color: var(--tab-bg);
-  color: var(--tab-color);
-  cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
+  padding: 0.6rem 1.2rem; border: none; border-radius: 2rem;
+  background: var(--clr-tab-bg); color: var(--clr-text);
+  cursor: pointer; transition: background 0.2s, color 0.2s;
 }
 .tab-btn.active {
-  background-color: var(--tab-active-bg);
-  color: var(--tab-active-color);
+  background: var(--clr-tab-active-bg);
+  color: var(--clr-tab-active);
 }
-.tab-btn:hover:not(.active) {
-  background-color: var(--tab-hover-bg);
+.tab-btn:not(.active):hover {
+  background: #e0e0e0;
 }
 
-/* ===== Services Section ===== */
+/*--------------------------------------
+  Services Grid
+--------------------------------------*/
 .services-section {
-  background-color: var(--services-bg) !important;
+  background: var(--clr-bg-light) !important;
+  padding: 2rem 0;
 }
-
-/* The actual card styling */
 .service-card {
-  border-radius: var(--card-radius);
-  background-color: var(--card-bg);
-  /* custom-card-width kicks in: width: 85%; max-width: 300px */
+  border-radius: 0.75rem; background: #fff;
+  width: 85%; max-width: 300px; margin: 0 auto;
+  display: flex; flex-direction: column;
 }
-
-/* On very small screens (under 576px), force the cards to be 100% of their parent column */
 @media (max-width: 575.98px) {
-  .custom-card-width {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
+  .service-card { width: 100% !important; max-width: none; }
 }
 
-/* If the column is col-12, remove any padding so it truly spans edge-to-edge */
-@media (max-width: 767.98px) {
-  .col-12 {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-}
+/* Image hover */
+.zoom-hover { transition: transform 0.3s ease; }
+.zoom-hover:hover { transform: scale(1.05); }
 
-/* Zoom hover effect (retained from your original) */
-.zoom-hover {
-  transition: transform 0.3s ease;
-}
-.zoom-hover:hover {
-  transform: scale(1.05);
-}
-
-/* Duration badge (unchanged from your version) */
+/* Duration badge */
 .duration-badge {
-  position: absolute;
-  bottom: 0.5rem;
-  left: 0.5rem;
-  background: rgba(0, 0, 0, 0.6);
-  color: #fff;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.8rem;
+  position: absolute; bottom: 0.5rem; left: 0.5rem;
+  background: rgba(0,0,0,0.6); color: #fff;
+  padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem;
 }
 
-/* Badge styling (unchanged) */
-.badge {
-  font-size: 0.75rem;
-  padding: 0.4em 0.6em;
-  border-radius: 0.4rem;
-}
-
-/* Remove any custom gutter overrides on .row > div */
-.services-section .row > div {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+/* Ensure no gutter on very small screens */
+@media (max-width: 767.98px) {
+  .row > [class*="col-"] { padding: 0 !important; }
 }
