@@ -3,7 +3,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Header from '../Header';
-import './WegovyPage.css';
+import './WeGovyPage.css';
 
 const MAIN_TEXT_COLOR = 'rgb(68, 135, 198)';
 const ACCENT_COLOR = '#00D364';
