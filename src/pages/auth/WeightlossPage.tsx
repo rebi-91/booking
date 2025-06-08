@@ -8,6 +8,26 @@ const MAIN_TEXT_COLOR = 'rgb(28, 43, 57)';
 const ACCENT_COLOR    = '#00D364';
 const DARK_BG         = '#0F1637';
 
+const timelineSteps = [
+  {
+    label: 'TODAY',
+    title: 'Simple assessment',
+    text:
+      "Book an appointment for a free consultation at Coleshill Pharmacy. If eligible, you'll receive your clinically-prescribed medication swiftly.",
+  },
+  {
+    label: '1–6 MONTHS',
+    title: 'Healthy weight loss',
+    text:
+      'Lose weight and learn how to reframe your relationship with food. Expect increased fitness, energy, and confidence.',
+  },
+  {
+    label: '6–12 MONTHS',
+    title: 'Lasting change',
+    text:
+      'With continued support from your coach, adopt healthier lifestyle habits to help maintain weight loss.',
+  },
+];
 // Chevron icon
 const ICON_CHEVRON =
   'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//chevron.png';
@@ -93,26 +113,7 @@ const benefits = [
   },
 ];
 
-const timelineSteps = [
-  {
-    label: 'TODAY',
-    title: 'Simple assessment',
-    text:
-      "Book an appointment for a free consultation at Coleshill Pharmacy. If eligible, you'll receive your clinically-prescribed medication swiftly.",
-  },
-  {
-    label: '1–6 MONTHS',
-    title: 'Healthy weight loss',
-    text:
-      'Lose weight and learn how to reframe your relationship with food. Expect increased fitness, energy, and confidence.',
-  },
-  {
-    label: '6–12 MONTHS',
-    title: 'Lasting change',
-    text:
-      'With continued support from your coach, adopt healthier lifestyle habits to help maintain weight loss.',
-  },
-];
+
 
 const slugify = (str: string) =>
   str
@@ -140,15 +141,16 @@ const WeightlossPage: React.FC = () => {
             <span className="sep">›</span>
             <span className="current">Weight Loss Clinic</span>
           </nav>
-          <h1 className="page-title">
-            Breakthrough weight-loss injections for<br />
-            long-term results
-          </h1>
+         
         </div>
       </div>
       {/* =============================== */}
 
       <main className="pt-header">
+      <h1 className="page-title">
+            Breakthrough weight-loss injections for<br />
+            long-term results
+          </h1>
         {/* Hero / Intro */}
         <section className="container hero-section">
           <div className="hero-content">
@@ -260,19 +262,58 @@ const WeightlossPage: React.FC = () => {
           </div>
         </section>
 
-        {/* Progress Timeline Section */}
-        <section className="timeline-section">
-          <h2 className="timeline-heading">The progress you can expect</h2>
-          <div className="cards-grid timeline-cards">
-            {timelineSteps.map((step, idx) => (
-              <div key={idx} className="timeline-card">
-                <span className="timeline-label">{step.label}</span>
-                <h4 className="timeline-title">{step.title}</h4>
-                <p className="timeline-text">{step.text}</p>
-              </div>
-            ))}
+      {/* Progress Timeline Section */}
+         <section
+          className="container-fluid px-4 py-5"
+          style={{ backgroundColor: DARK_BG, color: '#fff' }}
+        >
+          <div className="container">
+            <h2
+              style={{
+                fontWeight: 700,
+                fontSize: '2rem',
+                marginBottom: '2rem',
+                textAlign: 'center',
+              }}
+            >
+              The progress you can expect
+            </h2>
+
+            <div className="row gy-4">
+              {timelineSteps.map((step, idx) => (
+                <div key={idx} className="col-md-4 text-center">
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      backgroundColor: '#fff',
+                      color: DARK_BG,
+                      fontWeight: 700,
+                      borderRadius: '0.5rem',
+                      padding: '0.25rem 0.75rem',
+                      fontSize: '0.875rem',
+                      marginBottom: '0.75rem',
+                    }}
+                  >
+                    {step.label}
+                  </span>
+                  <h4 style={{ fontWeight: 600, marginBottom: '0.5rem' }}>
+                    {step.title}
+                  </h4>
+                  <p
+                    style={{
+                      lineHeight: 1.6,
+                      maxWidth: '300px',
+                      margin: '0 auto',
+                    }}
+                  >
+                    {step.text}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
-        </section>
+         </section>
+
 
         {/* Introduction / Importance Section */}
         <section className="intro-section">

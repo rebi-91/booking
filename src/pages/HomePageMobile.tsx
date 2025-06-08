@@ -429,7 +429,7 @@ const HERO_CARD_LINKS: Record<string,string> = {
 const POPULAR_SERVICES = [
   {
     title: 'Weight loss injections',
-    link:  '/book/13',
+    link:  '/weight-loss-injections',
     sub:   'Achieve your weight goals.',
     img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fweight-loss-4.webp&w=640&q=75',
   },
@@ -473,17 +473,17 @@ const VACCINATIONS = [
   },
   {
     title: 'Hepatitis A',
-    link:  '/book/15',
+    link:  '/book/4',
     img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fvaccines%2Fhepatitis.webp&w=1080&q=75',
   },
   {
     title: 'Typhoid',
-    link:  '/book/15',
+    link:  '/book/4',
     img:   'https://ysm-res.cloudinary.com/image/upload/ar_16:9,c_fill,dpr_3.0,f_auto,g_faces:auto,q_auto:eco,w_500/v1/yms/prod/d01914a4-5add-47e4-ba61-8681278f830a',
   },
   {
     title: 'Yellow Fever',
-    link:  '/book/15',
+    link:  '/book/4',
     img:   'https://www.leamingtontravelclinic.co.uk/wp-content/uploads/2023/08/Yellow_fever2.jpg',
   },
 ];

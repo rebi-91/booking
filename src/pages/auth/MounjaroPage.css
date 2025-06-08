@@ -16,8 +16,8 @@
      width: 100%;
      margin-left: auto;
      margin-right: auto;
-     padding-left: 1rem;
-     padding-right: 1rem;
+     padding-left: 0rem !important;
+     padding-right: 0rem !important;
    }
    @media (min-width: 576px) {
      .container {
@@ -43,17 +43,21 @@
    /* ------------------------------------------------
       “pt-header” ensures content is pushed below Header
       ------------------------------------------------ */
-   .pt-header {
-     padding-top: 4rem; /* adjust to height of <Header> */
-   }
-   
+ 
    /* -----------------------------------
       Breadcrumb / Page Path
       ----------------------------------- */
+     
+/* -----------------------------
+   Breadcrumb / Page Path
+   ----------------------------- */
    .breadcrumb-wrapper {
-     background-color: #000000;
-     padding: 0.5rem 0 0 1rem; /* left padding so it’s not flush */
-   }
+    background-color: #000000 !important;
+    padding: 0.35rem 2rem !important;
+    position: sticky;
+    top: 3rem !important; /* header height */
+    z-index: 100;
+  }
    
    .page-path {
      display: inline-flex;
@@ -293,7 +297,8 @@
    /* Ensure paragraph text is left-aligned in these sections */
    .section-subtext p {
      text-align: left;
-   }
+   } 
+   
    
    /* -----------------------------------
       FAQ / ACCORDION

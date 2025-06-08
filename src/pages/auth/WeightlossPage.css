@@ -1,359 +1,418 @@
-/* ---------------------------------------------
-   RESET & BASE
-   --------------------------------------------- */
-html,
-body {
+
+html, body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  color: #1C2B39;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: rgb(59, 89, 117) !important;
   background-color: #ffffff;
 }
 
 .container {
   width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-@media (min-width: 576px) { .container { max-width: 540px; } }
-@media (min-width: 768px) { .container { max-width: 720px; } }
-@media (min-width: 992px) { .container { max-width: 960px; } }
-@media (min-width: 1200px){ .container { max-width:1140px; } }
-
-/* ---------------------------------------------
-   Push content below fixed header
-   --------------------------------------------- */
-.pt-header {
-  padding-top: 4rem !important; /* adjust to your Header height */
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
-/* ---------------------------------------------
-   BREADCRUMB / PAGE PATH
-   --------------------------------------------- */
-.breadcrumb-wrapper {
-  background-color: #000;
-  padding-top: 70px !important;
-}
+@media (min-width: 576px)  { .container { max-width: 540px; } }
+@media (min-width: 768px)  { .container { max-width: 720px; } }
+@media (min-width: 992px)  { .container { max-width: 960px; } }
+@media (min-width: 1200px) { .container { max-width: 1140px;} }
+
+
+
+/* -----------------------------
+   Breadcrumb / Page Path
+   ----------------------------- */
+   .breadcrumb-wrapper {
+    background-color: #000000 !important;
+    padding: 0.35rem 1.2rem !important;
+    position: sticky;
+    top: 3.5rem !important; /* header height */
+    z-index: 100;
+  }
+
 .page-path {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  top: 4rem !important;
+  flex-wrap: wrap;
   font-size: 0.9rem;
-  color: #fff;
+  color: #555;
+  margin: 0;
 }
+
 .page-path a {
   color: inherit;
   text-decoration: none;
-}
-.page-path .sep {
-  margin: 0 0.5rem;
-  color: #888;
-}
-.page-path .current {
-  color: #fff;
   font-weight: 500;
 }
 
-/* ---------------------------------------------
-   PAGE TITLE
-   --------------------------------------------- */
-.page-title {
-  margin: 0.5rem 0 1.5rem 0;
-  font-size: 2rem;
-  line-height: 1.2;
-  font-weight: 700;
+.page-path .sep {
+  margin: 0 0.5rem;
+  color: #999;
+}
+
+.page-path .current {
+  font-weight: 600;
   color: rgb(28, 43, 57);
 }
 
-/* ---------------------------------------------
+.page-title {
+  padding-left: 25px !important;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: rgb(28, 43, 57);
+}
+
+/* ================================
    HERO / INTRO SECTION
-   --------------------------------------------- */
+   ================================ */
 .hero-section {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0rem;
-  padding-top: 0rem 0;
+  margin-bottom: 0rem;
 }
+
 .hero-content {
-  flex: 1 1 300px;
+  flex: 1 1 20px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 0rem;
 }
+
+/* USE DEFAULT DISC BULLETS */
 .hero-bullets {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1rem;
+  list-style-type: disc;
+  padding-left: 1.25rem;
+  margin: 0;
+  
 }
+
 .hero-bullets li {
-  margin-bottom: 0.75rem;
-  color: rgb(28, 43, 57);
+  margin-bottom: 0.25rem !important;
+  color: rgb(59, 89, 117) !important;
 }
+
 .btn-accent {
+  display: inline-block;
   background-color: #00D364;
   color: #fff;
-  padding: 0.75rem 1.5rem;
   border: none;
   border-radius: 0.375rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
   cursor: pointer;
+  text-align: center;
+  max-width: fit-content;
 }
+
+.btn-accent:hover {
+  background-color: #00be58;
+}
+
 .hero-image {
-  flex: 1 1 300px;
+  flex: 1 1 260px;
   text-align: center;
 }
+
 .hero-image img {
   max-width: 100%;
   border-radius: 0.5rem;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-/* ---------------------------------------------
+/* ================================
    ABOUT / FAQ SECTION
-   --------------------------------------------- */
+   ================================ */
 .about-faq {
-  padding: 2rem 0;
+  margin-bottom: 2rem;
 }
-.accordion {
-  max-width: 700px;
-  margin: 0 auto;
+
+.about-faq h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
 }
+
+.about-faq p {
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  color: #555;
+}
+
 .accordion-item {
-  margin-bottom: 1rem;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #e2e8f0;
   border-radius: 0.375rem;
+  margin-bottom: 1rem;
   overflow: hidden;
-  background-color: #fff;
   transition: box-shadow 0.2s;
 }
+
 .accordion-item:hover {
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
+
 .accordion-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   padding: 0.75rem 1rem;
-  background-color: #F8F9FA;
+  background-color: #f1f5f9;
   cursor: pointer;
-  transition: background-color 0.2s;
+  user-select: none;
 }
+
 .accordion-header.open {
-  background-color: #E2E8F0;
+  background-color: #e2e8f0;
 }
+
 .accordion-question {
-  color: #1C2B39;
+  flex: 1;
   font-weight: 600;
-  font-size: 1rem;
+  color: rgb(28, 43, 57);
 }
+
 .accordion-caret {
   width: 1rem;
   height: 1rem;
   transition: transform 0.2s;
-  transform: rotate(90deg);
-}
-.accordion-caret.rotated {
-  transform: rotate(270deg);
-}
-.accordion-body {
-  padding: 1rem;
-  background-color: #fff;
-  border-top: 1px solid #E9ECEF;
-  color: #4A5568;
-  line-height: 1.5;
 }
 
-/* ---------------------------------------------
-   PRODUCTS GRID
-   --------------------------------------------- */
-.products-grid {
-  padding: 2rem 0;
+.accordion-caret.rotated {
+  transform: rotate(180deg);
 }
+
+.accordion-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  padding: 0 1rem;
+}
+
+.accordion-body.show {
+  padding: 1rem;
+  max-height: 500px;
+}
+
+/* ================================
+   PRODUCTS GRID
+   ================================ */
+.products-grid {
+  margin-bottom: 2rem;
+}
+
+.products-grid h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.products-grid .accent {
+  color: #00D364;
+}
+
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
-  gap: 1.5rem;
-  margin-top: 1rem;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
+
 .product-card {
-  display: flex;
-  flex-direction: column;
-  background-color: #fff;
-  border: 1px solid #E2E8F0;
+  background: #fff;
+  border: 1px solid #e2e8f0;
   border-radius: 0.75rem;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
   transition: transform 0.2s;
 }
+
 .product-card:hover {
   transform: translateY(-4px);
 }
+
 .product-image-container {
-  height: 220px;
+  height: 160px;
   overflow: hidden;
 }
+
 .product-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s;
 }
-.product-image:hover {
-  transform: scale(1.05);
-}
+
 .product-body {
-  padding: 1.25rem;
+  padding: 1rem;
   flex: 1;
   display: flex;
   flex-direction: column;
 }
+
 .product-title {
-  font-size: 1.25rem;
-  color: #1C2B39;
+  font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 0.75rem;
 }
+
 .product-bullets {
   list-style: none;
   padding: 0;
   margin: 0 0 1rem;
-  color: #4A5568;
-  line-height: 1.5;
+  color: #555;
   flex-grow: 1;
 }
-.product-bullets li {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 0.5rem;
-}
+
 .bullet-icon-small {
   display: inline-block;
-  width: 0.75rem;
-  color: #00D364;
-  font-size: 0.875rem;
   margin-right: 0.5rem;
-  line-height: 1;
+  color: #00D364;
 }
+
 .btn-outline-primary {
-  border: 1px solid #1C2B39;
-  background-color: transparent;
-  color: #1C2B39;
-  font-weight: 600;
+  border: 1px solid rgb(28, 43, 57);
+  background: transparent;
+  color: rgb(28, 43, 57);
   padding: 0.5rem;
   border-radius: 0.375rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  width: 100%;
-}
-.btn-outline-primary:hover {
-  background-color: #1C2B39;
-  color: #fff;
-}
-
-/* ---------------------------------------------
-   BENEFITS GRID
-   --------------------------------------------- */
-.science-backed {
-  padding: 2rem 0;
-  background-color: #F8F9FA;
-}
-.benefits-grid {
-  margin-top: 1rem;
-}
-.benefit-card {
-  padding: 1.25rem;
-  background-color: #fff;
-  border: 1px solid #E2E8F0;
-  border-radius: 0.75rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-.benefit-title {
-  font-size: 1.25rem;
-  color: #1C2B39;
   font-weight: 600;
-  margin-bottom: 0.75rem;
-}
-.benefit-text {
-  color: #4A5568;
-  line-height: 1.6;
+  cursor: pointer;
+  text-align: center;
 }
 
-/* ---------------------------------------------
-   TIMELINE SECTION
-   --------------------------------------------- */
-.timeline-section {
-  background-color: #0F1637;
+.btn-outline-primary:hover {
+  background-color: rgb(28, 43, 57);
   color: #fff;
-  padding: 3rem 0;
 }
-.timeline-heading {
-  font-size: 2rem;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 2rem;
-}
-.timeline-cards {
-  margin-top: 1rem;
-}
-.timeline-card {
-  background-color: #1C2B39;
+
+/* =============================
+   Science-backed Section
+   ============================= */
+.science-backed {
+  margin: 2rem 0;
+  background-color: #f8fafc;
   padding: 1.5rem;
   border-radius: 0.75rem;
-  text-align: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
-.timeline-label {
-  display: inline-block;
-  background-color: #00D364;
-  color: #0F1637;
-  font-weight: 700;
-  border-radius: 0.5rem;
-  padding: 0.25rem 0.75rem;
-  font-size: 0.875rem;
-  margin-bottom: 0.75rem;
-  text-transform: uppercase;
+
+.benefits-grid {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
-.timeline-title {
-  font-size: 1.25rem;
+
+.benefit-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  text-align: left;
+}
+
+.benefit-title {
+  font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
 }
-.timeline-text {
+
+.benefit-text {
+  color: #555;
   line-height: 1.6;
-  max-width: 300px;
-  margin: 0 auto;
 }
 
-/* ---------------------------------------------
-   INTRO / IMPORTANCE SECTION
-   --------------------------------------------- */
-.intro-section {
-  padding: 3rem 0;
+/* =============================
+   Timeline Section
+   ============================= */
+.timeline-section {
+  background: #0F1637;
+  color: #fff;
+  padding: 2rem 1rem;
+  border-radius: 0.75rem;
+  margin: 2rem 0;
 }
+
+.timeline-heading {
+  text-align: center;
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.timeline-cards {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.timeline-card {
+  background: #1C2B39;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  text-align: center;
+}
+
+.timeline-label {
+  display: inline-block;
+  background: #00D364;
+  color: #0F1637;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.timeline-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.timeline-text {
+  line-height: 1.6;
+}
+
+/* =============================
+   Introduction Section
+   ============================= */
+.intro-section {
+  margin: 2rem 0;
+}
+
 .subsection-heading {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #1C2B39;
-  margin-top: 2rem;
   margin-bottom: 1rem;
-  text-align: center;
-}
-.intro-text-wrapper {
-  max-width: 800px;
-  margin: 0 auto;
-  color: #4A5568;
-  line-height: 1.6;
-  font-size: 1rem;
+  color: rgb(28, 43, 57);
 }
 
-/* ---------------------------------------------
-   RESPONSIVE
-   --------------------------------------------- */
-@media (max-width: 767.98px) {
-  .breadcrumb-wrapper { padding-top: 0.75rem 0; }
-  .hero-section { flex-direction: column; text-align: center; }
-  .hero-bullets, .hero-content { margin-bottom: 2rem; }
-  .page-title { font-size: 1.75rem; }
-  .product-bullets { font-size: 0.95rem; }
-  .accordion-question { font-size: 0.95rem; }
-  .btn-accent { width: 100%; }
-  .cards-grid { gap: 1rem; }
+.intro-text-wrapper p {
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  color: #555;
+}
+
+/* =============================
+   Responsive tweaks
+   ============================= */
+@media (max-width: 767px) {
+  .hero-section {
+    flex-direction: column;
+  }
+  .breadcrumb-wrapper {
+    top: 3.5rem;
+  }
+  .page-title {
+    font-size: 1.5rem;
+  }
+  .btn-accent {
+    width: 100%;
+  }
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .timeline-cards {
+    grid-template-columns: 1fr;
+  }
+  .science-backed {
+    padding: 1rem;
+  }
 }

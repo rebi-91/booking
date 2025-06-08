@@ -25,7 +25,7 @@ const MounjaroPage: React.FC = () => {
       {/* ←—— SAME <Header /> as your other pages */}
       <Header />
 
-      <main className="pt-header">
+      <main>
         {/* ===============================
             BREADCRUMB / PAGE PATH
            =============================== */}
