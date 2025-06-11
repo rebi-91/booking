@@ -39,7 +39,7 @@
 //     img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fed-3.webp&w=640&q=75',
 //   },
 //   {
-//     title: 'Contraception (including Emergency)',
+//     title: 'Oral Contraception',
 //     link:  '/book/14',
 //     sub:   'Fast, confidential help when you need it.',
 //     img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fmorning-after-pill.webp&w=640&q=75',
@@ -405,7 +405,10 @@ import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 import './HomePage.css';
 
-const MAIN_TEXT_COLOR = 'rgb(52, 78, 102)';
+const MAIN_TEXT_COLOR = 'rgb(119, 128, 159)';
+const MAI_TEXT_COLOR = 'rgb(14, 75, 141)';
+const MAINS_TEXT_COLOR = 'rgb(14, 75, 141)';
+const MAIS_TEXT_COLOR = 'rgb(14, 75, 141)';
 const ACCENT_COLOR    = '#00D364';
 const ACC_COLOR       = 'rgb(42, 157, 239)';
 const chevronDown     =
@@ -440,8 +443,8 @@ const POPULAR_SERVICES = [
     img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fed-3.webp&w=640&q=75',
   },
   {
-    title: 'Contraception (including Emergency)',
-    link:  '/book/14',
+    title: 'Oral Contraception',
+    link:  '/oral-contraceptive',
     sub:   'Fast, confidential help when you need it.',
     img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fmorning-after-pill.webp&w=640&q=75',
   },
@@ -556,9 +559,9 @@ const HomePage: React.FC = () => {
           <div className="row align-items-center">
             {/* Left Column */}
             <div className="col-md-6">
-              <h1 style={{ color: MAIN_TEXT_COLOR, fontWeight: 700, fontSize: '2.5rem' }}>
+              <h1 style={{ color: MAIS_TEXT_COLOR, fontWeight: 700, fontSize: '2.5rem' }}>
                 Trusted <span style={{ color: ACCENT_COLOR }}>Pharmacy</span><br/>
-                Care in <span style={{ color: ACC_COLOR }}>Coleshill</span>
+                Care in <span style={{ color: ACC_COLOR}}>Coleshill</span>
               </h1>
               <p style={{ color: MAIN_TEXT_COLOR, margin: '1rem 0' }}>
                 Explore our wide range of treatments or consult with our medical professionals.
@@ -592,7 +595,7 @@ const HomePage: React.FC = () => {
                   alt="Google"
                   className="google-logo"
                 />
-                <span style={{ color: MAIN_TEXT_COLOR, marginLeft: 8 }}>
+                <span style={{ color: MAIS_TEXT_COLOR, marginLeft: 8 }}>
                   ★★★★★ 4.9/5.0
                 </span>
               </div>
@@ -655,7 +658,7 @@ const HomePage: React.FC = () => {
         {/* Popular Services */}
         <section className="container py-5 bg-light rounded popular-services">
           <div className="d-flex justify-content-between align-items-center mb-4">
-            <h2 style={{ color: MAIN_TEXT_COLOR }}>Popular services</h2>
+            <h2 style={{ color: MAINS_TEXT_COLOR, fontWeight: 500, fontSize: '1.5rem' }}>Popular services</h2>
           </div>
           <div className="row g-4">
             {POPULAR_SERVICES.map((svc, i) => (
@@ -773,12 +776,12 @@ const HomePage: React.FC = () => {
 
         {/* Find Us */}
         <section className="container py-5 find-us">
-          <h2 style={{ color: MAIN_TEXT_COLOR, fontWeight: 700 }}>Find us</h2>
+          <h2 style={{ color: MAI_TEXT_COLOR, fontWeight: 700 }}>Find us</h2>
           <div className="row align-items-center mt-4">
             <div className="col-md-6">
               <p>Contact us for travel vaccination, ear wax removal and a wide range of NHS or private services we offer.</p>
               <p><strong>Phone:</strong> 01675 466014</p>
-              <p><strong>Email:</strong> coleshillpharmacy@nhs.com</p>
+              <p><strong>Email:</strong> coleshillpharmacy@gmail.com</p>
               <p><strong>Address:</strong> 114–116 High St, Coleshill, Birmingham B46 3BJ</p>
               <p>
                 <strong>Hours:</strong><br/>
@@ -849,7 +852,7 @@ export default HomePage;
 //     img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fed-3.webp&w=640&q=75',
 //   },
 //   {
-//     title: 'Emergency contraception',
+//     title: 'Oral Contraception',
 //     link:  '/book/14',
 //     sub:   'Fast, confidential help when you need it.',
 //     img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fmorning-after-pill.webp&w=640&q=75',
@@ -1435,7 +1438,7 @@ export default HomePage;
 //                   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fed-3.webp&w=640&q=75',
 //               },
 //               {
-//                 title: 'Emergency contraception',
+//                 title: 'Oral Contraception',
 //                 sub: 'Fast, confidential help when you need it.',
 //                 img:
 //                   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fmorning-after-pill.webp&w=640&q=75',
@@ -1880,7 +1883,7 @@ export default HomePage;
 //                   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fed-3.webp&w=640&q=75',
 //               },
 //               {
-//                 title: 'Emergency contraception',
+//                 title: 'Oral Contraception',
 //                 sub: 'Fast, confidential help when you need it.',
 //                 img:
 //                   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fmorning-after-pill.webp&w=640&q=75',

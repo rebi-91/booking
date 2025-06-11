@@ -112,7 +112,7 @@
 //   },
 //   14: {
 //     id: 14,
-//     title: 'Emergency contraception',
+//     title: 'Oral Contraception',
 //     duration: '20m',
 //     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
 //     price: 'Free NHS',
@@ -186,7 +186,7 @@
 //     9,   // Infected insect bite
 //     12,  // Shingles
 //     16,  // Blood pressure check
-//     14,  // Emergency contraception
+//     14,  // Oral Contraception
 //     15,  // Flu vaccination
 //     17,  // COVID-19 Vaccination
 //     20,  // Earache
@@ -748,7 +748,7 @@ const sampleServices: Record<number, Service> = {
   },
   14: {
     id: 14,
-    title: 'Contraception (including Emergency)',
+    title: 'Oral Contraception',
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
     price: 'Free NHS',
@@ -821,7 +821,7 @@ function serviceCategory(serviceId: number): Category {
     9,  // Infected insect bite
     12, // Shingles
     16, // Blood pressure check
-    14, // Emergency contraception
+    14, // Oral Contraception
     15, // Flu vaccination
     17, // COVID-19 Vaccination
     20, // Earache
@@ -1419,7 +1419,7 @@ export default BookingPage;
 //   },
 //   14: {
 //     id: 14,
-//     title: "Emergency contraception",
+//     title: "Oral Contraception",
 //     duration: "20m",
 //     address: "114–116 High St, Coleshill, Birmingham B46 3BJ",
 //     price: "Free NHS",
@@ -2026,7 +2026,7 @@ export default BookingPage;
 //   },
 //   14: {
 //     id: 14,
-//     title: 'Emergency contraception',
+//     title: 'Oral Contraception',
 //     duration: '20m',
 //     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
 //     price: '£10.00',

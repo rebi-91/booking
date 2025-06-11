@@ -120,7 +120,7 @@
 //   },
 //   {
 //     id: 14,
-//     title: 'Emergency contraception',
+//     title: 'Oral Contraception',
 //     img: 'https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Flead-services-agency.fra1.cdn.digitaloceanspaces.com%2F4%2F769543%2FKbbzRigIaf.webp&w=1080&q=75',
 //     duration: '20 mins',
 //     category: 'NHS Service',
@@ -458,7 +458,7 @@ const allServices: Service[] = [
   { id: 3, title: 'Travel Consultation', img: 'https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2F100%2F530057%2FyyrgMObVYh.webp&w=1080&q=75', duration: '20 mins', category: 'Private Service', description: 'Expert Guidance – Consult a pharmacist with 10+ years of experience.' },
   { id: 4, title: 'Travel vaccine', img: 'https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2F100%2F810793%2FM8XAcWPBe6.webp&w=1080&q=75', duration: '20 mins', category: 'Private Service', description: 'Peace of mind for a healthy journey' },
   { id: 5, title: 'Uncomplicated UTI (Women)', img: 'https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Flead-services-agency.fra1.cdn.digitaloceanspaces.com%2F4%2F963546%2FK6YOS9cMH3.webp&w=1080&q=75', duration: '20 mins', category: 'Pharmacy First', description: 'No need to book a GP appointment' },
-  { id: 6, title: 'Vitamin B12 Injection', img: 'https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Flead-services-agency.fra1.cdn.digitaloceanspaces.com%2F4%2F219742%2Fpu-_f9Dh4vv.webp&w=1080&q=75', duration: '20 mins', category: 'NHS Service', description: 'Boosts your energy and fights tiredness' },
+  { id: 6, title: 'Vitamin B12 Injection', img: 'https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Flead-services-agency.fra1.cdn.digitaloceanspaces.com%2F4%2F219742%2Fpu-_f9Dh4vv.webp&w=1080&q=75', duration: '20 mins', category: 'Private Service', description: 'Boosts your energy and fights tiredness' },
   { id: 7, title: 'Hair loss', img: 'https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Flead-services-agency.fra1.cdn.digitaloceanspaces.com%2F4%2F660941%2FA94GbKY5xM.webp&w=1080&q=75', duration: '20 mins', category: 'Private Service', description: 'Tailored solutions designed to meet your needs' },
   { id: 8, title: 'Impetigo', img: 'https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Flead-services-agency.fra1.cdn.digitaloceanspaces.com%2F4%2F373143%2Fs9tYLb2pEs.webp&w=1080&q=75', duration: '20 mins', category: 'Pharmacy First', description: 'Quick relief from itching and sore skin' },
   { id: 9, title: 'Infected insect bite', img: 'https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Flead-services-agency.fra1.cdn.digitaloceanspaces.com%2F4%2F120232%2FwfvV667Tx4.webp&w=1080&q=75', duration: '20 mins', category: 'Pharmacy First', description: 'No need for a GP visit' },
@@ -466,7 +466,7 @@ const allServices: Service[] = [
   { id: 11, title: 'Private flu jab', img: 'https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Flead-services-agency.fra1.cdn.digitaloceanspaces.com%2F4%2F281723%2F8K3Uhf06mK.webp&w=1080&q=75', duration: '20 mins', category: 'Private Service', description: 'Convenient option with no long waiting times' },
   { id: 12, title: 'Shingles', img: 'https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Flead-services-agency.fra1.cdn.digitaloceanspaces.com%2F4%2F314321%2Fsewm1HLfSk.webp&w=1080&q=75', duration: '20 mins', category: 'Pharmacy First', description: 'Quick access to care through the Pharmacy First scheme' },
   { id: 13, title: 'Weight loss clinic', img: 'https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Flead-services-agency.fra1.cdn.digitaloceanspaces.com%2F4%2F904592%2Fc10d6P2jks.webp&w=1080&q=75', duration: '20 mins', category: 'Private Service', description: 'Clinically proven weight loss of up to 22%*' },
-  { id: 14, title: 'Emergency contraception', img: 'https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Flead-services-agency.fra1.cdn.digitaloceanspaces.com%2F4%2F769543%2FKbbzRigIaf.webp&w=1080&q=75', duration: '20 mins', category: 'NHS Service', description: 'Easy to access at your local pharmacy' },
+  { id: 14, title: 'Oral Contraception', img: 'https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Flead-services-agency.fra1.cdn.digitaloceanspaces.com%2F4%2F769543%2FKbbzRigIaf.webp&w=1080&q=75', duration: '20 mins', category: 'NHS Service', description: 'Easy to access at your local pharmacy or free delivery' },
   { id: 15, title: 'Flu Vaccination', img: 'https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Flead-services-agency.fra1.cdn.digitaloceanspaces.com%2F4%2F101404%2F2-EtcvQ5-J.webp&w=1080&q=75', duration: '20 mins', category: 'NHS Service', description: 'Reduces your risk of being hospitalised from flu.' },
   { id: 16, title: 'Blood pressure check', img: 'https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Flead-services-agency.fra1.cdn.digitaloceanspaces.com%2F4%2F865410%2FrcaOjteI-1.webp&w=1080&q=75', duration: '20 mins', category: 'NHS Service', description: 'Detects high blood pressure before it causes problems' },
   { id: 17, title: 'COVID-19 Vaccination', img: 'https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Flead-services-agency.fra1.cdn.digitaloceanspaces.com%2F4%2F542160%2F8ruIf7vdRW.webp&w=1080&q=75', duration: '20 mins', category: 'NHS Service', description: 'Free for adults 65 and over on the NHS' },
@@ -833,7 +833,7 @@ export default ServicePage;
 //   },
 //   {
 //     id: 14,
-//     title: 'Emergency contraception',
+//     title: 'Oral Contraception',
 //     img: 'https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Flead-services-agency.fra1.cdn.digitaloceanspaces.com%2F4%2F769543%2FKbbzRigIaf.webp&w=1080&q=75',
 //     duration: '20 mins',
 //     category: 'NHS Service',
@@ -1196,7 +1196,7 @@ export default ServicePage;
 //   },
 //   {
 //     id: 14,
-//     title: 'Emergency contraception',
+//     title: 'Oral Contraception',
 //     img: 'https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Flead-services-agency.fra1.cdn.digitaloceanspaces.com%2F4%2F769543%2FKbbzRigIaf.webp&w=1080&q=75',
 //     duration: '20 mins',
 //     category: 'NHS Service',
@@ -1489,7 +1489,7 @@ export default ServicePage;
 //     },
 //     {
 //       id: 14,
-//       title: 'Emergency contraception',
+//       title: 'Oral Contraception',
 //       img: 'https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Flead-services-agency.fra1.cdn.digitaloceanspaces.com%2F4%2F769543%2FKbbzRigIaf.webp&w=1080&q=75',
 //       duration: '20 mins',
 //       category: 'NHS Service',

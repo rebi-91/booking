@@ -48,7 +48,7 @@ const browseSubMenuData: Record<string, string[]> = {
   ],
   'NHS Treatments': [
     'Blood Pressure Check',
-    'Emergency Contraception',
+    'Oral Contraception',
     'Flu Vaccination',
     'COVID-19 Vaccination',
   ],

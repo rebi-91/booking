@@ -197,7 +197,7 @@ const HomePage: React.FC = () => {
                   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fed-3.webp&w=640&q=75',
               },
               {
-                title: 'Emergency contraception',
+                title: 'Oral Contraception',
                 sub: 'Fast, confidential help when you need it.',
                 img:
                   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fmorning-after-pill.webp&w=640&q=75',

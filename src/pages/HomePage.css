@@ -11,13 +11,15 @@
   }
   
   .pt-header {
-    padding-top: 40px !important; /* header + top-bar height */
+    margin-top: 50px !important; /* header + top-bar height */
+
   }
   
   .btn-start {
     background-color: #0eeae6 !important;
     color: #1f2f78 !important;
     font-weight: 500 !important;
+    height: 45px;
     padding: 0.6rem 1.2rem;
     border: none;
     border-radius: 0.5rem; /* Rounded corners */
@@ -74,7 +76,7 @@
   
   /* Ensure no extra white space appears when dragging up/down */
   body {
-    background-color: #fff;
+    background-color: #030303 !important;
   }
   
   /* (Optional) If you want to ensure individual scrollable areas inside the page still work normally,
@@ -146,7 +148,10 @@
 .find-us .col-md-6:last-child {
   margin-bottom: 1.5rem !important;
 }
-
+.hero-section {
+  background-color: #fff;
+  margin-bottom: -10px !important;
+}
 /* Map iframe styling */
 .find-us iframe {
   border: 1px solid #e2e2e5;

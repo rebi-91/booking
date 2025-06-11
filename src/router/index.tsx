@@ -28,7 +28,7 @@
 // import ChickenpoxVaccinePage from '../pages/auth/ChickenpoxVaccinePage.tsx';
 // import ErectileDysfunctionPage from '../pages/auth/ErectileDysfunctionPage.tsx';
 // import BloodPressureCheckPage from '../pages/auth/BloodPressureCheckPage.tsx';
-// import EmergencyContraceptionPage from '../pages/auth/EmergencyContraceptionPage.tsx';
+// import EmergencyOral ContraceptionPage from '../pages/auth/EmergencyOral ContraceptionPage.tsx';
 // import FluVaccinationPage from '../pages/auth/FluVaccinationPage.tsx';
 // import CovidVaccinationPage from '../pages/auth/CovidVaccinationPage.tsx';
 
@@ -85,7 +85,7 @@
 //       { path: '/chickenpox-vaccine', element: <ChickenpoxVaccinePage /> },
 //       { path: '/erectile-dysfunction', element: <ErectileDysfunctionPage /> },
 //       { path: '/blood-pressure-check', element: <BloodPressureCheckPage /> },
-//       { path: '/emergency-contraception', element: <EmergencyContraceptionPage /> },
+//       { path: '/emergency-Oral Contraception', element: <EmergencyOral ContraceptionPage /> },
 //       { path: '/flu-vaccination', element: <FluVaccinationPage /> },
 //       { path: '/covid-19-vaccination', element: <CovidVaccinationPage /> },
 
@@ -144,6 +144,7 @@ import WeightlossPage from "../pages/auth/WeightlossPage.tsx";
 import WeGovyPage from "../pages/auth/WeGovyPage.tsx";
 import MounjaroPage from "../pages/auth/MounjaroPage.tsx";
 import MicrosuctionPage from '../pages/auth/MicrosuctionPage.tsx';
+import ContraPage from '../pages/auth/ContraPage.tsx';
 
 import BookingPage from "../pages/auth/BookingPage.tsx"; 
 import BookAppointment from "../pages/auth/BookAppointment.tsx"; 
@@ -201,6 +202,10 @@ const router = createBrowserRouter([
       {
         path: "/microsuction-earwax-removal",
         element: <MicrosuctionPage />,
+      },
+      {
+        path: "/oral-contraceptive",
+        element: <ContraPage />,
       },
       {
         path: "/book/:id",

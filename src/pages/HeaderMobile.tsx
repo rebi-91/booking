@@ -53,7 +53,7 @@ const browseSubMenuData: Record<string, string[]> = {
   ],
   'NHS Treatments': [
     'Blood Pressure Check',
-    'Emergency Contraception',
+    'Oral Contraception',
     'Flu Vaccination',
     'COVID‐19 Vaccination',
   ],
@@ -85,7 +85,7 @@ const ROUTE_MAP: Record<string, string> = {
   'Chickenpox Vaccine': '/book/18',
   'Erectile Dysfunction': '/book/21',
   'Blood Pressure Check': '/book/16',
-  'Contraception (including Emergency)': '/book/14',
+  'Oral Contraception': '/book/14',
   'Flu Vaccination': '/book/15',
   'COVID‐19 Vaccination': '/book/17',
   'Cholera': '/book/11',
@@ -303,7 +303,7 @@ export default Header;
 //   ],
 //   'NHS Treatments': [
 //     'Blood Pressure Check',
-//     'Emergency Contraception',
+//     'Oral Contraception',
 //     'Flu Vaccination',
 //     'COVID‐19 Vaccination',
 //   ],
@@ -496,7 +496,7 @@ export default Header;
 //   ],
 //   'NHS Treatments': [
 //     'Blood Pressure Check',
-//     'Emergency Contraception',
+//     'Oral Contraception',
 //     'Flu Vaccination',
 //     'COVID-19 Vaccination',
 //   ],
