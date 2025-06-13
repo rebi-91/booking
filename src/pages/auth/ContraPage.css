@@ -1,5 +1,3 @@
-/* ContraPage.css */
-
 /* Global resets */
 html, body {
   margin: 0;
@@ -100,7 +98,7 @@ html, body {
 
 .checkbox-card {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   padding: 12px;
   background: #ffffff;
   border: 2px solid #d1d5db;
@@ -126,6 +124,54 @@ html, body {
   border-color: #6366f1;
 }
 
+/* Improved checkbox under bleeding info */
+.improved-checkbox {
+  align-items: flex-start;
+}
+
+.improved-checkbox .checkbox-text {
+  margin-left: 0.75rem;
+}
+
+.improved-checkbox .checkbox-text ul {
+  margin: 0.5rem 0 0 1rem;
+  padding: 0;
+}
+
+.improved-checkbox .checkbox-text ul li {
+  margin-bottom: 0.25rem;
+}
+
+.info-block {
+  padding: 16px;
+  border: 2px solid #6366f1;
+  border-radius: 6px;
+  background: #f3f4ff;
+  margin-bottom: 16px;
+}
+
+.imperial-row {
+  display: flex;
+  gap: 12px;
+}
+
+.metric-row {
+  display: block;
+}
+
+.unit-switch {
+  margin-top: 12px;
+  background: none;
+  border: none;
+  color: #16a34a;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.unit-switch:hover {
+  text-decoration: underline;
+}
+
 /* Navigation using chevrons */
 .pager-buttons {
   display: flex;
@@ -148,12 +194,13 @@ html, body {
 }
 
 .pager-buttons .prev-btn::before {
-  content: '\276E'; /* Unicode chevron left */
+  content: '\276E';
   margin-right: 8px;
 }
 
-.pager-buttons .next-btn::after, .pager-buttons .submit-btn::after {
-  content: '\276F'; /* Unicode chevron right */
+.pager-buttons .next-btn::after,
+.pager-buttons .submit-btn::after {
+  content: '\276F';
   margin-left: 8px;
 }
 
@@ -166,12 +213,14 @@ html, body {
   background: #d1d5db;
 }
 
-.pager-buttons .next-btn, .pager-buttons .submit-btn {
+.pager-buttons .next-btn,
+.pager-buttons .submit-btn {
   background: #4f46e5;
   color: #ffffff;
 }
 
-.pager-buttons .next-btn:hover:not(:disabled), .pager-buttons .submit-btn:hover {
+.pager-buttons .next-btn:hover:not(:disabled),
+.pager-buttons .submit-btn:hover {
   background: #4338ca;
 }
 
