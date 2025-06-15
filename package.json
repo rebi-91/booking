@@ -21,6 +21,7 @@
     "dom-to-image-more": "^3.5.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.2",
+    "jspdf-autotable": "^5.0.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.7",
     "react-bootstrap-icons": "^1.11.5",
