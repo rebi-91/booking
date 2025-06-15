@@ -7,6 +7,7 @@ import './WeightlossPage.css';
 const MAIN_TEXT_COLOR = 'rgb(28, 43, 57)';
 const ACCENT_COLOR    = '#00D364';
 const DARK_BG         = '#0F1637';
+const MAI_TEXT_COLOR = 'rgb(14, 75, 141)';
 
 const timelineSteps = [
   {
@@ -34,7 +35,7 @@ const ICON_CHEVRON =
 
 const faqItems = [
   {
-    question: 'Who are weight loss injections for?',
+    question: 'Who are Weight loss management for?',
     answer:
       'They’re for people who struggle to lose weight through diet and exercise alone. We’ll check your health to see if they’re right for you.',
   },
@@ -46,12 +47,12 @@ const faqItems = [
   {
     question: 'Do I need to change my diet?',
     answer:
-      'Yes, it’s important to eat healthy, balanced meals while using weight loss injections. They work best when combined with good eating habits and regular activity.',
+      'Yes, it’s important to eat healthy, balanced meals while using Weight loss management. They work best when combined with good eating habits and regular activity.',
   },
   {
-    question: 'What are weight loss injections?',
+    question: 'What are Weight loss management?',
     answer:
-      'Weight loss injections help you eat less by making you feel full for longer. They work alongside healthy eating and exercise to support your weight loss journey.',
+      'Weight loss management help you eat less by making you feel full for longer. They work alongside healthy eating and exercise to support your weight loss journey.',
   },
   {
     question: 'How do they help with weight loss?',
@@ -64,7 +65,7 @@ const faqItems = [
       'Yes, you can stop if needed, but it’s best to discuss this with us first. We’ll guide you on the next steps for your weight loss.',
   },
   {
-    question: 'Are weight loss injections safe?',
+    question: 'Are Weight loss management safe?',
     answer:
       'Yes, they are approved and safe when used correctly. We’ll make sure they’re suitable for you before starting treatment.',
   },
@@ -132,7 +133,7 @@ const WeightlossPage: React.FC = () => {
       {/* ===============================
           BREADCRUMB / PAGE PATH
          =============================== */}
-      <div className="breadcrumb-wrapper">
+      <div className="breadcrumbwrapper">
         <div className="container">
           <nav className="page-path">
             <Link to="/">Home</Link>
@@ -179,7 +180,7 @@ const WeightlossPage: React.FC = () => {
           <h2>About Weight Loss Clinic</h2>
           <p>
             Our weight loss clinic is here to support you on your journey to a
-            healthier you. We offer weight loss injections alongside friendly
+            healthier you. We offer Weight loss management alongside friendly
             advice to help you manage your weight safely. Together, we’ll
             create a plan that fits your needs and works with your lifestyle.
           </p>
@@ -216,7 +217,7 @@ const WeightlossPage: React.FC = () => {
         {/* Weight Loss Products */}
         <section className="container products-grid">
           <h2>
-            Weight loss injections in <span className="accent">Coleshill</span>
+            Weight loss management in <span className="accent">Coleshill</span>
           </h2>
           <div className="cards-grid">
             {weightLossProducts.map((prod, idx) => (
@@ -361,6 +362,37 @@ const WeightlossPage: React.FC = () => {
             </p>
           </div>
         </section>
+
+        {/* Find Us */}
+        <section id="find-us" className="container py-5 find-us">
+          <h2 style={{ color: MAI_TEXT_COLOR, fontWeight: 700 }}>Find us</h2>
+          <div className="row align-items-center mt-4">
+            <div className="col-md-6">
+              <p>Contact us for travel vaccination, ear wax removal and a wide range of NHS or private services we offer.</p>
+              <p><strong>Phone:</strong> 01675 466014</p>
+              <p><strong>Email:</strong> coleshillpharmacy@gmail.com</p>
+              <p><strong>Address:</strong> 114–116 High St, Coleshill, Birmingham B46 3BJ</p>
+              <p>
+                <strong>Hours:</strong><br/>
+                Monday–Friday 8:30 am–6 pm<br/>
+                Saturday 9 am–5:30 pm<br/>
+                Sunday Closed
+              </p>
+            </div>
+            <div className="col-md-6">
+              <iframe
+                title="Coleshill Pharmacy Location"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2483.123456789!2d-1.7890123!3d52.5654321!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48776789abcdef12:0x3456789abcdef!2s114-116%20High%20St,%20Coleshill%20B46%203BJ,%20UK!5e0!3m2!1sen!2suk!4v1623456789012"
+                width="100%"
+                height="300"
+                style={{ border: 0, borderRadius: '0.5rem', marginBottom: '30px' }}
+                allowFullScreen
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </section>
+
       </main>
     </>
   );
@@ -386,7 +418,7 @@ export default WeightlossPage;
 
 // const faqItems = [
 //   {
-//     question: 'Who are weight loss injections for?',
+//     question: 'Who are Weight loss management for?',
 //     answer:
 //       'They’re for people who struggle to lose weight through diet and exercise alone. We’ll check your health to see if they’re right for you.',
 //   },
@@ -398,12 +430,12 @@ export default WeightlossPage;
 //   {
 //     question: 'Do I need to change my diet?',
 //     answer:
-//       'Yes, it’s important to eat healthy, balanced meals while using weight loss injections. They work best when combined with good eating habits and regular activity.',
+//       'Yes, it’s important to eat healthy, balanced meals while using Weight loss management. They work best when combined with good eating habits and regular activity.',
 //   },
 //   {
-//     question: 'What are weight loss injections?',
+//     question: 'What are Weight loss management?',
 //     answer:
-//       'Weight loss injections help you eat less by making you feel full for longer. They work alongside healthy eating and exercise to support your weight loss journey.',
+//       'Weight loss management help you eat less by making you feel full for longer. They work alongside healthy eating and exercise to support your weight loss journey.',
 //   },
 //   {
 //     question: 'How do they help with weight loss?',
@@ -416,7 +448,7 @@ export default WeightlossPage;
 //       'Yes, you can stop if needed, but it’s best to discuss this with us first. We’ll guide you on the next steps for your weight loss.',
 //   },
 //   {
-//     question: 'Are weight loss injections safe?',
+//     question: 'Are Weight loss management safe?',
 //     answer:
 //       'Yes, they are approved and safe when used correctly. We’ll make sure they’re suitable for you before starting treatment.',
 //   },
@@ -682,7 +714,7 @@ export default WeightlossPage;
 //             }}
 //           >
 //             Our weight loss clinic is here to support you on your journey to a
-//             healthier you. We offer weight loss injections alongside friendly
+//             healthier you. We offer Weight loss management alongside friendly
 //             advice to help you manage your weight safely. Together, we’ll
 //             create a plan that fits your needs and works with your lifestyle.
 //           </p>
@@ -739,7 +771,7 @@ export default WeightlossPage;
 //               textAlign: 'center',
 //             }}
 //           >
-//             Weight loss injections in{' '}
+//             Weight loss management in{' '}
 //             <span style={{ color: ACCENT_COLOR }}>Coleshill</span>
 //           </h2>
 //           <div className="row g-4">

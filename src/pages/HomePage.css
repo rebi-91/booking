@@ -176,3 +176,44 @@
     height: 300px;
   }
 }
+
+/* HomePage.css */
+.no-underline, .no-underline:hover, .no-underline:focus {
+  text-decoration: none !important;
+  color: inherit;
+}
+
+/* HomePage.css */
+#find-us {
+  scroll-margin-top: 30px; /* match your header’s actual height */
+}
+
+
+/* disabled “coming soon” cards */
+.coming-soon {
+  opacity: 1;             /* keep full card opacity */
+  pointer-events: none;   /* still non-clickable */
+}
+
+/* only slightly lighten & gray out the image */
+.coming-soon img {
+  filter: grayscale(0%) brightness(105%);
+  /* remove the hover-scale */
+  transition: none !important;
+}
+
+/* give coming-soon cards a distinct pastel background */
+.popular-services .coming-soon .card {
+  background-color: #fcfeff !important;
+  border: 1px dashed #a0c4ff !important;
+}
+
+/* mute the text a bit */
+.popular-services .coming-soon .card-body {
+  opacity: 0.7 !important;
+}
+
+/* remove pointer cursor */
+.popular-services .coming-soon .card {
+  cursor: default;
+}

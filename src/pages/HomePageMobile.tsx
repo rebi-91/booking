@@ -27,7 +27,7 @@
 
 // const POPULAR_SERVICES = [
 //   {
-//     title: 'Weight loss injections',
+//     title: 'Weight loss management',
 //     link:  '/book/13',
 //     sub:   'Achieve your weight goals.',
 //     img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fweight-loss-4.webp&w=640&q=75',
@@ -428,10 +428,14 @@ const HERO_CARD_LINKS: Record<string,string> = {
   'Travel Clinic':       '/book/3',
   'Ear wax removal':     '/book/19',
 };
+// src/components/HomePage.tsx
+
+// … above your POPULAR_SERVICES definition:
+const COMING_SOON = new Set(['Hair Loss', 'Vitamin B12 Injection']);
 
 const POPULAR_SERVICES = [
   {
-    title: 'Weight loss injections',
+    title: 'Weight loss management',
     link:  '/weight-loss-injections',
     sub:   'Achieve your weight goals.',
     img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fweight-loss-4.webp&w=640&q=75',
@@ -539,7 +543,9 @@ const PHARMACY_FIRST = [
 const HomePage: React.FC = () => {
   const [selection, setSelection] = useState<string>('');
   const navigate = useNavigate();
+    const [showReviews, setShowReviews] = useState(false); // for toggle approach
 
+    const COMING_SOON = new Set(['Hair Loss', 'Vitamin B12 Injection'])
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const pick = e.target.value;
     setSelection(pick);
@@ -589,16 +595,24 @@ const HomePage: React.FC = () => {
                 </button>
               </div>
 
-              <div className="d-flex align-items-center">
+                 {/* ★ Link out to Google Reviews ★ */}
+                 <a
+                href="https://www.google.com/search?client=safari&rls=en&q=coleshill+pharmacy&ie=UTF-8&oe=UTF-8#lrd=0x48776789abcdef12:0x3456789abcdef,1,,,"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-link p-0 d-flex align-items-center"
+                style={{ textDecoration: 'none' }}
+              >
                 <img
                   src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_74x24dp.png"
                   alt="Google"
                   className="google-logo"
                 />
                 <span style={{ color: MAIS_TEXT_COLOR, marginLeft: 8 }}>
-                  ★★★★★ 4.9/5.0
+                  ★★★★★ 4.3/5.0
                 </span>
-              </div>
+              </a>
+
             </div>
 
             {/* Right Column (desktop only) */}
@@ -654,41 +668,86 @@ const HomePage: React.FC = () => {
             </div>
           </div>
         </section>
+     
 
-        {/* Popular Services */}
-        <section className="container py-5 bg-light rounded popular-services">
-          <div className="d-flex justify-content-between align-items-center mb-4">
-            <h2 style={{ color: MAINS_TEXT_COLOR, fontWeight: 500, fontSize: '1.5rem' }}>Popular services</h2>
-          </div>
-          <div className="row g-4">
-            {POPULAR_SERVICES.map((svc, i) => (
-              <div key={i} className="col-sm-6 col-md-4">
-                <div
-                  className="card h-100 shadow-sm border-0"
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => navigate(svc.link)}
-                >
-                  <div style={{ height: 140, overflow: 'hidden' }}>
-                    <img
-                      src={svc.img}
-                      alt={svc.title}
-                      className="w-100 h-100"
-                      style={{ objectFit: 'cover', transition: 'transform 0.3s' }}
-                      onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.05)')}
-                      onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
-                    />
-                  </div>
-                  <div className="card-body">
-                    <h5 className="card-title mb-1" style={{ fontSize: '1rem' }}>
-                      {svc.title}
-                    </h5>
-                    <p className="text-muted small mb-0">{svc.sub}</p>
-                  </div>
-                </div>
+
+{/* Popular Services */}
+<section className="container py-5 bg-light rounded popular-services">
+  <div className="d-flex justify-content-between align-items-center mb-4">
+    <h2 style={{ color: MAINS_TEXT_COLOR, fontWeight: 500, fontSize: '1.5rem' }}>
+      Popular services
+    </h2>
+  </div>
+  <div className="row g-4">
+    {POPULAR_SERVICES.map((svc, i) => {
+      const isSoon = COMING_SOON.has(svc.title);
+      return (
+        <div key={i} className="col-sm-6 col-md-4">
+          <div
+            className={`card h-100 shadow-sm border-0 ${isSoon ? 'coming-soon' : ''}`}
+            style={{
+              cursor: isSoon ? 'default' : 'pointer',
+              position: 'relative'
+            }}
+            onClick={() => {
+              if (!isSoon) navigate(svc.link);
+            }}
+          >
+            {/* image */}
+            <div style={{ height: 140, overflow: 'hidden' }}>
+              <img
+                src={svc.img}
+                alt={svc.title}
+                className="w-100 h-100"
+                style={{
+                  objectFit: 'cover',
+                  transition: 'transform 0.3s'
+                }}
+                onMouseEnter={e => {
+                  if (!isSoon) e.currentTarget.style.transform = 'scale(1.05)';
+                }}
+                onMouseLeave={e => {
+                  if (!isSoon) e.currentTarget.style.transform = 'scale(1)';
+                }}
+              />
+            </div>
+
+            {/* Coming Soon badge */}
+            {isSoon && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  background: 'rgba(227, 233, 233, 0.67)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 600,
+                  color: 'rgba(6, 133, 133, 0.67)',
+                  fontSize: '1.25rem',
+                  borderRadius: '0.25rem'
+                }}
+              >
+                Coming Soon
               </div>
-            ))}
+            )}
+
+            {/* body */}
+            <div className="card-body">
+              <h5 className="card-title mb-1" style={{ fontSize: '1rem' }}>
+                {svc.title}
+              </h5>
+              <p className="text-muted small mb-0">{svc.sub}</p>
+            </div>
           </div>
-        </section>
+        </div>
+      );
+    })}
+  </div>
+</section>
 
         {/* Popular Vaccinations */}
         <section className="container py-5">
@@ -775,7 +834,7 @@ const HomePage: React.FC = () => {
         </section>
 
         {/* Find Us */}
-        <section className="container py-5 find-us">
+        <section id="find-us" className="container py-5 find-us">
           <h2 style={{ color: MAI_TEXT_COLOR, fontWeight: 700 }}>Find us</h2>
           <div className="row align-items-center mt-4">
             <div className="col-md-6">
@@ -840,7 +899,7 @@ export default HomePage;
 
 // const POPULAR_SERVICES = [
 //   {
-//     title: 'Weight loss injections',
+//     title: 'Weight loss management',
 //     link:  '/book/13',
 //     sub:   'Achieve your weight goals.',
 //     img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fweight-loss-4.webp&w=640&q=75',
@@ -1426,7 +1485,7 @@ export default HomePage;
 //           <div className="row g-4">
 //             {[
 //               {
-//                 title: 'Weight loss injections',
+//                 title: 'Weight loss management',
 //                 sub: 'Achieve your weight goals.',
 //                 img:
 //                   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fweight-loss-4.webp&w=640&q=75',
@@ -1871,7 +1930,7 @@ export default HomePage;
 //           <div className="row g-4">
 //             {[
 //               {
-//                 title: 'Weight loss injections',
+//                 title: 'Weight loss management',
 //                 sub: 'Achieve your weight goals.',
 //                 img:
 //                   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fweight-loss-4.webp&w=640&q=75',

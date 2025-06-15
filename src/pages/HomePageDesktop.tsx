@@ -185,7 +185,7 @@ const HomePage: React.FC = () => {
           <div className="row g-4">
             {[
               {
-                title: 'Weight loss injections',
+                title: 'Weight loss management',
                 sub: 'Achieve your weight goals.',
                 img:
                   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fweight-loss-4.webp&w=640&q=75',

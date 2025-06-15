@@ -8,6 +8,7 @@ import './MounjaroPage.css';
 const MAIN_TEXT_COLOR = 'rgb(68, 135, 198)';
 const ACCENT_COLOR = '#00D364';
 const DARK_BG = '#0F1637';
+const MAI_TEXT_COLOR = 'rgb(14, 75, 141)';
 
 const MounjaroPage: React.FC = () => {
   const navigate = useNavigate();
@@ -461,24 +462,37 @@ const MounjaroPage: React.FC = () => {
         {/* ===============================
             FIND US / CONTACT SECTION
            =============================== */}
-        <section className="container intro-section">
-          <h2 className="section-heading">Find Us</h2>
-          <p className="section-subtext">
-            Based in Coleshill, we offer a wide range of NHS and private services,
-            including weight loss injections, travel vaccinations, and more.
-          </p>
-          <p className="section-subtext">
-            <strong>Phone:</strong> 01634 404142 <br />
-            <strong>Email:</strong> <br />
-            <strong>Address:</strong> 114-116 High St, Coleshill, Birmingham B46 3BJ
-          </p>
-          <p className="section-subtext">
-            <strong>Open Hours:</strong> <br />
-            Monday – Friday: 08:30 – 18:00 <br />
-            Saturday: 9:00 - 17:00
-            Sunday: Closed
-          </p>
+        
+        {/* Find Us */}
+        <section id="find-us" className="container py-5 find-us">
+          <h2 style={{ color: MAI_TEXT_COLOR, fontWeight: 700 }}>Find us</h2>
+          <div className="row align-items-center mt-4">
+            <div className="col-md-6">
+              <p>Contact us for travel vaccination, ear wax removal and a wide range of NHS or private services we offer.</p>
+              <p><strong>Phone:</strong> 01675 466014</p>
+              <p><strong>Email:</strong> coleshillpharmacy@gmail.com</p>
+              <p><strong>Address:</strong> 114–116 High St, Coleshill, Birmingham B46 3BJ</p>
+              <p>
+                <strong>Hours:</strong><br/>
+                Monday–Friday 8:30 am–6 pm<br/>
+                Saturday 9 am–5:30 pm<br/>
+                Sunday Closed
+              </p>
+            </div>
+            <div className="col-md-6">
+              <iframe
+                title="Coleshill Pharmacy Location"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2483.123456789!2d-1.7890123!3d52.5654321!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48776789abcdef12:0x3456789abcdef!2s114-116%20High%20St,%20Coleshill%20B46%203BJ,%20UK!5e0!3m2!1sen!2suk!4v1623456789012"
+                width="100%"
+                height="300"
+                style={{ border: 0, borderRadius: '0.5rem', marginBottom: '30px' }}
+                allowFullScreen
+                loading="lazy"
+              />
+            </div>
+          </div>
         </section>
+
         {/* =============================== */}
       </main>
     </>

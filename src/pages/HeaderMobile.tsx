@@ -236,11 +236,28 @@ const Header: React.FC = () => {
                 <img src={ICON_CHEVRON} alt=">" className="chevron-icon" />
               </li> */}
               <li
-                className="mobile-item"
-                onClick={() => {
-                  goTo('Contact');
-                }}
-              >
+  className="mobile-item"
+  onClick={() => {
+    // Close the menu
+    closeAll();
+    // If we're not already on "/", navigate there first:
+    if (window.location.pathname !== '/') {
+      navigate('/');
+      // Wait for the HomePage to render, then scroll:
+      setTimeout(() => {
+        document
+          .getElementById('find-us')
+          ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 50);
+    } else {
+      // Already on home, just scroll:
+      document
+        .getElementById('find-us')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }}
+>
+
                 <span>Contact</span>
                 <img src={ICON_CHEVRON} alt=">" className="chevron-icon" />
               </li>

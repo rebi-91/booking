@@ -171,19 +171,21 @@
    
    .section-heading {
      font-size: 2rem;
-     line-height: 1.2;
+     line-height: 1;
      font-weight: 700;
      color: #1C2B39;
      text-align: center;
-     margin-bottom: 1rem;
+     margin-bottom: 0rem !important;
+     margin-top: 2rem !important;
    }
    
    .section-subtext {
      color: #4A5568;
      font-size: 1rem;
-     line-height: 1.6;
+     line-height: 1.4 !important;
      max-width: 800px;
-     margin: 0 auto 2rem auto;
+     margin-bottom: 4rem !important;
+     margin-top: 1rem !important;
      text-align: center;
    }
    
@@ -289,8 +291,8 @@
      font-size: 1.5rem;
      font-weight: 700;
      color: #1C2B39;
-     margin-top: 2rem;
-     margin-bottom: 1rem;
+     margin-top: -2rem !important;
+     margin-bottom: 2rem !important;
      text-align: left;
    }
    
@@ -368,6 +370,7 @@
    }
    
    .intro-section .section-heading {
+   
      text-align: center;
    }
    
