@@ -1,3 +1,277 @@
+// // src/components/Header.tsx
+// import React, { useState } from 'react';
+// import { useNavigate, Link } from 'react-router-dom';
+// import './Header.css';
+
+// const ICON_HAMBURGER =
+//   'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//menu-2.png';
+// const ICON_CLOSE =
+//   'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//close-2.png';
+// const ICON_PHONE =
+//   'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//phone.png';
+// const ICON_CHEVRON =
+//   'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//chevron.png';
+// const ICON_BACK =
+//   'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//back-arrow.png';
+
+// const dropdownData: Record<string, string[]> = {
+//   'Browse Services': [
+//     'All Services',
+//     'Travel Clinic',
+//     'Private Treatments',
+//     'NHS Treatments',
+//     'Pharmacy First',
+//   ],
+//   'NHS Services': ['NHS Services', 'NHS Repeat Prescriptions', 'Delivery Service'],
+//   'Weight Loss': ['Wegovy', 'Mounjaro'],
+//   'Travel Vaccinations': [
+//     'Cholera',
+//     'Diphtheria, Tetanus & Polio',
+//     'Rabies',
+//     'Hepatitis A',
+//     'Hepatitis B',
+//     'Japanese Encephalitis',
+//     'Meningitis ACWY (for Hajj/Umrah)',
+//     'Meningitis B',
+//     'Shingles (Zostavax)',
+//     'Typhoid',
+//     'Yellow Fever (Coming Soon)',
+//   ],
+// };
+
+// const browseSubMenuData: Record<string, string[]> = {
+//   'Private Treatments': [
+//     'Microsuction Earwax Removal',
+//     'Weight Loss Clinic',
+//     'Private Flu Jab',
+//     'Period Delay',
+//     'Altitude Sickness',
+//     'Vitamin B12 Injection',
+//     'Hair Loss',
+//     'Chickenpox Vaccine',
+//     'Erectile Dysfunction',
+//   ],
+//   'NHS Treatments': [
+//     'Blood Pressure Check',
+//     'Oral Contraception',
+//     'Flu Vaccination',
+//     'COVID‐19 Vaccination',
+//   ],
+//   'Pharmacy First': [
+//     'Sinusitis',
+//     'Sore Throat',
+//     'Earache',
+//     'Infected Insect Bite',
+//     'Impetigo',
+//     'Shingles',
+//     'Uncomplicated UTI (Women)',
+//   ]
+// };
+
+// // Explicit mapping from label → desired URL path
+// const ROUTE_MAP: Record<string, string> = {
+//   'All Services': '/services',
+//   'Travel Clinic': '/book/4',
+//   'Private Treatments': '/private-treatments',
+//   'NHS Treatments': '/nhs-treatments',
+//   'Pharmacy First': '/pharmacy-first',
+//   'Microsuction Earwax Removal': '/microsuction-earwax-removal',
+//   'Weight Loss Clinic': '/weight-loss-injections',
+//   'Private Flu Jab': '/book/11',
+//   'Period Delay': '/book/10',
+//   'Altitude Sickness': '/book/1',
+//   'Vitamin B12 Injection': '/book/6',
+//   'Hair Loss': '/book/7',
+//   'Chickenpox Vaccine': '/book/31',
+//   'Erectile Dysfunction': '/book/21',
+//   'Blood Pressure Check': '/book/16',
+//   'Oral Contraception': '/book/14',
+//   'Flu Vaccination': '/book/15',
+//   'COVID‐19 Vaccination': '/book/17',
+
+//   // Corrected travel‐vaccine routes:
+//   'Cholera': '/book/29',
+//   'Diphtheria, Tetanus & Polio': '/book/23',
+//   'Rabies': '/book/27',
+//   'Hepatitis A': '/book/24',
+//   'Hepatitis B': '/book/25',
+//   'Japanese Encephalitis': '/book/30',
+//   'Meningitis ACWY (for Hajj/Umrah)': '/book/28',
+//   'Meningitis B': '/book/32',
+//   'Shingles (Zostavax)': '/book/33',
+//   'Typhoid': '/book/26',
+//   'Anti-malarials': '/book/34',
+// };
+
+
+// const slugify = (s: string) =>
+//   s
+//     .toLowerCase()
+//     .replace(/[()]/g, '')
+//     .replace(/[^a-z0-9]+/g, '-')
+//     .replace(/^-+|-+$/g, '');
+
+// const Header: React.FC = () => {
+//   const [mobileOpen, setMobileOpen] = useState(false);
+//   const [level1, setLevel1] = useState<string | null>(null);
+//   const [level2, setLevel2] = useState<string | null>(null);
+
+//   const navigate = useNavigate();
+
+//   const closeAll = () => {
+//     setMobileOpen(false);
+//     setLevel1(null);
+//     setLevel2(null);
+//   };
+
+//   const goTo = (label: string, prefix?: string) => {
+//     const basePath = ROUTE_MAP[label] ?? `/${slugify(label)}`;
+//     const path = prefix ? `${prefix}${basePath}` : basePath;
+//     navigate(path);
+//     closeAll();
+//   };
+
+//   return (
+//     <header>
+//       <div className="mobile-header d-flex d-md-none align-items-center">
+//         <Link to="/" onClick={closeAll}>
+//           <img
+//             src="https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//coleshill.jpg"
+//             alt="Coleshill Pharmacy Logo"
+//             className="mobile-logo"
+//           />
+//         </Link>
+//         <a href="tel:01634404142" className="call-icon" aria-label="Call us">
+//           <img src={ICON_PHONE} alt="Call Icon" />
+//         </a>
+//         <div className="flex-fill" />
+//         <button
+//           className="hamburger-btn"
+//           onClick={() => (mobileOpen ? closeAll() : setMobileOpen(true))}
+//           aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+//         >
+//           {mobileOpen ? (
+//             <img src={ICON_CLOSE} alt="Close menu" className="icon-close" />
+//           ) : (
+//             <img src={ICON_HAMBURGER} alt="Open menu" className="icon-hamburger" />
+//           )}
+//         </button>
+//       </div>
+
+//       {mobileOpen && (
+//         <div className="mobile-drawer d-md-none">
+//           {/* Level 2 submenu */}
+//           {level2 && (
+//             <div className="mobile-list">
+//               <div className="mobile-back" onClick={() => setLevel2(null)}>
+//                 <img src={ICON_BACK} alt="Back" className="back-icon" />
+//                 {level2}
+//               </div>
+//               {browseSubMenuData[level2].map(sub => (
+//                 <div
+//                   key={sub}
+//                   className="mobile-item"
+//                   onClick={() => goTo(sub, level2 === 'Pharmacy First' ? '/pharmacy-first' : '')}
+//                 >
+//                   <span>{sub}</span>
+//                   <img src={ICON_CHEVRON} alt=">" className="chevron-icon" />
+//                 </div>
+//               ))}
+//             </div>
+//           )}
+
+//           {/* Level 1 submenu */}
+//           {level1 && !level2 && (
+//             <div className="mobile-list">
+//               <div className="mobile-back" onClick={() => setLevel1(null)}>
+//                 <img src={ICON_BACK} alt="Back" className="back-icon" />
+//                 {level1}
+//               </div>
+//               {dropdownData[level1].map(opt => (
+//                 <div
+//                   key={opt}
+//                   className="mobile-item"
+//                   onClick={() => {
+//                     if (level1 === 'Browse Services' && browseSubMenuData[opt]) {
+//                       setLevel2(opt);
+//                     } else {
+//                       goTo(opt);
+//                     }
+//                   }}
+//                 >
+//                   <span>{opt}</span>
+//                   <img src={ICON_CHEVRON} alt=">" className="chevron-icon" />
+//                 </div>
+//               ))}
+//             </div>
+//           )}
+
+//           {/* Top‐level menu */}
+//           {!level1 && !level2 && (
+//             <ul className="mobile-list">
+//               <li
+//                 className="mobile-item"
+//                 onClick={() => {
+//                   goTo('Book Appointment');
+//                 }}
+//               >
+//                 <span>Book Appointment</span>
+//                 <img src={ICON_CHEVRON} alt=">" className="chevron-icon" />
+//               </li>
+//               {Object.keys(dropdownData).map(menu => (
+//                 <li
+//                   key={menu}
+//                   className="mobile-item"
+//                   onClick={() => setLevel1(menu)}
+//                 >
+//                   <span>{menu}</span>
+//                   <img src={ICON_CHEVRON} alt=">" className="chevron-icon" />
+//                 </li>
+//               ))}
+//               {/* <li
+//                 className="mobile-item"
+//                 onClick={() => {
+//                   goTo('Blog');
+//                 }}
+//               >
+//                 <span>Blog</span>
+//                 <img src={ICON_CHEVRON} alt=">" className="chevron-icon" />
+//               </li> */}
+//               <li
+//   className="mobile-item"
+//   onClick={() => {
+//     // Close the menu
+//     closeAll();
+//     // If we're not already on "/", navigate there first:
+//     if (window.location.pathname !== '/') {
+//       navigate('/');
+//       // Wait for the HomePage to render, then scroll:
+//       setTimeout(() => {
+//         document
+//           .getElementById('find-us')
+//           ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+//       }, 50);
+//     } else {
+//       // Already on home, just scroll:
+//       document
+//         .getElementById('find-us')
+//         ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+//     }
+//   }}
+// >
+
+//                 <span>Contact</span>
+//                 <img src={ICON_CHEVRON} alt=">" className="chevron-icon" />
+//               </li>
+//             </ul>
+//           )}
+//         </div>
+//       )}
+//     </header>
+//   );
+// };
+
+// export default Header;
 // src/components/Header.tsx
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
@@ -88,8 +362,6 @@ const ROUTE_MAP: Record<string, string> = {
   'Oral Contraception': '/book/14',
   'Flu Vaccination': '/book/15',
   'COVID‐19 Vaccination': '/book/17',
-
-  // Corrected travel‐vaccine routes:
   'Cholera': '/book/29',
   'Diphtheria, Tetanus & Polio': '/book/23',
   'Rabies': '/book/27',
@@ -103,7 +375,6 @@ const ROUTE_MAP: Record<string, string> = {
   'Anti-malarials': '/book/34',
 };
 
-
 const slugify = (s: string) =>
   s
     .toLowerCase()
@@ -115,7 +386,6 @@ const Header: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [level1, setLevel1] = useState<string | null>(null);
   const [level2, setLevel2] = useState<string | null>(null);
-
   const navigate = useNavigate();
 
   const closeAll = () => {
@@ -228,39 +498,37 @@ const Header: React.FC = () => {
                   <img src={ICON_CHEVRON} alt=">" className="chevron-icon" />
                 </li>
               ))}
-              {/* <li
+              <li
                 className="mobile-item"
                 onClick={() => {
-                  goTo('Blog');
+                  closeAll();
+                  if (window.location.pathname !== '/') {
+                    navigate('/');
+                    setTimeout(() => {
+                      document
+                        .getElementById('find-us')
+                        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 50);
+                  } else {
+                    document
+                      .getElementById('find-us')
+                      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
                 }}
               >
-                <span>Blog</span>
-                <img src={ICON_CHEVRON} alt=">" className="chevron-icon" />
-              </li> */}
-              <li
-  className="mobile-item"
-  onClick={() => {
-    // Close the menu
-    closeAll();
-    // If we're not already on "/", navigate there first:
-    if (window.location.pathname !== '/') {
-      navigate('/');
-      // Wait for the HomePage to render, then scroll:
-      setTimeout(() => {
-        document
-          .getElementById('find-us')
-          ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 50);
-    } else {
-      // Already on home, just scroll:
-      document
-        .getElementById('find-us')
-        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }}
->
-
                 <span>Contact</span>
+                <img src={ICON_CHEVRON} alt=">" className="chevron-icon" />
+              </li>
+
+              {/* ← NEW LOGIN ITEM → */}
+              <li
+                className="mobile-item"
+                onClick={() => {
+                  closeAll();
+                  navigate('/login');
+                }}
+              >
+                <span>Login</span>
                 <img src={ICON_CHEVRON} alt=">" className="chevron-icon" />
               </li>
             </ul>
