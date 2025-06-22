@@ -138,6 +138,7 @@
 // };
 
 // export default SignUpPage;
+
 import React from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useSession } from "../../context/SessionContext";
@@ -185,7 +186,7 @@ const SignUpPage: React.FC = () => {
         setStatus("Account created successfully! Redirecting...");
         // Redirect to the PickSchoolPage after a short delay
         setTimeout(() => {
-          navigate("/pick-school");
+          navigate("/setup-profile");
         }, 3000);
       } else {
         // If no user data is returned, prompt email confirmation
@@ -198,8 +199,22 @@ const SignUpPage: React.FC = () => {
   });
 
   return (
+    <div
+      style={{
+        backgroundColor: "#000",
+        minHeight: "100vh",
+        paddingTop: "env(safe-area-inset-top)",
+        paddingLeft: "env(safe-area-inset-left)",
+        paddingRight: "env(safe-area-inset-right)",
+        paddingBottom: "env(safe-area-inset-bottom)",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      
     <main className={styles.container}>
-      <Link className={styles.homeLink} to="/">
+      <Link className={styles.homeLink} to="/login">
         ◄ Home
       </Link>
       <form className={styles.form} onSubmit={onSubmit}>
@@ -272,6 +287,7 @@ const SignUpPage: React.FC = () => {
         {error && <p className={styles.error}>{error}</p>}
       </form>
     </main>
+    </div>
   );
 };
 

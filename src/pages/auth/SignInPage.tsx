@@ -121,6 +121,8 @@
 // };
 
 // export default SignInPage;
+
+
 import React from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useSession } from "../../context/SessionContext"; // Ensure this context is correctly set up
@@ -178,12 +180,14 @@ const SignInPage: React.FC = () => {
 
       setStatus("Signed in successfully.");
 
-      // Redirect based on the role
       if (profileData.role === "New") {
-        navigate("/pick-school");
+        navigate("/setup-profile");
+      } else if (profileData.role === "Staff") {
+        navigate("/my-attendance");
       } else {
-        navigate("/");
+        navigate("/");  // fallback
       }
+      
     } catch (err: any) {
       setError(err.message || "An unexpected error occurred.");
       setStatus("");
@@ -191,12 +195,27 @@ const SignInPage: React.FC = () => {
   });
 
   // Early return if already signed in
-  if (contextSession) return <Navigate to="/" />;
+  if (contextSession) return <Navigate to="/login" />;
 
   return (
-    <main className={styles.container}>
+    <div
+    style={{
+      backgroundColor: "#000",
+      minHeight: "100vh",
+      paddingTop: "env(safe-area-inset-top)",
+      paddingLeft: "env(safe-area-inset-left)",
+      paddingRight: "env(safe-area-inset-right)",
+      paddingBottom: "env(safe-area-inset-bottom)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    }}
+  >
+        <main
+          className={styles.container}
+        >
       {/* Retained Home Link */}
-      <Link className={styles.homeLink} to="/">
+      <Link className={styles.homeLink} to="/login">
         ◄ Home
       </Link>
       <form className={styles.form} onSubmit={onSubmit}>
@@ -245,6 +264,7 @@ const SignInPage: React.FC = () => {
         {error && <p className={styles.error}>{error}</p>}
       </form>
     </main>
+    </div>
   );
 };
 

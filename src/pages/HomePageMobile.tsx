@@ -67,7 +67,7 @@
 // const VACCINATIONS = [
 //   {
 //     title: 'Chickenpox',
-//     link:  '/book/18',
+//     link:  '/book/31',
 //     img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fvaccines%2Fchickenpox.webp&w=1080&q=75',
 //   },
 //   {
@@ -409,143 +409,161 @@ const MAIN_TEXT_COLOR = 'rgb(119, 128, 159)';
 const MAI_TEXT_COLOR = 'rgb(14, 75, 141)';
 const MAINS_TEXT_COLOR = 'rgb(14, 75, 141)';
 const MAIS_TEXT_COLOR = 'rgb(14, 75, 141)';
-const ACCENT_COLOR    = '#00D364';
-const ACC_COLOR       = 'rgb(42, 157, 239)';
-const chevronDown     =
+const ACCENT_COLOR = '#00D364';
+const ACC_COLOR = 'rgb(42, 157, 239)';
+const chevronDown =
   'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//down-chevron.png';
 
-// ===== 1) Centralised route definitions =====
-const NAV_LINKS: Record<string,string> = {
-  'All Services':        '/services',
-  'Travel Clinic':       '/book/3',
-  'Private Treatments':  '/services?tab=PRIVATE',
-  'NHS Treatments':      '/services?tab=NHS',
-  'Pharmacy First':      '/services?tab=PHARMACY',
+// Titles that should show a "Coming Soon" badge and be non-clickable
+const COMING_SOON = new Set([
+  'Hair Loss',
+  'Vitamin B12 Injection',
+  'Yellow Fever',
+]);
+
+// Mapping dropdown selections to service-page URLs with the appropriate tab param
+const NAV_LINKS: Record<string, string> = {
+  'All Services': '/services?tab=ALL',
+  'Travel Clinic': '/services?tab=TRAVEL',
+  'Private Treatments': '/services?tab=PRIVATE',
+  'NHS Treatments': '/services?tab=NHS',
+  'Pharmacy First': '/services?tab=PHARMACY',
 };
 
-const HERO_CARD_LINKS: Record<string,string> = {
+const HERO_CARD_LINKS: Record<string, string> = {
   'Weight loss service': '/book/13',
-  'Travel Clinic':       '/book/3',
-  'Ear wax removal':     '/book/19',
+  'Travel Clinic': '/book/3',
+  'Ear wax removal': '/book/19',
 };
-// src/components/HomePage.tsx
-
-// … above your POPULAR_SERVICES definition:
-const COMING_SOON = new Set(['Hair Loss', 'Vitamin B12 Injection']);
 
 const POPULAR_SERVICES = [
   {
     title: 'Weight loss management',
-    link:  '/weight-loss-injections',
-    sub:   'Achieve your weight goals.',
-    img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fweight-loss-4.webp&w=640&q=75',
+    link: '/weight-loss-injections',
+    sub: 'Achieve your weight goals.',
+    img:
+      'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fweight-loss-4.webp&w=640&q=75',
   },
   {
     title: 'Erectile dysfunction',
-    link:  '/book/21',
-    sub:   'Effective solutions tailored to your needs.',
-    img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fed-3.webp&w=640&q=75',
+    link: '/book/21',
+    sub: 'Effective solutions tailored to your needs.',
+    img:
+      'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fed-3.webp&w=640&q=75',
   },
   {
     title: 'Oral Contraception',
-    link:  '/oral-contraceptive',
-    sub:   'Fast, confidential help when you need it.',
-    img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fmorning-after-pill.webp&w=640&q=75',
+    link: '/oral-contraceptive',
+    sub: 'Fast, confidential help when you need it.',
+    img:
+      'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fmorning-after-pill.webp&w=640&q=75',
   },
   {
     title: 'Flu Vaccination',
-    link:  '/book/15',
-    sub:   'Stay protected this season with a quick flu jab.',
-    img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fflu-vaccine.webp&w=640&q=75',
+    link: '/book/15',
+    sub: 'Stay protected this season with a quick flu jab.',
+    img:
+      'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fflu-vaccine.webp&w=640&q=75',
   },
   {
     title: 'Hair Loss',
-    link:  '/book/7',
-    sub:   'Support for healthier, fuller hair.',
-    img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fhair-loss-2.webp&w=640&q=75',
+    link: '/book/7',
+    sub: 'Support for healthier, fuller hair.',
+    img:
+      'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fhair-loss-2.webp&w=640&q=75',
   },
   {
     title: 'Vitamin B12 Injection',
-    link:  '/book/6',
-    sub:   'Restore energy and improve vitality.',
-    img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fvitamin-b12-injection.webp&w=640&q=75',
+    link: '/book/6',
+    sub: 'Restore energy and improve vitality.',
+    img:
+      'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fvitamin-b12-injection.webp&w=640&q=75',
   },
 ];
 
 const VACCINATIONS = [
   {
     title: 'Chickenpox',
-    link:  '/book/18',
-    img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fvaccines%2Fchickenpox.webp&w=1080&q=75',
+    link: '/book/31',
+    img:
+      'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fvaccines%2Fchickenpox.webp&w=1080&q=75',
   },
   {
     title: 'Hepatitis A',
-    link:  '/book/4',
-    img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fvaccines%2Fhepatitis.webp&w=1080&q=75',
+    link: '/book/24',
+    img:
+      'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fvaccines%2Fhepatitis.webp&w=1080&q=75',
   },
   {
     title: 'Typhoid',
-    link:  '/book/4',
-    img:   'https://ysm-res.cloudinary.com/image/upload/ar_16:9,c_fill,dpr_3.0,f_auto,g_faces:auto,q_auto:eco,w_500/v1/yms/prod/d01914a4-5add-47e4-ba61-8681278f830a',
+    link: '/book/26',
+    img:
+      'https://ysm-res.cloudinary.com/image/upload/ar_16:9,c_fill,dpr_3.0,f_auto,g_faces:auto,q_auto:eco,w_500/v1/yms/prod/d01914a4-5add-47e4-ba61-8681278f830a',
   },
   {
     title: 'Yellow Fever',
-    link:  '/book/4',
-    img:   'https://www.leamingtontravelclinic.co.uk/wp-content/uploads/2023/08/Yellow_fever2.jpg',
+    link: '/book/4',
+    img:
+      'https://www.leamingtontravelclinic.co.uk/wp-content/uploads/2023/08/Yellow_fever2.jpg',
   },
 ];
 
 const PHARMACY_FIRST = [
   {
     title: 'Sinusitis',
-    link:  '/book/22',
-    img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fpharmacy-first%2Fsinusitis.webp&w=1200&q=75',
+    link: '/book/22',
+    img:
+      'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fpharmacy-first%2Fsinusitis.webp&w=1200&q=75',
     subtitle: 'Ages 12+',
   },
   {
     title: 'Sore throat',
-    link:  '/book/2',
-    img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fpharmacy-first%2Fsore-throat.webp&w=1200&q=75',
+    link: '/book/2',
+    img:
+      'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fpharmacy-first%2Fsore-throat.webp&w=1200&q=75',
     subtitle: 'Ages 5+',
   },
   {
     title: 'Earache',
-    link:  '/book/20',
-    img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fpharmacy-first%2Fearache.webp&w=1200&q=75',
+    link: '/book/20',
+    img:
+      'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fpharmacy-first%2Fearache.webp&w=1200&q=75',
     subtitle: 'Ages 1–17',
   },
   {
     title: 'Infected insect bite',
-    link:  '/book/9',
-    img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fpharmacy-first%2Finsect-bite.webp&w=1200&q=75',
+    link: '/book/9',
+    img:
+      'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fpharmacy-first%2Finsect-bite.webp&w=1200&q=75',
     subtitle: 'Ages 1+',
   },
   {
     title: 'Impetigo',
-    link:  '/book/8',
-    img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fpharmacy-first%2Fimpetigo.webp&w=1200&q=75',
+    link: '/book/8',
+    img:
+      'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fpharmacy-first%2Fimpetigo.webp&w=1200&q=75',
     subtitle: 'Ages 1+',
   },
   {
     title: 'Shingles',
-    link:  '/book/12',
-    img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fpharmacy-first%2Fshingles.webp&w=1200&q=75',
+    link: '/book/12',
+    img:
+      'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fpharmacy-first%2Fshingles.webp&w=1200&q=75',
     subtitle: 'Ages 18+',
   },
   {
     title: 'Uncomplicated UTI (women)',
-    link:  '/book/5',
-    img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fpharmacy-first%2Futi.webp&w=1200&q=75',
+    link: '/book/5',
+    img:
+      'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fpharmacy-first%2Futi.webp&w=1200&q=75',
     subtitle: 'Women aged 16–64',
   },
 ];
 
 const HomePage: React.FC = () => {
-  const [selection, setSelection] = useState<string>('');
+  const [selection, setSelection] = useState<string>('All Services');
   const navigate = useNavigate();
-    const [showReviews, setShowReviews] = useState(false); // for toggle approach
 
-    const COMING_SOON = new Set(['Hair Loss', 'Vitamin B12 Injection'])
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const pick = e.target.value;
     setSelection(pick);
@@ -559,18 +577,24 @@ const HomePage: React.FC = () => {
       <Header />
 
       <main className="pt-header">
-
         {/* Hero Section */}
         <section className="container py-5 hero-section">
           <div className="row align-items-center">
-            {/* Left Column */}
             <div className="col-md-6">
-              <h1 style={{ color: MAIS_TEXT_COLOR, fontWeight: 700, fontSize: '2.5rem' }}>
-                Trusted <span style={{ color: ACCENT_COLOR }}>Pharmacy</span><br/>
-                Care in <span style={{ color: ACC_COLOR}}>Coleshill</span>
+              <h1
+                style={{
+                  color: MAIS_TEXT_COLOR,
+                  fontWeight: 700,
+                  fontSize: '2.5rem',
+                }}
+              >
+                Trusted <span style={{ color: ACCENT_COLOR }}>Pharmacy</span>
+                <br />
+                Care in <span style={{ color: ACC_COLOR }}>Coleshill</span>
               </h1>
               <p style={{ color: MAIN_TEXT_COLOR, margin: '1rem 0' }}>
-                Explore our wide range of treatments or consult with our medical professionals.
+                Explore our wide range of treatments or consult with our
+                medical professionals.
               </p>
 
               <div className="mb-3">
@@ -579,9 +603,10 @@ const HomePage: React.FC = () => {
                   onChange={handleSelect}
                   className="form-select w-100"
                 >
-                  <option value="">Select a service</option>
-                  {Object.keys(NAV_LINKS).map(opt => (
-                    <option key={opt} value={opt}>{opt}</option>
+                  {Object.keys(NAV_LINKS).map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -589,15 +614,18 @@ const HomePage: React.FC = () => {
               <div className="mb-3">
                 <button
                   className="btn btn-start w-100"
-                  onClick={() => navigate('/services')}
+                  onClick={() => {
+                    const dest =
+                      NAV_LINKS[selection] || NAV_LINKS['All Services'];
+                    navigate(dest);
+                  }}
                 >
                   Get Started Now
                 </button>
               </div>
 
-                 {/* ★ Link out to Google Reviews ★ */}
-                 <a
-                href="https://www.google.com/search?client=safari&rls=en&q=coleshill+pharmacy&ie=UTF-8&oe=UTF-8#lrd=0x48776789abcdef12:0x3456789abcdef,1,,,"
+              <a
+                href="https://www.google.com/search?client=safari&rls=en&q=coleshill+pharmacy"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-link p-0 d-flex align-items-center"
@@ -612,15 +640,15 @@ const HomePage: React.FC = () => {
                   ★★★★★ 4.3/5.0
                 </span>
               </a>
-
             </div>
 
-            {/* Right Column (desktop only) */}
             <div className="col-md-6 d-none d-md-flex hero-cards gap-3">
               <div
                 className="card stacked-card"
                 style={{ width: 260, cursor: 'pointer' }}
-                onClick={() => navigate(HERO_CARD_LINKS['Weight loss service'])}
+                onClick={() =>
+                  navigate(HERO_CARD_LINKS['Weight loss service'])
+                }
               >
                 <div className="overflow-hidden" style={{ height: 220 }}>
                   <img
@@ -636,7 +664,9 @@ const HomePage: React.FC = () => {
                 <div className="card-footer text-center">
                   <button
                     className="btn weight-select-btn"
-                    onClick={() => navigate(HERO_CARD_LINKS['Weight loss service'])}
+                    onClick={() =>
+                      navigate(HERO_CARD_LINKS['Weight loss service'])
+                    }
                   >
                     Select
                   </button>
@@ -644,154 +674,210 @@ const HomePage: React.FC = () => {
               </div>
 
               <div className="d-flex flex-column gap-3">
-                {['Travel Clinic','Ear wax removal'].map(key => (
-                  <div
-                    key={key}
-                    className="card side-card"
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => navigate(HERO_CARD_LINKS[key])}
-                  >
-                    <div className="overflow-hidden" style={{ height: 140 }}>
-                      <img
-                        src={`https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2F${key.toLowerCase().replace(/ /g,'-')}.webp&w=1200&q=75`}
-                        alt={key}
-                        className="card-img"
-                      />
+                {['Travel Clinic', 'Ear wax removal'].map((key) => {
+                  const isSoon = COMING_SOON.has(key);
+                  return (
+                    <div
+                      key={key}
+                      className="card side-card"
+                      style={{
+                        cursor: isSoon ? 'default' : 'pointer',
+                      }}
+                      onClick={() => {
+                        if (!isSoon) navigate(HERO_CARD_LINKS[key]);
+                      }}
+                    >
+                      <div className="overflow-hidden" style={{ height: 140 }}>
+                        <img
+                          src={`https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2F${key
+                            .toLowerCase()
+                            .replace(/ /g, '-')} .webp&w=1200&q=75`}
+                          alt={key}
+                          className="card-img"
+                        />
+                      </div>
+                      <div className="card-body d-flex justify-content-between align-items-center px-3">
+                        <small>{key}</small>
+                      </div>
                     </div>
-                    <div className="card-body d-flex justify-content-between align-items-center px-3">
-                      <small>{key}</small>
-                      <img src={chevronDown} className="chevron-90" alt="" />
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </div>
         </section>
-     
 
-
-{/* Popular Services */}
-<section className="container py-5 bg-light rounded popular-services">
-  <div className="d-flex justify-content-between align-items-center mb-4">
-    <h2 style={{ color: MAINS_TEXT_COLOR, fontWeight: 500, fontSize: '1.5rem' }}>
-      Popular services
-    </h2>
-  </div>
-  <div className="row g-4">
-    {POPULAR_SERVICES.map((svc, i) => {
-      const isSoon = COMING_SOON.has(svc.title);
-      return (
-        <div key={i} className="col-sm-6 col-md-4">
-          <div
-            className={`card h-100 shadow-sm border-0 ${isSoon ? 'coming-soon' : ''}`}
-            style={{
-              cursor: isSoon ? 'default' : 'pointer',
-              position: 'relative'
-            }}
-            onClick={() => {
-              if (!isSoon) navigate(svc.link);
-            }}
-          >
-            {/* image */}
-            <div style={{ height: 140, overflow: 'hidden' }}>
-              <img
-                src={svc.img}
-                alt={svc.title}
-                className="w-100 h-100"
-                style={{
-                  objectFit: 'cover',
-                  transition: 'transform 0.3s'
-                }}
-                onMouseEnter={e => {
-                  if (!isSoon) e.currentTarget.style.transform = 'scale(1.05)';
-                }}
-                onMouseLeave={e => {
-                  if (!isSoon) e.currentTarget.style.transform = 'scale(1)';
-                }}
-              />
-            </div>
-
-            {/* Coming Soon badge */}
-            {isSoon && (
-              <div
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  background: 'rgba(227, 233, 233, 0.67)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 600,
-                  color: 'rgba(6, 133, 133, 0.67)',
-                  fontSize: '1.25rem',
-                  borderRadius: '0.25rem'
-                }}
-              >
-                Coming Soon
-              </div>
-            )}
-
-            {/* body */}
-            <div className="card-body">
-              <h5 className="card-title mb-1" style={{ fontSize: '1rem' }}>
-                {svc.title}
-              </h5>
-              <p className="text-muted small mb-0">{svc.sub}</p>
-            </div>
+        {/* Popular Services */}
+        <section className="container py-5 bg-light rounded popular-services">
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <h2
+              style={{
+                color: MAINS_TEXT_COLOR,
+                fontWeight: 500,
+                fontSize: '1.5rem',
+              }}
+            >
+              Popular services
+            </h2>
           </div>
-        </div>
-      );
-    })}
-  </div>
-</section>
+          <div className="row g-4">
+            {POPULAR_SERVICES.map((svc) => {
+              const isSoon = COMING_SOON.has(svc.title);
+              return (
+                <div key={svc.title} className="col-sm-6 col-md-4">
+                  <div
+                    className={`card h-100 shadow-sm border-0 ${
+                      isSoon ? 'coming-soon' : ''
+                    }`}
+                    style={{
+                      cursor: isSoon ? 'default' : 'pointer',
+                      position: 'relative',
+                    }}
+                    onClick={() => {
+                      if (!isSoon) navigate(svc.link);
+                    }}
+                  >
+                    <div style={{ height: 140, overflow: 'hidden' }}>
+                      <img
+                        src={svc.img}
+                        alt={svc.title}
+                        className="w-100 h-100"
+                        style={{ objectFit: 'cover', transition: 'transform 0.3s' }}
+                        onMouseEnter={(e) => {
+                          if (!isSoon) e.currentTarget.style.transform = 'scale(1.05)';
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isSoon) e.currentTarget.style.transform = 'scale(1)';
+                        }}
+                      />
+                    </div>
+
+                    {isSoon && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          background: 'rgba(227, 233, 233, 0.67)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontWeight: 600,
+                          color: 'rgba(6, 133, 133, 0.67)',
+                          fontSize: '1.25rem',
+                          borderRadius: '0.25rem',
+                        }}
+                      >
+                        Coming Soon
+                      </div>
+                    )}
+
+                    <div className="card-body">
+                      <h5 className="card-title mb-1" style={{ fontSize: '1rem' }}>
+                        {svc.title}
+                      </h5>
+                      <p className="text-muted small mb-0">{svc.sub}</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
 
         {/* Popular Vaccinations */}
         <section className="container py-5">
-          <h2 style={{ color: MAIN_TEXT_COLOR, fontWeight: 700, fontSize: '1.75rem', marginBottom: '1rem' }}>
+          <h2
+            style={{
+              color: MAIN_TEXT_COLOR,
+              fontWeight: 700,
+              fontSize: '1.75rem',
+              marginBottom: '1rem',
+            }}
+          >
             Popular <span style={{ color: MAIN_TEXT_COLOR }}>Vaccinations</span>
           </h2>
           <div className="row g-4">
-            {VACCINATIONS.map((vac, i) => (
-              <div key={i} className="col-sm-6 col-md-3">
-                <div
-                  className="position-relative rounded overflow-hidden shadow-sm"
-                  style={{ height: 280, cursor: 'pointer' }}
-                  onClick={() => navigate(vac.link)}
-                >
-                  <img
-                    src={vac.img}
-                    className="w-100 h-100"
-                    style={{ objectFit: 'cover', transition: 'transform 0.3s' }}
-                    onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.05)')}
-                    onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
-                    alt={vac.title}
-                  />
+            {VACCINATIONS.map((vac) => {
+              const isSoon = COMING_SOON.has(vac.title);
+              return (
+                <div key={vac.title} className="col-sm-6 col-md-3">
                   <div
+                    className="position-relative rounded overflow-hidden shadow-sm"
                     style={{
-                      position: 'absolute',
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      padding: '1rem',
-                      background: 'linear-gradient(transparent, rgba(0,0,0,0.6))',
-                      color: '#fff',
+                      height: 280,
+                      cursor: isSoon ? 'default' : 'pointer',
+                    }}
+                    onClick={() => {
+                      if (!isSoon) navigate(vac.link);
                     }}
                   >
-                    <h5 style={{ margin: 0 }}>{vac.title}</h5>
-                    <small>Book vaccine →</small>
+                    <img
+                      src={vac.img}
+                      className="w-100 h-100"
+                      style={{
+                        objectFit: 'cover',
+                        transition: 'transform 0.3s',
+                      }}
+                      onMouseEnter={(e) =>
+                        !isSoon && (e.currentTarget.style.transform = 'scale(1.05)')
+                      }
+                      onMouseLeave={(e) =>
+                        !isSoon && (e.currentTarget.style.transform = 'scale(1)')
+                      }
+                      alt={vac.title}
+                    />
+
+                    {isSoon && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          background: 'rgba(255,255,255,0.7)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '1.25rem',
+                          fontWeight: 600,
+                          color: '#333',
+                          borderRadius: '0.25rem',
+                        }}
+                      >
+                        Coming Soon
+                      </div>
+                    )}
+
+                    <div
+                      style={{
+                        position: 'absolute',
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        padding: '1rem',
+                        background: 'linear-gradient(transparent, rgba(0,0,0,0.6))',
+                        color: '#fff',
+                      }}
+                    >
+                      <h5 style={{ margin: 0 }}>{vac.title}</h5>
+                      <small>Book vaccine →</small>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
 
         {/* Pharmacy First Carousel */}
-        <section className="container-fluid px-4 pharmacy-first-carousel" style={{ background: '#0F1637', color: '#fff', padding: '4rem 0' }}>
+        <section
+          className="container-fluid px-4 pharmacy-first-carousel"
+          style={{ background: '#0F1637', color: '#fff', padding: '4rem 0' }}
+        >
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h2 style={{ fontWeight: 700, fontSize: '2rem' }}>
               Pharmacy First <span style={{ fontWeight: 400 }}>treatments</span>
@@ -800,12 +886,20 @@ const HomePage: React.FC = () => {
           <p style={{ opacity: 0.8, marginBottom: '2rem' }}>
             Free NHS advice and treatments for common conditions.
           </p>
-          <div className="d-flex overflow-auto pharmacy-first-track" style={{ gap: '16px' }}>
+          <div
+            className="d-flex overflow-auto pharmacy-first-track"
+            style={{ gap: '16px' }}
+          >
             {PHARMACY_FIRST.map((svc, idx) => (
               <div
                 key={idx}
                 className="card text-center flex-shrink-0"
-                style={{ width: 260, border: 'none', borderRadius: '0.75rem', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                style={{
+                  width: 260,
+                  border: 'none',
+                  borderRadius: '0.75rem',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                }}
               >
                 <div style={{ height: 180, overflow: 'hidden' }}>
                   <img
@@ -813,8 +907,12 @@ const HomePage: React.FC = () => {
                     alt={svc.title}
                     className="w-100 h-100"
                     style={{ objectFit: 'cover', transition: 'transform 0.3s' }}
-                    onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.05)')}
-                    onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.transform = 'scale(1.05)')
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.transform = 'scale(1)')
+                    }
                   />
                 </div>
                 <div className="card-body">
@@ -838,14 +936,27 @@ const HomePage: React.FC = () => {
           <h2 style={{ color: MAI_TEXT_COLOR, fontWeight: 700 }}>Find us</h2>
           <div className="row align-items-center mt-4">
             <div className="col-md-6">
-              <p>Contact us for travel vaccination, ear wax removal and a wide range of NHS or private services we offer.</p>
-              <p><strong>Phone:</strong> 01675 466014</p>
-              <p><strong>Email:</strong> coleshillpharmacy@gmail.com</p>
-              <p><strong>Address:</strong> 114–116 High St, Coleshill, Birmingham B46 3BJ</p>
               <p>
-                <strong>Hours:</strong><br/>
-                Monday–Friday 8:30 am–6 pm<br/>
-                Saturday 9 am–5:30 pm<br/>
+                Contact us for travel vaccination, ear wax removal and a wide
+                range of NHS or private services we offer.
+              </p>
+              <p>
+                <strong>Phone:</strong> 01675 466014
+              </p>
+              <p>
+                <strong>Email:</strong> coleshillpharmacy@gmail.com
+              </p>
+              <p>
+                <strong>Address:</strong> 114–116 High St, Coleshill, Birmingham
+                B46 3BJ
+              </p>
+              <p>
+                <strong>Hours:</strong>
+                <br />
+                Monday–Friday 8:30 am–6 pm
+                <br />
+                Saturday 9 am–5:30 pm
+                <br />
                 Sunday Closed
               </p>
             </div>
@@ -862,13 +973,13 @@ const HomePage: React.FC = () => {
             </div>
           </div>
         </section>
-
       </main>
     </>
   );
 };
 
 export default HomePage;
+
 
 // // src/pages/auth/HomePage.tsx
 // import React, { useState } from 'react';
@@ -939,7 +1050,7 @@ export default HomePage;
 // const VACCINATIONS = [
 //   {
 //     title: 'Chickenpox',
-//     link:  '/book/18',
+//     link:  '/book/31',
 //     img:   'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fvaccines%2Fchickenpox.webp&w=1080&q=75',
 //   },
 //   {

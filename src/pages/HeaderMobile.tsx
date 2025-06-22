@@ -31,11 +31,11 @@ const dropdownData: Record<string, string[]> = {
     'Hepatitis A',
     'Hepatitis B',
     'Japanese Encephalitis',
-    'Tick‐borne Encephalitis',
-    'Meningitis ACWY and Meningitis B',
+    'Meningitis ACWY (for Hajj/Umrah)',
+    'Meningitis B',
+    'Shingles (Zostavax)',
     'Typhoid',
-    'Mumps, Measles, and Rubella (MMR)',
-    'Yellow Fever Vaccination',
+    'Yellow Fever (Coming Soon)',
   ],
 };
 
@@ -65,7 +65,7 @@ const browseSubMenuData: Record<string, string[]> = {
     'Impetigo',
     'Shingles',
     'Uncomplicated UTI (Women)',
-  ],
+  ]
 };
 
 // Explicit mapping from label → desired URL path
@@ -82,25 +82,27 @@ const ROUTE_MAP: Record<string, string> = {
   'Altitude Sickness': '/book/1',
   'Vitamin B12 Injection': '/book/6',
   'Hair Loss': '/book/7',
-  'Chickenpox Vaccine': '/book/18',
+  'Chickenpox Vaccine': '/book/31',
   'Erectile Dysfunction': '/book/21',
   'Blood Pressure Check': '/book/16',
   'Oral Contraception': '/book/14',
   'Flu Vaccination': '/book/15',
   'COVID‐19 Vaccination': '/book/17',
-  'Cholera': '/book/11',
-    'Diphtheria, Tetanus & Polio': '/book/11',
-    'Rabies': '/book/11',
-    'Hepatitis A': '/book/11',
-    'Hepatitis B': '/book/11',
-    'Japanese Encephalitis': '/book/11',
-    'Tick‐borne Encephalitis': '/book/11',
-    'Meningitis ACWY and Meningitis B': '/book/11',
-    'Typhoid': '/book/11',
-    'Mumps, Measles, and Rubella (MMR)': '/book/11',
-    'Yellow Fever Vaccination': '/book/11',
-  // Pharmacy First items can also be overridden here if needed
+
+  // Corrected travel‐vaccine routes:
+  'Cholera': '/book/29',
+  'Diphtheria, Tetanus & Polio': '/book/23',
+  'Rabies': '/book/27',
+  'Hepatitis A': '/book/24',
+  'Hepatitis B': '/book/25',
+  'Japanese Encephalitis': '/book/30',
+  'Meningitis ACWY (for Hajj/Umrah)': '/book/28',
+  'Meningitis B': '/book/32',
+  'Shingles (Zostavax)': '/book/33',
+  'Typhoid': '/book/26',
+  'Anti-malarials': '/book/34',
 };
+
 
 const slugify = (s: string) =>
   s

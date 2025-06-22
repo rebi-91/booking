@@ -1,737 +1,724 @@
+// import React, { useState, useEffect, useCallback } from "react";
+// import { useNavigate } from "react-router-dom";
+// import supabase from "../../supabase";
+// import { useSession } from "../../context/SessionContext";
 
-import React, { useState, useEffect } from "react";
+// import { Pie } from "react-chartjs-2";
+// import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+
+// import { Container, Row, Col, Table, Spinner, Alert, Button } from "react-bootstrap";
+
+// import "./StaffPage.css";
+
+// ChartJS.register(ArcElement, Tooltip, Legend);
+
+// // ----------------------------------------------------------------
+// // Campus location (20 m radius):
+// const MANUAL_LATITUDE = 52.498084;
+// const MANUAL_LONGITUDE = -1.706501;
+// // ----------------------------------------------------------------
+
+// function StaffPage() {
+//   const { session } = useSession();
+//   const navigate = useNavigate();
+
+//   const [staffID, setStaffID] = useState("");
+//   const [staffName, setStaffName] = useState("");
+//   const [inTimes, setInTimes] = useState<(string | null)[]>([]);
+//   const [outTimes, setOutTimes] = useState<(string | null)[]>([]);
+//   const [startBreak, setStartBreak] = useState<(string | null)[]>([]);
+//   const [endBreak, setEndBreak] = useState<(string | null)[]>([]);
+//   const [totalHours, setTotalHours] = useState<number>(0);
+//   const [showUpdateMsg, setShowUpdateMsg] = useState(false);
+
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+
+//   const today = new Date();
+//   const D = today.getDate();
+//   const Y = today.getFullYear();
+//   const M = today.getMonth();
+//   const daysInMonth = new Date(Y, M + 1, 0).getDate();
+//   const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+
+//   useEffect(() => {
+//     if (!session) {
+//       navigate("/sign-up");
+//       return;
+//     }
+//     (async () => {
+//       setLoading(true);
+//       try {
+//         const { data: u, error: ue } = await supabase.auth.getUser();
+//         if (ue || !u?.user) throw new Error("Not authenticated");
+
+//         const { data: p, error: pe } = await supabase
+//           .from("profiles")
+//           .select("role, staffID")
+//           .eq("id", u.user.id)
+//           .single();
+//         if (pe || !p || p.role !== "Staff") throw new Error("Unauthorized");
+//         setStaffID(p.staffID);
+
+//         const { data: row, error: re } = await supabase
+//           .from("attendance")
+//           .select("*")
+//           .eq("staffID", p.staffID)
+//           .single();
+//         if (re || !row) throw new Error("No attendance record");
+
+//         setStaffName(row.staffName);
+
+//         const inA: (string | null)[] = [];
+//         const outA: (string | null)[] = [];
+//         const sb: (string | null)[] = [];
+//         const eb: (string | null)[] = [];
+//         for (let d = 1; d <= daysInMonth; d++) {
+//           inA.push(row[`in${d}`] || null);
+//           outA.push(row[`out${d}`] || null);
+//           sb.push(row[`startBreak${d}`] || null);
+//           eb.push(row[`endBreak${d}`] || null);
+//         }
+//         setInTimes(inA);
+//         setOutTimes(outA);
+//         setStartBreak(sb);
+//         setEndBreak(eb);
+//       } catch (e: any) {
+//         setError(e.message);
+//       } finally {
+//         setLoading(false);
+//       }
+//     })();
+//   }, [session, navigate, daysInMonth]);
+
+//   const within20 = useCallback(() => {
+//     // TODO: replace with real geolocation distance check
+//     return true;
+//   }, []);
+
+//   const updateDay = async (field: string, value: string) => {
+//     await supabase
+//       .from("attendance")
+//       .update({ [field]: value })
+//       .eq("staffID", staffID);
+//   };
+
+//   const updateLocal = (
+//     arr: (string | null)[],
+//     setter: React.Dispatch<React.SetStateAction<(string | null)[]>>,
+//     day: number,
+//     val: string
+//   ) => {
+//     const copy = [...arr];
+//     copy[day - 1] = val;
+//     setter(copy);
+//   };
+
+//   const handleAction = async (
+//     type: "in" | "out" | "startBreak" | "endBreak"
+//   ) => {
+//     if (!within20()) {
+//       alert("You must be within 20 m of campus.");
+//       return;
+//     }
+//     // enforce one‐time press
+//     if (
+//       (type === "in" && inTimes[D - 1]) ||
+//       (type === "out" && outTimes[D - 1]) ||
+//       (type === "startBreak" && startBreak[D - 1]) ||
+//       (type === "endBreak" && endBreak[D - 1])
+//     ) {
+//       const what =
+//         type === "in"
+//           ? "login"
+//           : type === "out"
+//           ? "logout"
+//           : type === "startBreak"
+//           ? "break start"
+//           : "break end";
+//       alert(`You've already recorded ${what} today.`);
+//       return;
+//     }
+//     // require prior step
+//     if ((type === "out" && !inTimes[D - 1]) ||
+//         (type === "endBreak" && !startBreak[D - 1])) {
+//       alert(
+//         type === "out"
+//           ? "You must log in first."
+//           : "You must start break first."
+//       );
+//       return;
+//     }
+//     // confirmation
+//     const confirmText = {
+//       in: "Log in now?",
+//       out: "Log out now?",
+//       startBreak: "Start break now?",
+//       endBreak: "End break now?"
+//     } as const;
+//     if (!window.confirm(confirmText[type])) return;
+
+//     const now = new Date().toLocaleTimeString("en-GB", {
+//       hour12: false,
+//       hour: "2-digit",
+//       minute: "2-digit"
+//     });
+//     await updateDay(`${type}${D}`, now);
+//     if (type === "in") updateLocal(inTimes, setInTimes, D, now);
+//     if (type === "out") updateLocal(outTimes, setOutTimes, D, now);
+//     if (type === "startBreak") updateLocal(startBreak, setStartBreak, D, now);
+//     if (type === "endBreak") updateLocal(endBreak, setEndBreak, D, now);
+
+//     setShowUpdateMsg(true);
+//     setTimeout(() => setShowUpdateMsg(false), 3000);
+//   };
+
+//   useEffect(() => {
+//     let total = 0;
+//     inTimes.forEach((inT, idx) => {
+//       const outT = outTimes[idx];
+//       if (inT && outT) {
+//         const [ih, im] = inT.split(":").map(Number);
+//         const [oh, om] = outT.split(":").map(Number);
+//         const sb = startBreak[idx] || "00:00";
+//         const eb = endBreak[idx] || "00:00";
+//         const [sh, sm] = sb.split(":").map(Number);
+//         const [eh, em] = eb.split(":").map(Number);
+//         const minsWorked =
+//           oh * 60 +
+//           om -
+//           (ih * 60 + im) -
+//           ((eh * 60 + em) - (sh * 60 + sm));
+//         total += Math.max(minsWorked, 0) / 60;
+//       }
+//     });
+//     setTotalHours(Math.round(total * 100) / 100);
+//   }, [inTimes, outTimes, startBreak, endBreak]);
+
+//   if (loading)
+//     return (
+//       <Container className="d-flex vh-100 justify-content-center align-items-center">
+//         <Spinner /> <span className="ms-2">Loading…</span>
+//       </Container>
+//     );
+//   if (error)
+//     return (
+//       <Container className="d-flex vh-100 justify-content-center align-items-center">
+//         <Alert variant="danger">{error}</Alert>
+//       </Container>
+//     );
+
+//   const presentCount = inTimes.filter(Boolean).length;
+//   const absentCount = daysInMonth - presentCount;
+//   const pieData = {
+//     labels: ["Present", "Absent"],
+//     datasets: [
+//       {
+//         data: [presentCount, absentCount],
+//         backgroundColor: ["#007bff", "#ff4d4d"]
+//       }
+//     ]
+//   };
+
+//   const hrs = Math.floor(totalHours);
+//   const mins = Math.round((totalHours - hrs) * 60);
+
+//   return (
+//     <Container fluid className="staffpage-container py-4">
+//       <Row className="justify-content-center">
+//         <Col xs={12} md={10} lg={8}>
+//           <div className="bg-dark p-4 rounded shadow">
+//             {/* Header */}
+//             <div className="header-container d-flex justify-content-between align-items-center mb-3">
+//               <div>
+//                 <h2 className="text-primary2 mb-1">{staffName}</h2>
+//                 <div className="current-month-year">
+//                   <strong>ID:</strong> {staffID} | {today.toLocaleDateString()}
+//                 </div>
+//               </div>
+//               <Button
+//                 variant="link"
+//                 className="home-button"
+//                 onClick={() => navigate("/login")}
+//               >
+//                 🏠
+//               </Button>
+//             </div>
+
+//             {/* Action Buttons */}
+//             <Row className="mb-3">
+//               <Col>
+//                 <Button
+//                   variant="primary"
+//                   className="w-100 d-flex flex-column align-items-center"
+//                   onClick={() => handleAction("in")}
+//                 >
+//                   <span>Login</span>
+//                   <span className="time-text">{inTimes[D - 1] || "--:--"}</span>
+//                 </Button>
+//               </Col>
+//               <Col>
+//                 <Button
+//                   variant="primary"
+//                   className="w-100 d-flex flex-column align-items-center"
+//                   onClick={() => handleAction("out")}
+//                 >
+//                   <span>Logout</span>
+//                   <span className="time-text">{outTimes[D - 1] || "--:--"}</span>
+//                 </Button>
+//               </Col>
+//             </Row>
+//             <Row className="mb-4">
+//               <Col>
+//                 <Button
+//                   variant="secondary"
+//                   className="w-100 d-flex flex-column align-items-center"
+//                   onClick={() => handleAction("startBreak")}
+//                   disabled={!!startBreak[D - 1]}
+//                 >
+//                   <span>Start Break</span>
+//                   <span className="time-text">
+//                     {startBreak[D - 1] || "--:--"}
+//                   </span>
+//                 </Button>
+//               </Col>
+//               <Col>
+//                 <Button
+//                   variant="secondary"
+//                   className="w-100 d-flex flex-column align-items-center"
+//                   onClick={() => handleAction("endBreak")}
+//                   disabled={!!endBreak[D - 1]}
+//                 >
+//                   <span>End Break</span>
+//                   <span className="time-text">
+//                     {endBreak[D - 1] || "--:--"}
+//                   </span>
+//                 </Button>
+//               </Col>
+//             </Row>
+
+//             {/* Total Hours */}
+//             <div className="hours-box text-center mb-3">
+//               <h5>Total Hours Worked</h5>
+//               <div className="hours-value">
+//                 {hrs}h {mins}m
+//               </div>
+//             </div>
+//             {showUpdateMsg && <Alert variant="info">Updated!</Alert>}
+
+//             {/* Pie Chart */}
+//             <div style={{ height: 240 }} className="mb-4">
+//               <Pie
+//                 data={pieData}
+//                 options={{ responsive: true, maintainAspectRatio: false }}
+//               />
+//             </div>
+
+//             {/* Days Present / Absent */}
+//             <Row className="mb-4 text-center">
+//               <Col className="text-success">
+//                 Days Present: {presentCount}
+//               </Col>
+//               <Col className="text-danger">Days Absent: {absentCount}</Col>
+//             </Row>
+
+//             {/* Attendance Table */}
+//             <div className="table-responsive">
+//               <Table bordered hover className="table-custom text-center">
+//               <thead>
+//     <tr>
+//       <th className="th-day">Day</th>
+//       <th className="th-morning">In</th>
+//       <th className="th-evening">Out</th>
+//       <th className="th-morning">SB</th>
+//       <th className="th-evening">EB</th>
+//     </tr>
+//   </thead>
+//                 <tbody>
+//                   {daysArray.map((d) => (
+//                     <tr key={d}>
+//                       <td className="fw-bold">{d}</td>
+//                       <td>{inTimes[d - 1] || "—"}</td>
+//                       <td>{outTimes[d - 1] || "—"}</td>
+//                       <td>{startBreak[d - 1] || "—"}</td>
+//                       <td>{endBreak[d - 1] || "—"}</td>
+//                     </tr>
+//                   ))}
+//                 </tbody>
+//               </Table>
+//             </div>
+//           </div>
+//         </Col>
+//       </Row>
+//     </Container>
+//   );
+// }
+
+// export default StaffPage;
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import supabase from "../../supabase";
 import { useSession } from "../../context/SessionContext";
 
+import useGeolocation from "../auth/hooks/useGeolocation";
+import { getDistanceFromLatLonInMeters } from "../auth/hooks/distance";
+
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
-import { Container, Row, Col, Table, Spinner, Alert, Form, Button } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Table,
+  Spinner,
+  Alert,
+  Button,
+} from "react-bootstrap";
 
-import useGeolocation from "../auth/hooks/useGeolocation";   
-import { getDistanceFromLatLonInMeters } from "../auth/hooks/distance";
-
-import "./StaffPage.css"; // Custom CSS
+import "./StaffPage.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
+
+// ----------------------------------------------------------------
+// Campus location (20 m radius):
+const MANUAL_LATITUDE = 52.498084;
+const MANUAL_LONGITUDE = -1.706501;
+// ----------------------------------------------------------------
 
 function StaffPage() {
   const { session } = useSession();
   const navigate = useNavigate();
   const geolocation = useGeolocation();
 
-  // Teacher info
-  const [teacherName, setTeacherName] = useState("");
-  const [school, setSchool] = useState("");
-  const [loginTime, setLoginTime] = useState<string | null>(null);
-  const [logoutTime, setLogoutTime] = useState<string | null>(null);
-  const [minLate, setMinLate] = useState<number | null>(null);
-  const [totalLate, setTotalLate] = useState<number | null>(null);
-
-  // Shift dropdown
-  const [shifts, setShifts] = useState<any[]>([]);
-  const [selectedShift, setSelectedShift] = useState("");
-
-  // Date info
-  const today = new Date();
-  const currentDay = today.getDate();
-  const currentMonth = today.getMonth();
-  const currentYear = today.getFullYear();
-  const monthNames = [
-    "January","February","March","April","May","June",
-    "July","August","September","October","November","December",
-  ] as const;
-  const currentMonthName = monthNames[currentMonth];
-  const numberOfDays = new Date(currentYear, currentMonth + 1, 0).getDate();
-  const daysArray = Array.from({ length: numberOfDays }, (_, i) => i + 1);
-
-  const [startAttendance, setStartAttendance] = useState<(boolean | null)[]>([]);
-  const [finishAttendance, setFinishAttendance] = useState<(boolean | null)[]>([]);
-  const [present, setPresent] = useState(0);
-  const [presentEvening, setPresentEvening] = useState(0);
+  const [staffID, setStaffID] = useState("");
+  const [staffName, setStaffName] = useState("");
+  const [inTimes, setInTimes] = useState<(string | null)[]>([]);
+  const [outTimes, setOutTimes] = useState<(string | null)[]>([]);
+  const [startBreak, setStartBreak] = useState<(string | null)[]>([]);
+  const [endBreak, setEndBreak] = useState<(string | null)[]>([]);
+  const [totalHours, setTotalHours] = useState<number>(0);
+  const [showUpdateMsg, setShowUpdateMsg] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const [startPresentCount, setStartPresentCount] = useState(0);
-  const [startAbsentCount, setStartAbsentCount] = useState(0);
-  const [finishPresentCount, setFinishPresentCount] = useState(0);
-  const [finishAbsentCount, setFinishAbsentCount] = useState(0);
+  const today = new Date();
+  const D = today.getDate();
+  const Y = today.getFullYear();
+  const M = today.getMonth();
+  const daysInMonth = new Date(Y, M + 1, 0).getDate();
+  const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
   useEffect(() => {
     if (!session) {
-      setError("No active session. Please log in.");
-      setLoading(false);
+      navigate("/sign-up");
+      return;
     }
-  }, [session]);
-
-  // 1) Fetch shifts
-  useEffect(() => {
-    const fetchShifts = async () => {
+    (async () => {
+      setLoading(true);
       try {
-        const { data, error } = await supabase.from("shift").select("*");
-        if (error) throw error;
-        setShifts(data || []);
-      } catch (err: any) {
-        console.error("Error fetching shifts:", err.message);
-      }
-    };
-    fetchShifts();
-  }, []);
+        // Get current user
+        const { data: u, error: ue } = await supabase.auth.getUser();
+        if (ue || !u?.user) throw new Error("Not authenticated");
 
-  // 2) Fetch teacher row
-  useEffect(() => {
-    const fetchTeacherData = async () => {
-      try {
-        setLoading(true);
-
-        const { data: userData, error: userError } = await supabase.auth.getUser();
-        if (userError || !userData?.user) {
-          setError("User not authenticated. Please log in.");
-          setLoading(false);
-          return;
-        }
-
-        const { data: profileRow, error: profileError } = await supabase
+        // Fetch profile to get staffID
+        const { data: p, error: pe } = await supabase
           .from("profiles")
-          .select("role, password, school")
-          .eq("id", userData.user.id)
-          .maybeSingle();
+          .select("role, staffID")
+          .eq("id", u.user.id)
+          .single();
+        if (pe || !p || p.role !== "Staff") throw new Error("Unauthorized");
+        setStaffID(p.staffID);
 
-        if (profileError || !profileRow) {
-          setError("Failed to retrieve profile or not a teacher.");
-          setLoading(false);
-          return;
-        }
-        if (profileRow.role !== "Teacher") {
-          setError("You are not authorized. Only role=Teacher is allowed here.");
-          setLoading(false);
-          return;
-        }
-
-        const teacherID = profileRow.password;
-        const schoolName = profileRow.school;
-        setSchool(schoolName || "");
-
-        const { data: teacherRow, error: teacherError } = await supabase
-          .from("teacher")
+        // Fetch attendance row
+        const { data: row, error: re } = await supabase
+          .from("attendance")
           .select("*")
-          .eq("teacherID", teacherID)
-          .eq("school", schoolName)
-          .maybeSingle();
+          .eq("staffID", p.staffID)
+          .single();
+        if (re || !row) throw new Error("No attendance record");
 
-        if (teacherError || !teacherRow) {
-          setError("No teacher record found for your ID & school.");
-          setLoading(false);
-          return;
+        setStaffName(row.staffName);
+
+        // Build arrays for each day
+        const inA: (string | null)[] = [];
+        const outA: (string | null)[] = [];
+        const sb: (string | null)[] = [];
+        const eb: (string | null)[] = [];
+        for (let d = 1; d <= daysInMonth; d++) {
+          inA.push(row[`in${d}`] || null);
+          outA.push(row[`out${d}`] || null);
+          sb.push(row[`startBreak${d}`] || null);
+          eb.push(row[`endBreak${d}`] || null);
         }
-
-        setTeacherName(teacherRow.teacherName || "");
-        setLoginTime(teacherRow[`in${currentDay}`] || null);
-        setLogoutTime(teacherRow[`out${currentDay}`] || null);
-        setMinLate(teacherRow[`minLate${currentDay}`] ?? 0);
-        setTotalLate(teacherRow.totalLate ?? 0);
-        setPresent(teacherRow.present || 0);
-        setPresentEvening(teacherRow.presentEvening || 0);
-
-        const tempStart: (boolean | null)[] = [];
-        const tempFinish: (boolean | null)[] = [];
-        for (let d = 1; d <= numberOfDays; d++) {
-          tempStart.push(teacherRow[`${d}`] === true ? true : null);
-          tempFinish.push(teacherRow[`e${d}`] === true ? true : null);
-        }
-        setStartAttendance(tempStart);
-        setFinishAttendance(tempFinish);
-
-      } catch (err: any) {
-        console.error("Error fetching teacher data:", err.message);
-        setError(err.message || "Unexpected error.");
+        setInTimes(inA);
+        setOutTimes(outA);
+        setStartBreak(sb);
+        setEndBreak(eb);
+      } catch (e: any) {
+        setError(e.message);
       } finally {
         setLoading(false);
       }
-    };
+    })();
+  }, [session, navigate, daysInMonth]);
 
-    if (session) {
-      fetchTeacherData();
-    }
-  }, [session, currentDay, numberOfDays]);
-
-  useEffect(() => {
-    if (startAttendance.length > 0) {
-      let present = 0, absent = 0;
-      startAttendance.forEach((val) => {
-        if (val === true) present++;
-        else absent++;
-      });
-      setStartPresentCount(present);
-      setStartAbsentCount(absent);
-    }
-
-    if (finishAttendance.length > 0) {
-      let present = 0, absent = 0;
-      finishAttendance.forEach((val) => {
-        if (val === true) present++;
-        else absent++;
-      });
-      setFinishPresentCount(present);
-      setFinishAbsentCount(absent);
-    }
-  }, [startAttendance, finishAttendance]);
-
-  // Filtering shifts
-  const baghdadTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Baghdad" });
-  const baghdadDate = new Date(baghdadTime);
-  const baghdadHour = baghdadDate.getHours();
-
-  console.log("User's school:", school);
-  console.log("Fetched shifts:", shifts);
-
-  const filteredShifts = shifts.filter((sh) => {
-    // Use trimmed comparison for school matching
-    if (sh.school?.trim() !== school?.trim()) return false;
-    if (sh.shift === "Evening" && baghdadHour < 14) return false;
-    return true;
-  });
-
-  const shiftLabel = (sh: any) => `${sh.shift} [${sh.cutOff} - ${sh.earlyOff}]`;
-
-  // Compute monthly counters (omitted for brevity, same as original)
-  const updateMonthlyCounters = async (teacherRow: any, teacherID: string, schoolName: string) => {
-    try {
-      let countStart = 0;
-      for (let i = 1; i <= 31; i++) {
-        if (teacherRow[`${i}`] === true) countStart++;
-      }
-      let countFinish = 0;
-      for (let i = 1; i <= 31; i++) {
-        if (teacherRow[`e${i}`] === true) countFinish++;
-      }
-
-      const updateObj: any = {};
-      let needsUpdate = false;
-      if (countStart !== teacherRow.present) {
-        updateObj.present = countStart;
-        needsUpdate = true;
-      }
-      if (countFinish !== teacherRow.presentEvening) {
-        updateObj.presentEvening = countFinish;
-        needsUpdate = true;
-      }
-
-      if (needsUpdate) {
-        const { error } = await supabase
-          .from("teacher")
-          .update(updateObj)
-          .eq("teacherID", teacherID)
-          .eq("school", schoolName);
-
-        if (!error) {
-          setPresent(countStart);
-          setPresentEvening(countFinish);
-        }
-      }
-    } catch (err: any) {
-      console.error("Error updating monthly counters:", err.message);
-    }
-  };
-
-  const verifySchoolRange = async (schoolName: string) => {
-    const { data: schoolRow, error: schoolErr } = await supabase
-      .from("school")
-      .select("lat, long")
-      .eq("schoolName", schoolName)
-      .maybeSingle();
-
-    if (schoolErr || !schoolRow) {
-      throw new Error(`Could not load lat/long from school table where schoolName='${schoolName}'.`);
-    }
-    if (geolocation.loading) {
-      throw new Error("Geolocation is still loading, please wait...");
-    }
-    if (geolocation.error) {
-      throw new Error(geolocation.error);
-    }
-
-    const distance = getDistanceFromLatLonInMeters(
+  // Returns true if device is within 20m of campus
+  const within20 = useCallback(() => {
+    if (geolocation.loading || geolocation.error) return false;
+    const dist = getDistanceFromLatLonInMeters(
       geolocation.latitude!,
       geolocation.longitude!,
-      schoolRow.lat,
-      schoolRow.long
+      MANUAL_LATITUDE,
+      MANUAL_LONGITUDE
     );
-    if (distance > 250) {
-      throw new Error(
-        `You are over 50m from your assigned school. Distance: ${distance.toFixed(1)}m`
-      );
+    return dist <= 20;
+  }, [geolocation]);
+
+  // Persist a single field update
+  const updateDay = async (field: string, value: string) => {
+    await supabase
+      .from("attendance")
+      .update({ [field]: value })
+      .eq("staffID", staffID);
+  };
+
+  // Update local state arrays
+  const updateLocal = (
+    arr: (string | null)[],
+    setter: React.Dispatch<React.SetStateAction<(string | null)[]>>,
+    day: number,
+    val: string
+  ) => {
+    const copy = [...arr];
+    copy[day - 1] = val;
+    setter(copy);
+  };
+
+  // Handle Login / Logout / Break start/end
+  const handleAction = async (
+    type: "in" | "out" | "startBreak" | "endBreak"
+  ) => {
+    if (!within20()) {
+      alert("You must be within 20 m of pharmacy.");
+      return;
     }
-  };
 
-  const findShiftByLabel = (label: string) => {
-    return filteredShifts.find((sh) => shiftLabel(sh) === label) || null;
-  };
-
-  // handleLogin function (same as original)
-  const handleLogin = async () => {
-    try {
-      if (!selectedShift) {
-        alert("Please select a shift first.");
-        return;
-      }
-      await verifySchoolRange(school);
-      const chosenShift = findShiftByLabel(selectedShift);
-      if (!chosenShift) {
-        throw new Error("Invalid shift selection.");
-      }
-      const [cutOffHour, cutOffMin] = chosenShift.cutOff.split(":").map(Number);
-      const nowBaghdad = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Baghdad" }));
-      const cutOffTime = new Date(nowBaghdad);
-      cutOffTime.setHours(cutOffHour, cutOffMin, 0, 0);
-      const isLate = nowBaghdad > cutOffTime;
-
-      const userRes = await supabase.auth.getUser();
-      if (!userRes.data?.user) throw new Error("User not found in session.");
-      const userId = userRes.data.user.id;
-
-      const { data: profileRow } = await supabase
-        .from("profiles")
-        .select("password, school")
-        .eq("id", userId)
-        .maybeSingle();
-      if (!profileRow) throw new Error("No teacher profile found.");
-
-      const teacherID = profileRow.password;
-      const schoolName = profileRow.school;
-
-      const { data: teacherRow, error: tErr } = await supabase
-        .from("teacher")
-        .select("*")
-        .eq("teacherID", teacherID)
-        .eq("school", schoolName)
-        .maybeSingle();
-
-      if (tErr || !teacherRow) {
-        throw new Error("Teacher row not found for login.");
-      }
-
-      const dayStr = currentDay.toString();
-      if (teacherRow[dayStr] === true) {
-        throw new Error("You have already signed in today.");
-      }
-      if (teacherRow[`in${dayStr}`]) {
-        throw new Error("Login time for today is already recorded.");
-      }
-
-      const updateObj: any = {};
-      updateObj[dayStr] = true;
-
-      const baghdadTimeStr = nowBaghdad.toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-        timeZone: "Asia/Baghdad",
-      });
-      updateObj[`in${dayStr}`] = baghdadTimeStr;
-
-      let minutesLate = 0;
-      if (isLate) {
-        const diffMs = nowBaghdad.getTime() - cutOffTime.getTime();
-        minutesLate = Math.floor(diffMs / 60000);
-      }
-      updateObj[`minLate${dayStr}`] = minutesLate.toString();
-
-      const oldTotalLate = parseInt(teacherRow.totalLate || "0", 10);
-      const newTotalLate = oldTotalLate + minutesLate;
-      updateObj.totalLate = newTotalLate.toString();
-
-      const { error: updErr } = await supabase
-        .from("teacher")
-        .update(updateObj)
-        .eq("teacherID", teacherID)
-        .eq("school", schoolName);
-
-      if (updErr) throw new Error("Failed to record login: " + updErr.message);
-
-      setLoginTime(baghdadTimeStr);
-      setMinLate(minutesLate);
-      setTotalLate(newTotalLate);
-
-      const copy = [...startAttendance];
-      copy[currentDay - 1] = true;
-      setStartAttendance(copy);
-
-      const { data: afterRow } = await supabase
-        .from("teacher")
-        .select("*")
-        .eq("teacherID", teacherID)
-        .eq("school", schoolName)
-        .maybeSingle();
-
-      if (afterRow) {
-        await updateMonthlyCounters(afterRow, teacherID, schoolName);
-      }
-
-      alert("Login successful.");
-    } catch (err: any) {
-      alert(err.message);
-      console.error("Login error:", err.message);
+    // Prevent double presses
+    const already =
+      (type === "in" && inTimes[D - 1]) ||
+      (type === "out" && outTimes[D - 1]) ||
+      (type === "startBreak" && startBreak[D - 1]) ||
+      (type === "endBreak" && endBreak[D - 1]);
+    if (already) {
+      const what =
+        type === "in"
+          ? "login"
+          : type === "out"
+          ? "logout"
+          : type === "startBreak"
+          ? "break start"
+          : "break end";
+      alert(`You've already recorded ${what} today.`);
+      return;
     }
-  };
 
-  // handleLogout function (same as original)
-  const handleLogout = async () => {
-    try {
-      if (!selectedShift) {
-        alert("Please select a shift first.");
-        return;
-      }
-      await verifySchoolRange(school);
-      const chosenShift = findShiftByLabel(selectedShift);
-      if (!chosenShift) {
-        throw new Error("Invalid shift selection for logout.");
-      }
-
-      const [eoHour, eoMin] = chosenShift.earlyOff.split(":").map(Number);
-      const nowBaghdad = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Baghdad" }));
-      const earlyOffTime = new Date(nowBaghdad);
-      earlyOffTime.setHours(eoHour, eoMin, 0, 0);
-
-      const cutoffLogout = new Date(earlyOffTime.getTime() - 30 * 60000);
-      if (nowBaghdad < cutoffLogout) {
-        throw new Error("Logout 30 mins before shift ends. Thank you!");
-      }
-
-      const userRes = await supabase.auth.getUser();
-      if (!userRes.data?.user) throw new Error("User not found in session.");
-      const userId = userRes.data.user.id;
-
-      const { data: profileRow } = await supabase
-        .from("profiles")
-        .select("password, school")
-        .eq("id", userId)
-        .maybeSingle();
-
-      if (!profileRow) throw new Error("No teacher profile found for logout.");
-
-      const teacherID = profileRow.password;
-      const schoolName = profileRow.school;
-
-      const { data: teacherRow, error: tErr } = await supabase
-        .from("teacher")
-        .select("*")
-        .eq("teacherID", teacherID)
-        .eq("school", schoolName)
-        .maybeSingle();
-
-      if (tErr || !teacherRow) {
-        throw new Error("Teacher not found for logout. Contact Admin");
-      }
-
-      const eDayStr = `e${currentDay}`;
-
-      const updateObj: any = {};
-      updateObj[eDayStr] = true;
-
-      const baghdadTimeStr = nowBaghdad.toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-        timeZone: "Asia/Baghdad",
-      });
-      updateObj[`out${currentDay}`] = baghdadTimeStr;
-
-      const { error: updErr } = await supabase
-        .from("teacher")
-        .update(updateObj)
-        .eq("teacherID", teacherID)
-        .eq("school", schoolName);
-
-      if (updErr) {
-        throw new Error("Failed to record logout: " + updErr.message);
-      }
-
-      setLogoutTime(baghdadTimeStr);
-
-      const copy = [...finishAttendance];
-      copy[currentDay - 1] = true;
-      setFinishAttendance(copy);
-
-      const { data: afterRow } = await supabase
-        .from("teacher")
-        .select("*")
-        .eq("teacherID", teacherID)
-        .eq("school", schoolName)
-        .maybeSingle();
-
-      if (afterRow) {
-        await updateMonthlyCounters(afterRow, teacherID, schoolName);
-      }
-
-      alert("Logout successful.");
-    } catch (err: any) {
-      alert(err.message);
-      console.error("Logout error:", err.message);
+    // Enforce sequence
+    if ((type === "out" && !inTimes[D - 1]) || (type === "endBreak" && !startBreak[D - 1])) {
+      alert(type === "out" ? "You must log in first." : "You must start break first.");
+      return;
     }
+
+    // Confirm with user
+    const prompts = {
+      in: "Log in now?",
+      out: "Log out now?",
+      startBreak: "Start break now?",
+      endBreak: "End break now?",
+    } as const;
+    if (!window.confirm(prompts[type])) return;
+
+    // Record current time
+    const now = new Date().toLocaleTimeString("en-GB", {
+      hour12: false,
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    await updateDay(`${type}${D}`, now);
+
+    // Reflect local state
+    if (type === "in") updateLocal(inTimes, setInTimes, D, now);
+    if (type === "out") updateLocal(outTimes, setOutTimes, D, now);
+    if (type === "startBreak") updateLocal(startBreak, setStartBreak, D, now);
+    if (type === "endBreak") updateLocal(endBreak, setEndBreak, D, now);
+
+    setShowUpdateMsg(true);
+    setTimeout(() => setShowUpdateMsg(false), 3000);
   };
 
-  if (loading) {
+  // Recalculate total hours worked
+  useEffect(() => {
+    let total = 0;
+    inTimes.forEach((inT, idx) => {
+      const outT = outTimes[idx];
+      if (inT && outT) {
+        const [ih, im] = inT.split(":").map(Number);
+        const [oh, om] = outT.split(":").map(Number);
+        const sb = startBreak[idx] || "00:00";
+        const eb = endBreak[idx] || "00:00";
+        const [sh, sm] = sb.split(":").map(Number);
+        const [eh, em] = eb.split(":").map(Number);
+        const minsWorked =
+          oh * 60 +
+          om -
+          (ih * 60 + im) -
+          ((eh * 60 + em) - (sh * 60 + sm));
+        total += Math.max(minsWorked, 0) / 60;
+      }
+    });
+    setTotalHours(Math.round(total * 100) / 100);
+  }, [inTimes, outTimes, startBreak, endBreak]);
+
+  // Loading / Error states
+  if (loading)
     return (
-      <Container className="staffpage-container vh-100 d-flex flex-column align-items-center justify-content-center">
-        <Spinner animation="border" variant="primary" role="status" />
-        <p className="mt-3">Loading...</p>
+      <Container className="d-flex vh-100 justify-content-center align-items-center">
+        <Spinner /> <span className="ms-2">Loading…</span>
       </Container>
     );
-  }
-
-  if (error) {
+  if (error)
     return (
-      <Container className="staffpage-container vh-100 d-flex flex-column align-items-center justify-content-center">
+      <Container className="d-flex vh-100 justify-content-center align-items-center">
         <Alert variant="danger">{error}</Alert>
       </Container>
     );
-  }
 
-  const loginData = {
-    labels: ["Present (Login)", "Absent (Login)"],
-    datasets: [
-      {
-        label: "Login Attendance",
-        data: [startPresentCount, startAbsentCount],
-        backgroundColor: ["#007bff", "#ff4d4d"],
-        hoverBackgroundColor: ["#0056b3", "#cc0000"],
-      },
-    ],
-  };
-  const logoutData = {
-    labels: ["Present (Logout)", "Absent (Logout)"],
-    datasets: [
-      {
-        label: "Logout Attendance",
-        data: [finishPresentCount, finishAbsentCount],
-        backgroundColor: ["#50B755", "#ff4d4d"],
-        hoverBackgroundColor: ["#379d3a", "#cc0000"],
-      },
-    ],
-  };
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false },
-      tooltip: { enabled: true },
-    },
+  // Pie chart data
+  const presentCount = inTimes.filter(Boolean).length;
+  const absentCount = daysInMonth - presentCount;
+  const pieData = {
+    labels: ["Present", "Absent"],
+    datasets: [{ data: [presentCount, absentCount], backgroundColor: ["#007bff", "#ff4d4d"] }],
   };
 
-  const getCurrentMonthYear = () => {
-    return `${monthNames[today.getMonth()]} ${today.getFullYear()}`;
-  };
+  // Format hours and minutes
+  const hrs = Math.floor(totalHours);
+  const mins = Math.round((totalHours - hrs) * 60);
 
   return (
-    <Container fluid className="staffpage-container py-4" >
+    <Container fluid className="staffpage-container py-4">
       <Row className="justify-content-center">
         <Col xs={12} md={10} lg={8}>
-          <div className="bg-dark text-white p-4 rounded " style={{ boxShadow: "0 1px 20px 1px #007BA7" }}>
-            <div className="d-flex flex-column flex-md-row justify-content-between align-items-start mb-3">
+          <div className="bg-dark p-4 rounded shadow">
+            {/* Header */}
+            <div className="header-container d-flex justify-content-between align-items-center mb-3">
               <div>
-                <h2 className="text-primary mb-1">
-                  {teacherName || "Unknown Teacher"}
-                </h2>
-                <p className="mb-0">
-                  <strong>School:</strong> {school}
-                </p>
-                <p className="current-month-year">{getCurrentMonthYear()}</p>
-              </div>
-              <div className="d-flex flex-row align-items-end mt-3 mt-md-0">
-                {/* <button
-                  className="teacher-icon-button me-2"
-                  onClick={() => navigate("/teacherdashboard")}
-                  title="Go to Teacher Dashboard"
-                >
-                  🎓
-                </button> */}
-                <button
-                  className="teacher-icon-button3 me-2"
-                  onClick={() => navigate("/")}
-                  title="Go to Home Page"
-                >
-                  🏠
-                </button>
-                <button
-                  className="teacher-icon-button4 "
-                  onClick={() => navigate("/attendance")}
-                  title="Go to Student Attendance Page"
-                >
-                   📅
-                </button>
-              </div>
-            </div>
-
-            <div className="mb-3">
-              <Form.Group>
-                <Form.Label>Select Shift:</Form.Label>
-                <Form.Control
-                  as="select"
-                  value={selectedShift}
-                  onChange={(e) => setSelectedShift(e.target.value)}
-                >
-                  <option value="">-- Select a Shift --</option>
-                  {filteredShifts.map((sh) => {
-                    const lbl = shiftLabel(sh);
-                    return (
-                      <option key={lbl} value={lbl}>
-                        {lbl}
-                      </option>
-                    );
-                  })}
-                </Form.Control>
-              </Form.Group>
-            </div>
-
-            <div className="stats-container mb-4">
-              <Row>
-                <Col xs={6} md={3} className="mb-2">
-                  <div
-                    className="stat-box clickable"
-                    title="Click to Login"
-                    onClick={handleLogin}
-                  >
-                    <span className="stat-label">Login</span>
-                    <span className="stat-value">{loginTime || "---"}</span>
-                  </div>
-                </Col>
-                <Col xs={6} md={3} className="mb-2">
-                  <div
-                    className="stat-box clickable"
-                    title="Click to Logout"
-                    onClick={handleLogout}
-                  >
-                    <span className="stat-label">Logout</span>
-                    <span className="stat-value">{logoutTime || "---"}</span>
-                  </div>
-                </Col>
-                <Col xs={6} md={3} className="mb-2">
-                  <div className="stat-box">
-                    <span className="stat-label">Minutes Late</span>
-                    <span className="stat-value">
-                      {minLate !== null ? minLate : "---"}
-                    </span>
-                  </div>
-                </Col>
-                <Col xs={6} md={3} className="mb-2">
-                  <div className="stat-box">
-                    <span className="stat-label">Total Late</span>
-                    <span
-                      className="stat-value"
-                      style={{
-                        color: totalLate === 0 ? "#50B755" : "#ff4d4d",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {totalLate !== null ? totalLate : "---"}
-                    </span>
-                  </div>
-                </Col>
-              </Row>
-            </div>
-
-            <Row className="justify-content-center">
-              <Col xs={12} md={5} lg={4} className="mb-4 d-flex flex-column align-items-center">
-                <h5 className="chart-title" style={{ backgroundColor: "#007bff" }}>
-                  Login Attendance
-                </h5>
-                <div className="pie-container">
-                  <Pie data={loginData} options={chartOptions} />
-                  <div className="pie-center-text">
-                    {startPresentCount + startAbsentCount > 0
-                      ? (
-                          (startPresentCount /
-                            (startPresentCount + startAbsentCount)) *
-                          100
-                        ).toFixed(1)
-                      : 0
-                    }%
-                  </div>
+                <h2 className="text-primary2 mb-1">{staffName}</h2>
+                <div className="current-month-year">
+                  <strong>ID:</strong> {staffID} | {today.toLocaleDateString()}
                 </div>
+              </div>
+              <Button
+                variant="link"
+                className="home-button"
+                onClick={() => navigate("/login")}
+              >
+                🏠
+              </Button>
+            </div>
+
+            {/* Action Buttons */}
+            <Row className="mb-3">
+              <Col>
+                <Button
+                  variant="primary"
+                  className="w-100 d-flex flex-column align-items-center"
+                  onClick={() => handleAction("in")}
+                >
+                  <span>Login</span>
+                  <span className="time-text">{inTimes[D - 1] || "--:--"}</span>
+                </Button>
               </Col>
-              <Col xs={12} md={5} lg={4} className="mb-4 d-flex flex-column align-items-center">
-                <h5 className="chart-title" style={{ backgroundColor: "#50B755" }}>
-                  Logout Attendance
-                </h5>
-                <div className="pie-container">
-                  <Pie data={logoutData} options={chartOptions} />
-                  <div className="pie-center-text">
-                    {finishPresentCount + finishAbsentCount > 0
-                      ? (
-                          (finishPresentCount /
-                            (finishPresentCount + finishAbsentCount)) *
-                          100
-                        ).toFixed(1)
-                      : 0
-                    }%
-                  </div>
-                </div>
+              <Col>
+                <Button
+                  variant="primary"
+                  className="w-100 d-flex flex-column align-items-center"
+                  onClick={() => handleAction("out")}
+                >
+                  <span>Logout</span>
+                  <span className="time-text">{outTimes[D - 1] || "--:--"}</span>
+                </Button>
+              </Col>
+            </Row>
+            <Row className="mb-4">
+              <Col>
+                <Button
+                  variant="secondary"
+                  className="w-100 d-flex flex-column align-items-center"
+                  onClick={() => handleAction("startBreak")}
+                  disabled={!!startBreak[D - 1]}
+                >
+                  <span>Start Break</span>
+                  <span className="time-text">{startBreak[D - 1] || "--:--"}</span>
+                </Button>
+              </Col>
+              <Col>
+                <Button
+                  variant="secondary"
+                  className="w-100 d-flex flex-column align-items-center"
+                  onClick={() => handleAction("endBreak")}
+                  disabled={!!endBreak[D - 1]}
+                >
+                  <span>End Break</span>
+                  <span className="time-text">{endBreak[D - 1] || "--:--"}</span>
+                </Button>
               </Col>
             </Row>
 
-            <Row className="justify-content-center mb-4">
-              <Col xs={12} md={6} lg={4} className="d-flex justify-content-center">
-                <div className="present-container p-4 rounded shadow">
-                  <Row>
-                    <Col xs={6} className="text-center">
-                      <h6>Login (Days)</h6>
-                      <p className="present-count">{present}</p>
-                    </Col>
-                    <Col xs={6} className="text-center">
-                      <h6>Logout (Days)</h6>
-                      <p className="present-evening-count">{presentEvening}</p>
-                    </Col>
-                  </Row>
-                </div>
-              </Col>
+            {/* Total Hours */}
+            <div className="hours-box text-center mb-3">
+              <h5>Total Hours Worked</h5>
+              <div className="hours-value">{hrs}h {mins}m</div>
+            </div>
+            {showUpdateMsg && <Alert variant="info">Updated!</Alert>}
+
+            {/* Pie Chart */}
+            <div style={{ height: 240 }} className="mb-4">
+              <Pie data={pieData} options={{ responsive: true, maintainAspectRatio: false }} />
+            </div>
+
+            {/* Days Present / Absent */}
+            <Row className="mb-4 text-center">
+              <Col className="text-success">Days Present: {presentCount}</Col>
+              <Col className="text-danger">Days Absent: {absentCount}</Col>
             </Row>
 
+            {/* Attendance Table */}
             <div className="table-responsive">
-              <Table bordered hover className="text-center align-middle w-100 table-custom">
+              <Table bordered hover className="table-custom text-center">
                 <thead>
                   <tr>
-                    <th>Login</th>
-                    <th>Logout</th>
-                    <th>Day</th>
-                    <th>Start</th>
-                    <th>Finish</th>
+                    <th className="th-day">Day</th>
+                    <th className="th-morning">In</th>
+                    <th className="th-evening">Out</th>
+                    <th className="th-morning">SB</th>
+                    <th className="th-evening">EB</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {daysArray.map((day) => {
-                    const startVal = startAttendance[day - 1];  
-                    const finishVal = finishAttendance[day - 1]; 
-
-                    return (
-                      <tr key={day}>
-                        <td>
-                          {day === currentDay ? (loginTime || "---") : "---"}
-                        </td>
-                        <td>
-                          {day === currentDay ? (logoutTime || "---") : "---"}
-                        </td>
-                        <td className="fw-bold">{day}</td>
-                        <td>{startVal === true ? "✅" : "❌"}</td>
-                        <td>{finishVal === true ? "✅" : "❌"}</td>
-                      </tr>
-                    );
-                  })}
+                  {daysArray.map((d) => (
+                    <tr key={d}>
+                      <td className="fw-bold">{d}</td>
+                      <td>{inTimes[d - 1] || "—"}</td>
+                      <td>{outTimes[d - 1] || "—"}</td>
+                      <td>{startBreak[d - 1] || "—"}</td>
+                      <td>{endBreak[d - 1] || "—"}</td>
+                    </tr>
+                  ))}
                 </tbody>
               </Table>
             </div>
-            <footer className="footer">
-              <Container>
-                <Row>
-                  <Col className="text-center">
-                    &copy; {new Date().getFullYear()} SchoolMood. All rights reserved.
-                  </Col>
-                </Row>
-              </Container>
-            </footer>
-
           </div>
         </Col>
       </Row>
@@ -742,6 +729,250 @@ function StaffPage() {
 export default StaffPage;
 
 
+// import React, { useState, useEffect } from "react";
+// import { useNavigate } from "react-router-dom";
+// import supabase from "../../supabase";
+// import { useSession } from "../../context/SessionContext";
+
+// import { Pie } from "react-chartjs-2";
+// import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+
+// import { Container, Row, Col, Table, Spinner, Alert, Button } from "react-bootstrap";
+
+// import "./StaffPage.css"; // Our custom CSS
+
+// // ----------------------------------------------------------------
+// // You can set your desired location coordinates here:
+// const MANUAL_LATITUDE = 52.498084;   // Provided latitude
+// const MANUAL_LONGITUDE = -1.706501;  // Provided longitude
+// // ----------------------------------------------------------------
+// ChartJS.register(ArcElement, Tooltip, Legend);
+
+// function StaffPage() {
+//   const { session } = useSession();
+//   const navigate = useNavigate();
+
+//   // Basic state
+//   const [staffName, setStaffName] = useState("");
+//   const [loginTime, setLoginTime] = useState<string | null>(null);
+//   const [logoutTime, setLogoutTime] = useState<string | null>(null);
+//   const [minLate, setMinLate] = useState<number>(0);
+//   const [totalLate, setTotalLate] = useState<number>(0);
+
+//   // Columns for days in the month (1..31)
+//   const today = new Date();
+//   const currentMonth = today.getMonth();
+//   const currentYear = today.getFullYear();
+//   const monthNames = [
+//     "January","February","March","April","May","June",
+//     "July","August","September","October","November","December",
+//   ] as const;
+//   const currentMonthName = monthNames[currentMonth];
+//   const numberOfDays = new Date(currentYear, currentMonth + 1, 0).getDate();
+//   const daysArray = Array.from({ length: numberOfDays }, (_, i) => i + 1);
+
+//   // We'll store morning and evening attendance T/F for each day
+//   const [morningAttendance, setMorningAttendance] = useState<(boolean | null)[]>([]);
+//   const [eveningAttendance, setEveningAttendance] = useState<(boolean | null)[]>([]);
+
+//   // Totals
+//   const [present, setPresent] = useState<number>(0);
+//   const [presentEvening, setPresentEvening] = useState<number>(0);
+
+//   // Loading & error
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+
+//   // Pie chart counts
+//   const [morningPresentCount, setMorningPresentCount] = useState(0);
+//   const [morningAbsentCount, setMorningAbsentCount] = useState(0);
+//   const [eveningPresentCount, setEveningPresentCount] = useState(0);
+//   const [eveningAbsentCount, setEveningAbsentCount] = useState(0);
+
+//   useEffect(() => {
+//     if (!session) {
+//       navigate("/sign-up");
+//       return;
+//     }
+
+//     const fetchData = async () => {
+//       try {
+//         // get user
+//         const { data: userData, error: userError } = await supabase.auth.getUser();
+//         if (userError || !userData?.user) throw new Error("Not authenticated");
+
+//         // get profile role & staffID
+//         const { data: profile, error: profErr } = await supabase
+//           .from("profiles")
+//           .select("role, staffID")
+//           .eq("id", userData.user.id)
+//           .single();
+//         if (profErr || !profile || profile.role !== "Staff") {
+//           throw new Error("Unauthorized");
+//         }
+
+//         // get attendance row
+//         const { data: row, error: attErr } = await supabase
+//           .from("attendance")
+//           .select("*")
+//           .eq("staffID", profile.staffID)
+//           .single();
+//         if (attErr || !row) throw new Error("No attendance record");
+
+//         // set header stats
+//         setStaffName(row.staffName);
+//         setLoginTime(row[`in${today.getDate()}`] || null);
+//         setLogoutTime(row[`out${today.getDate()}`] || null);
+//         setMinLate(row[`minLate${today.getDate()}`] ?? 0);
+//         setTotalLate(row.totalLate ?? 0);
+//         setPresent(row.present);
+//         setPresentEvening(row.presentEvening);
+
+//         // build attendance arrays
+//         const m: (boolean | null)[] = [];
+//         const e: (boolean | null)[] = [];
+//         for (let d = 1; d <= numberOfDays; d++) {
+//           m.push(row[`${d}`] === true ? true : null);
+//           e.push(row[`e${d}`] === true ? true : null);
+//         }
+//         setMorningAttendance(m);
+//         setEveningAttendance(e);
+//       } catch (err: any) {
+//         console.error(err);
+//         setError(err.message);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchData();
+//   }, [session, navigate, numberOfDays, today]);
+
+//   // recalc pie counts
+//   useEffect(() => {
+//     let mp = 0, ma = 0;
+//     morningAttendance.forEach(v => v ? mp++ : ma++);
+//     setMorningPresentCount(mp); setMorningAbsentCount(ma);
+
+//     let ep = 0, ea = 0;
+//     eveningAttendance.forEach(v => v ? ep++ : ea++);
+//     setEveningPresentCount(ep); setEveningAbsentCount(ea);
+//   }, [morningAttendance, eveningAttendance]);
+
+//   // chart data
+//   const morningData = {
+//     labels: ["Present (M)", "Absent (M)"],
+//     datasets: [{ data: [morningPresentCount, morningAbsentCount], backgroundColor: ["#007bff","#ff4d4d"] }]
+//   };
+//   const eveningData = {
+//     labels: ["Present (E)", "Absent (E)"],
+//     datasets: [{ data: [eveningPresentCount, eveningAbsentCount], backgroundColor: ["#50B755","#ff4d4d"] }]
+//   };
+//   const chartOpts = { responsive:true, maintainAspectRatio:false };
+
+//   // nav buttons
+//   const gotoDashboard = () => navigate("/teacherdashboard");
+//   const gotoAttendance = () => navigate("/attendance");
+
+//   const getCurrentMonthYear = () => `${currentMonthName} ${currentYear}`;
+
+//   if (loading) {
+//     return (
+//       <Container className="staffpage-container vh-100 d-flex flex-column align-items-center justify-content-center">
+//         <Spinner animation="border" /><p className="mt-3">Loading...</p>
+//       </Container>
+//     );
+//   }
+//   if (error) {
+//     return (
+//       <Container className="staffpage-container vh-100 d-flex flex-column align-items-center justify-content-center">
+//         <Alert variant="danger">{error}</Alert>
+//       </Container>
+//     );
+//   }
+
+//   return (
+//     <Container fluid className="staffpage-container py-4">
+//       <Row className="justify-content-center">
+//         <Col xs={12} md={10} lg={8}>
+//           <div className="bg-dark text-white p-4 rounded shadow">
+//             {/* Header */}
+//             <div className="d-flex justify-content-between align-items-start mb-3">
+//               <div>
+//                 <h2 className="text-primary mb-1">{staffName}</h2>
+//                 <p className="current-month-year">{getCurrentMonthYear()}</p>
+//               </div>
+//               <div className="d-flex">
+//                 <Button variant="link" className="text-white me-2" onClick={gotoDashboard}>🎓</Button>
+//                 <Button variant="link" className="text-white me-2" onClick={gotoAttendance}>📃</Button>
+//                 <Button variant="link" className="text-white" onClick={() => navigate("/")}>🏠</Button>
+//               </div>
+//             </div>
+
+//             {/* Stats */}
+//             <div className="stats-container mb-4">
+//               <Row>
+//                 <Col xs={6} md={3}><div className="stat-box"><span className="stat-label">Login</span><span className="stat-value">{loginTime||"---"}</span></div></Col>
+//                 <Col xs={6} md={3}><div className="stat-box"><span className="stat-label">Logout</span><span className="stat-value">{logoutTime||"---"}</span></div></Col>
+//                 <Col xs={6} md={3}><div className="stat-box"><span className="stat-label">Min Late</span><span className="stat-value">{minLate}</span></div></Col>
+//                 <Col xs={6} md={3}><div className="stat-box"><span className="stat-label">Total Late</span><span className="stat-value" style={{ color: totalLate===0?"#50B755":"#ff4d4d" }}>{totalLate}</span></div></Col>
+//               </Row>
+//             </div>
+
+//             {/* Pie charts */}
+//             <Row className="justify-content-center">
+//               <Col xs={12} md={5} lg={4} className="mb-4 text-center">
+//                 <h5 className="chart-title bg-primary">Morning</h5>
+//                 <div className="pie-container"><Pie data={morningData} options={chartOpts}/>
+//                   <div className="pie-center-text">{((morningPresentCount/(morningPresentCount+morningAbsentCount||1))*100).toFixed(1)}%</div>
+//                 </div>
+//               </Col>
+//               <Col xs={12} md={5} lg={4} className="mb-4 text-center">
+//                 <h5 className="chart-title bg-success">Evening</h5>
+//                 <div className="pie-container"><Pie data={eveningData} options={chartOpts}/>
+//                   <div className="pie-center-text">{((eveningPresentCount/(eveningPresentCount+eveningAbsentCount||1))*100).toFixed(1)}%</div>
+//                 </div>
+//               </Col>
+//             </Row>
+
+//             {/* Totals */}
+//             <Row className="justify-content-center mb-4">
+//               <Col xs={12} md={6} lg={4} className="d-flex justify-content-center">
+//                 <div className="present-container p-4 rounded shadow text-center">
+//                   <Row>
+//                     <Col xs={6}><h6>Morning Days</h6><p className="present-count">{present}</p></Col>
+//                     <Col xs={6}><h6>Evening Days</h6><p className="present-evening-count">{presentEvening}</p></Col>
+//                   </Row>
+//                 </div>
+//               </Col>
+//             </Row>
+
+//             {/* Table */}
+//             <div className="table-responsive">
+//               <Table bordered hover className="text-center align-middle table-custom">
+//                 <thead>
+//                   <tr><th>Day</th><th>M</th><th>E</th></tr>
+//                 </thead>
+//                 <tbody>
+//                   {daysArray.map(day => (
+//                     <tr key={day}>
+//                       <td className="fw-bold">{day}</td>
+//                       <td>{morningAttendance[day-1] ? "✅" : "❌"}</td>
+//                       <td>{eveningAttendance[day-1] ? "✅" : "❌"}</td>
+//                     </tr>
+//                   ))}
+//                 </tbody>
+//               </Table>
+//             </div>
+
+//           </div>
+//         </Col>
+//       </Row>
+//     </Container>
+//   );
+// }
+
+// export default StaffPage;
 // import React, { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
 // import supabase from "../../supabase";
@@ -1034,6 +1265,7 @@ export default StaffPage;
 //                   📃
 //                 </button>
 //                 {/* Optional: HomePage Button */}
+
 //                 <button
 //                   className="teacher-icon-button3"
 //                   onClick={() => navigate("/")}

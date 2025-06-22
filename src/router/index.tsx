@@ -151,6 +151,7 @@ import BookAppointment from "../pages/auth/BookAppointment.tsx";
 import SignInPage from "../pages/auth/SignInPage.tsx";
 import SignUpPage from "../pages/auth/SignUpPage.tsx";
 import PickSchoolPage from "../pages/auth/PickSchoolPage.tsx";
+import SetupProfilePage from "../pages/auth/SetupProfilePage.tsx";
 
 import ProtectedPage from "../pages/ProtectedPage.tsx";
 import NotFoundPage from "../pages/404Page.tsx";
@@ -172,6 +173,7 @@ import ProgressGraph from "../pages/student/ProgressGraph.tsx";
 import TotalAverage from "../pages/student/TotalAverage.tsx";
 import StudentFeeGraph from "../pages/student/StudentFeeGraph.tsx";
 import StaffPage from "../pages/teacher/StaffPage.tsx";
+import BookingBoard from "../pages/teacher/BookingBoard.tsx";
 
 const router = createBrowserRouter([
   {
@@ -224,14 +226,27 @@ const router = createBrowserRouter([
         element: <SignUpPage />,
       },
       {
+        path: "/login",
+        element: <LoginPage />,
+      },
+      {
         path: "/pick-school",
         element: <PickSchoolPage />,
+      },
+     
+      {
+        path: "/setup-profile",
+        element: <SetupProfilePage />,
       },
      
       //ADMIN
       {
         path: "/dashboard",
         element: <DashBoard />,
+      },
+      {
+        path: "/bookings",
+        element: <BookingBoard />,
       },
       {
         path: "/dashboard2",
