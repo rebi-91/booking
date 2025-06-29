@@ -417,7 +417,6 @@ const chevronDown =
 // Titles that should show a "Coming Soon" badge and be non-clickable
 const COMING_SOON = new Set([
   'Hair Loss',
-  'Vitamin B12 Injection',
   'Yellow Fever',
 ]);
 
@@ -459,18 +458,18 @@ const POPULAR_SERVICES = [
       'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fmorning-after-pill.webp&w=640&q=75',
   },
   {
-    title: 'Flu Vaccination',
-    link: '/book/15',
-    sub: 'Stay protected this season with a quick flu jab.',
+    title: 'Ear Wax Removal',
+    link: '/book/19',
+    sub: 'Safe microsuction for clear, comfortable ears.',
     img:
-      'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fflu-vaccine.webp&w=640&q=75',
+    'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/123156/AHHct1yZUR.webp',
   },
   {
-    title: 'Hair Loss',
-    link: '/book/7',
-    sub: 'Support for healthier, fuller hair.',
+    title: 'Travel Vaccinations',
+    link: '/book/4',
+    sub: 'Comprehensive vaccine service for your trip.',
     img:
-      'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fhair-loss-2.webp&w=640&q=75',
+      'https://clinic-digital.lon1.cdn.digitaloceanspaces.com/100/530057/yyrgMObVYh.webp',
   },
   {
     title: 'Vitamin B12 Injection',
