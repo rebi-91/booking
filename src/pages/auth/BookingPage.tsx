@@ -59,7 +59,7 @@ const sampleServices: Record<number, Service> = {
     title: 'Vitamin B12 Injection',
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: '£10.00',
+    price: '£30.00',
   },
   7: {
     id: 7,
@@ -87,7 +87,7 @@ const sampleServices: Record<number, Service> = {
     title: 'Period delay',
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: '£10.00',
+    price: '£20.00',
   },
   11: {
     id: 11,
@@ -165,7 +165,7 @@ const sampleServices: Record<number, Service> = {
     title: 'Erectile dysfunction',
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: '£20.00',
+    price: 'Sildenafil or Tadalafil - 2 tablets (£10), 4 tablets (£15) and 8 tablets (£25)',
   },
   22: {
     id: 22,
@@ -256,7 +256,7 @@ const sampleServices: Record<number, Service> = {
     title: 'Anti-malarials',
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: 'Prices vary',
+    price: 'Malarone for £40 and Doxycycline for £25',
   },
 };
 

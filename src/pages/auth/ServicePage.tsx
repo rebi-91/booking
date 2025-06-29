@@ -313,7 +313,39 @@ const allServices: Service[] = [
   { id: 31, title: 'Chicken pox',                            img: 'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/706101/svONNg1d06.webp', duration: '20 mins', category: 'Private Service', description: 'Private immunisation against chickenpox.' },
   { id: 32, title: 'Meningitis B',                           img: 'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//meningitis%20b.webp',duration: '20 mins', category: 'Private Service', description: 'Protective dose against meningococcal B infection.' },
   { id: 33, title: 'Shingles (Zostavax)',                    img: 'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//shingles.jpeg',duration: '20 mins', category: 'Private Service', description: 'Live vaccine for shingles prevention in adults.' },
-  { id: 34, title: 'Anti-malarials',                         img: 'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//malariaa.jpeg',duration: '20 mins', category: 'Private Service', description: 'Prescription for 3–4 day anti-malarial regimen.' },
+  { 
+    id: 34, 
+    title: 'Anti-malarials',                         
+    img: 'https://gpcdcgwgkciyogknekwp.supabase.co/storage/v1/object/public/pharmacy//malarials.jpeg',
+    duration: '20 mins', 
+    category: 'Private Service', 
+    description: 'Travel consultation and prescription of the most effective anti-malarial regimen for your destination.' 
+  },
+  { 
+    id: 35, 
+    title: 'Acid Reflux',                         
+    img: 'https://gpcdcgwgkciyogknekwp.supabase.co/storage/v1/object/public/pharmacy//acid%20reflux.jpeg',
+    duration: '20 mins', 
+    category: 'Private Service', 
+    description: 'Personalised prescription to relieve heartburn, indigestion and acid regurgitation.' 
+  },
+  { 
+    id: 36, 
+    title: 'Pain Relief',                         
+    img: 'https://gpcdcgwgkciyogknekwp.supabase.co/storage/v1/object/public/pharmacy//acid%20reflux.jpeg',
+    duration: '20 mins', 
+    category: 'Private Service', 
+    description: 'Personalised prescription to relieve heartburn, indigestion and acid regurgitation.' 
+  },
+  { 
+    id: 37, 
+    title: 'Male pattern baldness (Androgenic Alopecia)',                         
+    img: 'https://gpcdcgwgkciyogknekwp.supabase.co/storage/v1/object/public/pharmacy//baldness.jpeg',
+    duration: '20 mins', 
+    category: 'Private Service', 
+    description: 'Personalised prescription to relieve heartburn, indigestion and acid regurgitation.' 
+  },
+  
 ];
 
 const COMING_SOON = new Set(['Hair loss', 'Yellow fever']);

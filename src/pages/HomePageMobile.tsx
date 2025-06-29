@@ -416,7 +416,6 @@ const chevronDown =
 
 // Titles that should show a "Coming Soon" badge and be non-clickable
 const COMING_SOON = new Set([
-  'Hair Loss',
   'Yellow Fever',
 ]);
 
@@ -444,6 +443,44 @@ const POPULAR_SERVICES = [
       'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fweight-loss-4.webp&w=640&q=75',
   },
   {
+    title: 'Ear Wax Removal',
+    link: '/book/19',
+    sub: 'Safe microsuction for clear, comfortable ears.',
+    img:
+    'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/123156/AHHct1yZUR.webp',
+  },
+  {
+    title: 'Travel Vaccinations',
+    link: '/book/4',
+    sub: 'Comprehensive vaccine service for your trip.',
+    img:
+    'https://clinic-digital.lon1.cdn.digitaloceanspaces.com/100/530057/yyrgMObVYh.webp',
+  },
+  {
+    title: 'Vitamin B12 Injection',
+    link: '/book/6',
+    sub: 'Restore energy and improve vitality.',
+    img:
+    'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fvitamin-b12-injection.webp&w=640&q=75',
+  },
+  {
+    title: 'Oral Contraception',
+    link: '/oral-contraceptive',
+    sub: 'Fast, confidential help when you need it.',
+    img:
+    'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fmorning-after-pill.webp&w=640&q=75',
+  },
+  {
+    title: 'Erectile dysfunction',
+    link: '/book/21',
+    sub: 'Effective solutions tailored to your needs.',
+    img:
+      'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fed-3.webp&w=640&q=75',
+  },
+];
+
+const VACCINATIONS = [
+  {
     title: 'Erectile dysfunction',
     link: '/book/21',
     sub: 'Effective solutions tailored to your needs.',
@@ -457,30 +494,6 @@ const POPULAR_SERVICES = [
     img:
       'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fmorning-after-pill.webp&w=640&q=75',
   },
-  {
-    title: 'Ear Wax Removal',
-    link: '/book/19',
-    sub: 'Safe microsuction for clear, comfortable ears.',
-    img:
-    'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/123156/AHHct1yZUR.webp',
-  },
-  {
-    title: 'Travel Vaccinations',
-    link: '/book/4',
-    sub: 'Comprehensive vaccine service for your trip.',
-    img:
-      'https://clinic-digital.lon1.cdn.digitaloceanspaces.com/100/530057/yyrgMObVYh.webp',
-  },
-  {
-    title: 'Vitamin B12 Injection',
-    link: '/book/6',
-    sub: 'Restore energy and improve vitality.',
-    img:
-      'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fvitamin-b12-injection.webp&w=640&q=75',
-  },
-];
-
-const VACCINATIONS = [
   {
     title: 'Chickenpox',
     link: '/book/31',
