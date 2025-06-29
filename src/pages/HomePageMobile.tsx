@@ -481,20 +481,6 @@ const POPULAR_SERVICES = [
 
 const VACCINATIONS = [
   {
-    title: 'Erectile dysfunction',
-    link: '/book/21',
-    sub: 'Effective solutions tailored to your needs.',
-    img:
-      'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fed-3.webp&w=640&q=75',
-  },
-  {
-    title: 'Oral Contraception',
-    link: '/oral-contraceptive',
-    sub: 'Fast, confidential help when you need it.',
-    img:
-      'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fmorning-after-pill.webp&w=640&q=75',
-  },
-  {
     title: 'Chickenpox',
     link: '/book/31',
     img:
@@ -800,7 +786,7 @@ const HomePage: React.FC = () => {
         </section>
 
         {/* Popular Vaccinations */}
-        <section className="container py-5">
+        {/* <section className="container py-5">
           <h2
             style={{
               color: MAIN_TEXT_COLOR,
@@ -883,12 +869,12 @@ const HomePage: React.FC = () => {
               );
             })}
           </div>
-        </section>
+        </section> */}
 
         {/* Pharmacy First Carousel */}
         <section
           className="container-fluid px-4 pharmacy-first-carousel"
-          style={{ background: '#0F1637', color: '#fff', padding: '4rem 0' }}
+          style={{ background: '#0F1637', color: '#fff', padding: '3rem 0' }}
         >
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h2 style={{ fontWeight: 700, fontSize: '2rem' }}>
@@ -907,20 +893,21 @@ const HomePage: React.FC = () => {
                 key={idx}
                 className="card text-center flex-shrink-0"
                 style={{
-                  width: 260,
+                  width: 250,
+                  height: 390,
                   border: 'none',
                   borderRadius: '0.75rem',
                   boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
                 }}
               >
-                <div style={{ height: 180, overflow: 'hidden' }}>
+                <div style={{ height: 220, overflow: 'hidden' }}>
                   <img
                     src={svc.img}
                     alt={svc.title}
                     className="w-100 h-100"
                     style={{ objectFit: 'cover', transition: 'transform 0.3s' }}
                     onMouseEnter={(e) =>
-                      (e.currentTarget.style.transform = 'scale(1.05)')
+                      (e.currentTarget.style.transform = 'scale(1.2)')
                     }
                     onMouseLeave={(e) =>
                       (e.currentTarget.style.transform = 'scale(1)')
@@ -931,8 +918,8 @@ const HomePage: React.FC = () => {
                   <h5 style={{ fontWeight: 600 }}>{svc.title}</h5>
                   <p className="small mb-2">{svc.subtitle}</p>
                   <button
-                    className="btn btn-primary btn-sm"
-                    style={{ width: '80%', margin: '0 auto', padding: '0.4rem 0' }}
+                    className="getstartedbtn"
+                    style={{ width: '88%', paddingBottom: '1rem'}}
                     onClick={() => navigate(svc.link)}
                   >
                     Get started

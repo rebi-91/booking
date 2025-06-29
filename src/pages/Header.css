@@ -76,7 +76,7 @@
   overflow-y: auto;
   z-index: 1040;
   animation: slideDown 0.25s ease forwards;
-   background-color: #b8eff4;
+   background-color: #88b8eb;
 }
 @keyframes slideDown {
   from {
@@ -90,7 +90,8 @@
 .mobile-list {
   list-style: none;
   padding: 0 1rem;
-  background-color:  #b8eff4;
+  background-color:  #88b8eb;
+  margin-top: 1.2rem;
 }
 
 .mobile-back {
@@ -117,10 +118,13 @@
   align-items: center;
   font-size: 1.05rem;
   font-weight: 600;
-  color: #24e4ee;
-  border-radius: 10px;
-  background-color: #103067;
-  padding: 1.2rem 0.5rem;
+  color: #1ae59b;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  background-color: #0e335b;
+  padding: 1.2rem 1.3rem;
   border-bottom: none;
   margin-top: 0.6rem;
   cursor: pointer;
@@ -131,8 +135,8 @@
   opacity: 0.6;
 }
 .mobile-item:active {
-  background-color: #f2f2f2;
-  border-radius: 8px;
+  background-color: #5276a9;
+  border-radius: 5px;
 }
 
 @media (min-width: 768px) {

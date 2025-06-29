@@ -42,6 +42,25 @@
   font-weight: 600;
   cursor: pointer;
 }
+.getstartedbtn {
+  display: inline-flex;             /* flex to center content */
+  align-items: center;              /* vertical centering of text/icons */
+  justify-content: center; 
+  position: absolute;         /* horizontal centering */
+  margin-top: 1rem; 
+  bottom: 15px;
+  left: 15px;
+  height: 43px !important;                  /* center the button itself */
+  padding: 0.85rem 1.5rem;           /* adjust as needed */
+  background-color: #007bff !important;  /* Bootstrap blue */
+  color: #fff !important;
+  border: none;
+  border-radius: 0.4rem !important; /* rounded corners */
+  font-size: 1rem !important;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 
 .weight-select-btn:hover {
   background-color: #b2ffff;

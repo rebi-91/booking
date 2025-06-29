@@ -258,6 +258,34 @@ const sampleServices: Record<number, Service> = {
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
     price: 'Malarone for £40 and Doxycycline for £25',
   },
+  35: {
+    id: 35,
+    title: 'Acid Reflux',
+    duration: '20m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: 'Omeprazole, Lansoprazole, Esomeprazole (other PPIs)  ',
+  },
+  36: {
+    id: 36,
+    title: 'Pain Relief',
+    duration: '20m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: 'Naproxen for £8 ',
+  },
+  37: {
+    id: 37,
+    title: 'Male pattern baldness (Androgenic Alopecia)',
+    duration: '20m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: 'Finasteride for £20',
+  },
+  38: {
+    id: 38,
+    title: 'Female',
+    duration: '20m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: 'Finasteride for £20',
+  },
 };
 
 type Category = 'NHS' | 'Private';
