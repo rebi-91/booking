@@ -223,7 +223,7 @@
 import React, { useState, useEffect, useRef, CSSProperties } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import Header from '../Header';
-import "./Switch.css"
+
 
 // 1) Insert this ToggleSwitch component under your imports:
 
