@@ -151,7 +151,7 @@ const sampleServices: Record<number, Service> = {
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
     price:
-      'Our service is £45 for one ear and £60 for two ears. £10 consult fee if no wax removed.',
+      'Our service is £35 for one ear and £55 for two ears.',
   },
   20: {
     id: 20,

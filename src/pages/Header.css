@@ -76,7 +76,7 @@
   overflow-y: auto;
   z-index: 1040;
   animation: slideDown 0.25s ease forwards;
-   background-color: #88b8eb;
+   background-color: #cddefd;
 }
 @keyframes slideDown {
   from {
@@ -90,7 +90,7 @@
 .mobile-list {
   list-style: none;
   padding: 0 1rem;
-  background-color:  #88b8eb;
+  background-color:  #cddefd;
   margin-top: 1.2rem;
 }
 
@@ -118,12 +118,12 @@
   align-items: center;
   font-size: 1.05rem;
   font-weight: 600;
-  color: #1ae59b;
+  color: #00ffa2;
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
-  background-color: #0e335b;
+  background-color: #245283;
   padding: 1.2rem 1.3rem;
   border-bottom: none;
   margin-top: 0.6rem;
