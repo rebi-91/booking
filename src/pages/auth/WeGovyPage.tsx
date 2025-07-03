@@ -37,7 +37,7 @@ const WegovyPage: React.FC = () => {
               <span className="sep">›</span>
               <Link to="/services">Services</Link>
               <span className="sep">›</span>
-              <Link to="/weight-loss-injections">Weight loss</Link>
+              <Link to="/weight-loss-management">Weight loss</Link>
               <span className="sep">›</span>
               <span className="current">Wegovy</span>
             </nav>

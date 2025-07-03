@@ -1,3 +1,7 @@
+
+/* Example: load Quicksand and Fredoka One */
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Lora:wght@400;700&display=swap');
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -12,7 +16,7 @@
   height: 56px;
   background: #ffffff;
   /* border-bottom: 1px solid #eeeeee; */ /* remove this */
-  box-shadow: 0 15px 20px rgba(113, 219, 243, 0.252) !important; /* subtle shadow */
+  box-shadow: 0 1px 13px rgb(196, 213, 233) !important; /* subtle shadow */
   display: flex;
   align-items: center;
   z-index: 1050;
@@ -20,13 +24,13 @@
 
 
 .mobile-logo {
-  height: 28px;
+  height: 30px;
   object-fit: contain;
-  margin-left: 1rem;
+  margin-left: 0.5rem;
 }
 
 .call-icon {
-  margin-left: 1.05rem;
+  margin-left: 0.75rem;
   display: flex;
   align-items: center;
 }
@@ -76,7 +80,7 @@
   overflow-y: auto;
   z-index: 1040;
   animation: slideDown 0.25s ease forwards;
-   background-color: #cddefd;
+   background-color: #cdd9f0
 }
 @keyframes slideDown {
   from {
@@ -90,7 +94,7 @@
 .mobile-list {
   list-style: none;
   padding: 0 1rem;
-  background-color:  #cddefd;
+  background-color:  #cdd9f0;
   margin-top: 1.2rem;
 }
 
@@ -116,18 +120,26 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   font-weight: 600;
-  color: #00ffa2;
+  color: #072151;
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
-  background-color: #245283;
+  background-color: #4b86d9;
   padding: 1.2rem 1.3rem;
   border-bottom: none;
   margin-top: 0.6rem;
   cursor: pointer;
+  box-shadow:
+  0 3px 5px rgba(0, 11, 21, 0.638),
+  0 4px 6px rgba(0, 0, 0, 0.25);
+
+/* smooth press animation */
+transition: transform 0.1s ease, box-shadow 0.1s ease;
+cursor: pointer;
+
 }
 .chevron-icon {
   width: 20px;
@@ -195,4 +207,78 @@
 
 .dropdown-menu .dropdown-item:hover {
   background-color: rgba(0, 0, 0, 0.05);
+}
+
+
+
+.mobile-drawer .start-menu .mobile-item {
+  justify-content: center;
+  text-align: center;
+  color: #06ffb0;
+  font-size: 0.95rem;
+
+  /* specify your chosen font stack: */
+  font-family: 'Merriweather', sans-serif !important;
+
+  background-color: #112e57;
+  border: none;          /* remove item border */
+      /* remove rounding */
+  margin-top: 0.8rem;
+  box-shadow:
+  0 2px 1px rgba(3, 255, 188, 0.966),
+  0 4px 6px rgba(0, 0, 0, 0.25);
+
+/* smooth press animation */
+transition: transform 0.1s ease, box-shadow 0.1s ease;
+cursor: pointer;
+
+}
+/* ===== DEPTHED BUTTON STYLE FOR .mobile-item2 ===== */
+.mobile-drawer .start-menu .mobile-item2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #00e8fd;
+  font-size: 1.12rem;
+  font-weight: 600;
+  font-family: 'Merriweather', serif !important;
+
+  background-color: #323e55;
+  padding: 1.2rem 1.0rem;
+  margin-top: 5.6rem;
+  border: 1px;
+  border-radius: 5px;
+
+  /* box-shadow for depth */
+  box-shadow:
+    0px 2px 2px rgba(2, 255, 255, 0.914),
+    0 4px 6px rgba(0, 0, 0, 0.25);
+
+  /* smooth press animation */
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  cursor: pointer;
+}
+
+.mobile-drawer .start-menu .mobile-item2:active {
+  /* move down and soften the shadow */
+  transform: translateY(2px);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.10),
+    0 1px 2px rgba(0, 0, 0, 0.07);
+}
+
+
+/* Or swap in Lora on hover: */
+.mobile-drawer .start-menu .mobile-item:hover {
+  font-family: 'Lora', serif;
+}
+
+/* Optional: make hovered start-menu items extra playful */
+.mobile-drawer .start-menu .mobile-item:hover {
+  font-family: 'Fredoka One', cursive;
+}
+
+.mobile-drawer .start-menu .mobile-item .chevron-icon {
+  display: none;
 }

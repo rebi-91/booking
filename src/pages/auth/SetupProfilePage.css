@@ -1,0 +1,176 @@
+/* SetupProfilePage.css */
+
+.sp-page {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+    background: #f5f7fa;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  
+  .sp-card {
+    position: relative;
+    background: #fff;
+    padding: 2.5rem 1.3rem 3rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    height: 100%;
+    max-width: 420px;
+  }
+  .sp-label {
+    display: block;
+    margin-bottom: -0.75rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #555;
+  }
+  
+  
+  .sp-back {
+    position: absolute;
+    bottom: 1.1rem;
+    left: 1.3rem;
+    width: 88%;
+    margin-top: 2rem !important;
+    margin-bottom: 3rem !important;
+    border-radius: 6px;
+    background: #072e60;
+    border: 1px black !important;
+    font-size: 1rem;
+    color: #fefefe;
+    cursor: pointer;
+  }
+  
+  .sp-heading {
+    margin: 0;
+    font-size: 1.75rem;
+    color: #222;
+    text-align: center;
+  }
+  
+  .sp-subheading {
+    text-align: center;
+    margin: 0.5rem 0 1.5rem;
+    color: #666;
+  }
+  
+  .sp-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .sp-input {
+    width: 100%;
+    padding: 0.4rem 1rem !important;
+    border: 1px solid #ccd0d5;
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    color: #333;
+    background: #fafbfc;
+    transition: border-color 0.2s;
+  }
+  .sp-input2 {
+    width: 100%;
+    padding: 0.8rem 1rem !important;
+    border: 1px solid #ccd0d5 !important;
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    color: #333;
+    background: #fafbfc;
+    transition: border-color 0.2s;
+  }
+  
+  .sp-input:focus {
+    outline: none;
+    border-color: #4096ff;
+    background: #fff;
+  }
+  
+  
+  .sp-error {
+    color: #d93025;
+    font-size: 0.875rem;
+    margin-top: -0.5rem;
+  }
+  
+  .sp-note {
+    text-align: center;
+    color: #888;
+  }
+  
+  .sp-next,
+  .sp-confirm-btn {
+    margin-top: -1rem;
+    margin-bottom: 4rem;
+    padding: 0.85rem;
+    background: #1877f2;
+    color: #fff;
+    width: 101%;
+    border: none;
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+  
+  .sp-next:hover,
+  .sp-confirm-btn:hover {
+    background: #165ec9;
+  }
+  
+  .sp-next:active,
+  .sp-confirm-btn:active {
+    transform: scale(0.98);
+  }
+  
+  .sp-confirm {
+    text-align: center;
+  }
+  
+  .sp-summary {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 2rem;
+    text-align: left;
+  }
+  
+  .sp-summary li {
+    margin-bottom: 0.5rem;
+  }
+  
+  /* === shared styling for all text‐like inputs === */
+.sp-input {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    background-color: #fff;
+    box-sizing: border-box;
+  }
+  
+  /* === date inputs get the same look === */
+  .sp-input--date {
+    /* inherits everything from .sp-input */
+    appearance: none;         /* remove any browser default arrow/spinner */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    /* if you like, add a calendar icon via background-image */
+    background: #fff url("data:image/svg+xml,…") right 1rem center no-repeat;
+    background-size: 1rem 1rem;
+  }
+  
+  /* hide spinner arrows in Chrome/Edge */
+  .sp-input--date::-webkit-inner-spin-button,
+  .sp-input--date::-webkit-calendar-picker-indicator {
+    display: none;
+  }
+  .sp-input--date::-moz-inner-spin-button {
+    display: none;
+  }
+  

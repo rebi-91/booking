@@ -330,7 +330,7 @@ const WeightlossPage: React.FC = () => {
               path toward weight loss success.
             </p>
             <p>
-              We proudly serve individuals in Medway who seek professional, ongoing
+              We proudly serve individuals who seek professional, ongoing
               guidance and trustworthy support.
             </p>
             <p>

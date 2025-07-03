@@ -9,6 +9,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../Header';
 import './BookingPage.css';
 import supabase from '../../supabase';
+import { useSession } from "../../context/SessionContext";
 
 interface Service {
   id: number;
@@ -28,7 +29,7 @@ const sampleServices: Record<number, Service> = {
   },
   2: {
     id: 2,
-    title: 'Sore throat treatment',
+    title: 'Sore throat (Ages 5+)',
     duration: '10m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
     price: 'Free NHS',
@@ -38,18 +39,18 @@ const sampleServices: Record<number, Service> = {
     title: 'Travel Consultation',
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: '£10.00 - deducted if go ahead with treatment',
+    price: '£10.00 – deducted if go ahead with treatment',
   },
   4: {
     id: 4,
     title: 'Travel vaccine',
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: 'Varies - depends on what vaccine(s) needed',
+    price: 'Varies – depends on what vaccine(s) needed',
   },
   5: {
     id: 5,
-    title: 'Uncomplicated UTI (Women) treatment',
+    title: 'Uncomplicated UTI (Women aged 16–64)',
     duration: '10m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
     price: 'Free NHS',
@@ -63,230 +64,273 @@ const sampleServices: Record<number, Service> = {
   },
   7: {
     id: 7,
-    title: 'Hair loss',
-    duration: '20m',
+    title: 'Impetigo (Ages 1+)',
+    duration: '10m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: '£10.00',
+    price: 'Free NHS',
   },
   8: {
     id: 8,
-    title: 'Impetigo treatment',
+    title: 'Infected insect bite (Ages 1+)',
     duration: '10m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
     price: 'Free NHS',
   },
-  9: {
-    id: 9,
-    title: 'Infected insect bite treatment',
-    duration: '10m',
-    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: 'Free NHS',
-  },
-  10: {
-    id: 10,
-    title: 'Period delay',
+  90: {
+    id: 90,
+    title: 'Period Delay',
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
     price: '£20.00',
   },
-  11: {
-    id: 11,
+  89: {
+    id: 89,
+    title: 'Period Pain',
+    duration: '20m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: 'Varies depending on treatment',
+  },
+  10: {
+    id: 10,
     title: 'Private flu jab',
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
     price: '£20.00',
   },
-  12: {
-    id: 12,
-    title: 'Shingles treatment',
+  44: {
+    id: 44,
+    title: 'Shingles (Ages 18+)',
     duration: '10m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
     price: 'Free NHS',
   },
-  13: {
-    id: 13,
-    title: 'Weight Loss',
+  12: {
+    id: 12,
+    title: 'Weight Loss Management',
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
     price: 'Starts at £120.00',
   },
+  13: {
+    id: 13,
+    title: 'Oral Contraception',
+    duration: '10m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: 'Free NHS',
+  },
   14: {
     id: 14,
-    title: 'Oral Contraception',
+    title: 'Flu Vaccination',
     duration: '10m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
     price: 'Free NHS',
   },
   15: {
     id: 15,
-    title: 'Flu Vaccination',
+    title: 'Blood Pressure Check',
     duration: '10m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
     price: 'Free NHS',
   },
   16: {
     id: 16,
-    title: 'Blood pressure check',
+    title: 'COVID-19 Vaccination',
     duration: '10m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
     price: 'Free NHS',
   },
   17: {
     id: 17,
-    title: 'COVID-19 Vaccination',
+    title: 'Yellow fever',
+    duration: '20m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: '—',
+  },
+  18: {
+    id: 18,
+    title: 'Ear wax removal',
+    duration: '20m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: '£35 one ear / £55 both ears',
+  },
+  19: {
+    id: 19,
+    title: 'Earache (Ages 1–17)',
     duration: '10m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
     price: 'Free NHS',
   },
-  18: {
-    id: 18,
-    title: 'Chicken pox vaccine',
+  20: {
+    id: 20,
+    title: 'Erectile dysfunction',
+    duration: '20m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: 'Sildenafil/Tadalafil – 2 tabs £10, 4 tabs £15, 8 tabs £25',
+  },
+  21: {
+    id: 21,
+    title: 'Sinusitis (Ages 12+)',
+    duration: '10m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: 'Free NHS',
+  },
+  22: {
+    id: 22,
+    title: 'Acid Reflux',
+    duration: '20m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: 'PPIs (omeprazole etc.) for £8',
+  },
+  23: {
+    id: 23,
+    title: 'Pain Relief',
+    duration: '20m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: 'Naproxen 500mg for £8',
+  },
+  24: {
+    id: 24,
+    title: 'Male Pattern Baldness (Androgenic Alopecia)',
+    duration: '20m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: 'Finasteride 1mg for £20',
+  },
+  25: {
+    id: 25,
+    title: 'Female Hirsutism in Women',
+    duration: '20m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: 'Vaniqa cream for £69.99',
+  },
+  26: {
+    id: 26,
+    title: 'Jet Lag',
+    duration: '20m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: 'Melatonin MR – 5 tabs £18.99 / 30 tabs £39.99',
+  },
+  9: {
+    id: 9,
+    title: 'Traveller’s Diarrhoea',
+    duration: '20m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: 'Azithromycin for £20',
+  },
+  28: {
+    id: 28,
+    title: 'Oral Thrush',
+    duration: '20m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: 'Varies depending on treatment',
+  },
+  30: {
+    id: 30,
+    title: 'Diphtheria, Tetanus and Polio',
+    duration: '20m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: '£40.00 - only 1 dose',
+  },
+  31: {
+    id: 31,
+    title: 'Hepatitis A (2 doses)',
+    duration: '20m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: '£60.00 per dose',
+  },
+  32: {
+    id: 32,
+    title: 'Hepatitis B (3 doses)',
+    duration: '20m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: '£60.00 per dose',
+  },
+  33: {
+    id: 33,
+    title: 'Typhoid (1 dose or orally)',
+    duration: '20m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: '£40.00',
+  },
+  34: {
+    id: 34,
+    title: 'Rabies (3 doses)',
+    duration: '20m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: '£90.00 per dose',
+  },
+  35: {
+    id: 35,
+    title: 'Meningitis ACWY (1 dose – for Hajj/Umrah)',
+    duration: '20m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: '£60.00',
+  },
+  36: {
+    id: 36,
+    title: 'Cholera (2 doses – special cases)',
+    duration: '20m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: '£90.00',
+  },
+  37: {
+    id: 37,
+    title: 'Japanese Encephalitis',
+    duration: '20m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: '£100.00 per dose',
+  },
+  38: {
+    id: 38,
+    title: 'Chicken Pox',
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
     price: '£80.00',
   },
-  19: {
-    id: 19,
-    title: 'Ear wax removal',
-    duration: '20m',
-    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price:
-      'Our service is £35 for one ear and £55 for two ears.',
-  },
-  20: {
-    id: 20,
-    title: 'Earache treatment',
-    duration: '10m',
-    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: 'Free NHS',
-  },
-  21: {
-    id: 21,
-    title: 'Erectile dysfunction',
-    duration: '20m',
-    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: 'Sildenafil or Tadalafil - 2 tablets (£10), 4 tablets (£15) and 8 tablets (£25)',
-  },
-  22: {
-    id: 22,
-    title: 'Sinusitis treatment',
-    duration: '10m',
-    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: 'Free NHS',
-  },
-  23: {
-    id: 23,
-    title: 'Diphtheria, tetanus and polio (1 dose)',
-    duration: '20m',
-    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: '£40',
-  },
-  24: {
-    id: 24,
-    title: 'Hepatitis A (2 doses)',
-    duration: '20m',
-    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: '£60 per dose',
-  },
-  25: {
-    id: 25,
-    title: 'Hepatitis B (3 doses)',
-    duration: '20m',
-    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: '£60 per dose',
-  },
-  26: {
-    id: 26,
-    title: 'Typhoid (1 dose or orally)',
-    duration: '20m',
-    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: '£40',
-  },
-  27: {
-    id: 27,
-    title: 'Rabies (3 doses)',
-    duration: '20m',
-    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: '£90 per dose',
-  },
-  28: {
-    id: 28,
-    title: 'Meningitis (1 dose - for hajj or umrah)',
-    duration: '20m',
-    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: '£60',
-  },
-  29: {
-    id: 29,
-    title: 'Cholera (2 doses - special cases)',
-    duration: '20m',
-    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: '£90',
-  },
-  30: {
-    id: 30,
-    title: 'Japanese Encephalitis',
-    duration: '20m',
-    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: '£100 per dose',
-  },
-  31: {
-    id: 31,
-    title: 'Chicken pox',
-    duration: '20m',
-    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: '£80',
-  },
-  32: {
-    id: 32,
+  39: {
+    id: 39,
     title: 'Meningitis B',
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: '£140',
+    price: '£140.00',
   },
-  33: {
-    id: 33,
-    title: 'Shingles (Zostavax)',
+  40: {
+    id: 40,
+    title: 'Shingles vaccination (Zostavax)',
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: '£200',
+    price: '£200.00',
   },
-  34: {
-    id: 34,
+  41: {
+    id: 41,
     title: 'Anti-malarials',
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: 'Malarone for £40 and Doxycycline for £25',
+    price: 'Malarone £40 / Doxycycline £25',
   },
-  35: {
-    id: 35,
-    title: 'Acid Reflux',
+  42: {
+    id: 42,
+    title: 'HPV',
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: 'Omeprazole, Lansoprazole, Esomeprazole (other PPIs)  ',
+    price: 'Gardasil-9 – £184.50/dose, £362 (2 doses), £540 (3 doses)',
   },
-  36: {
-    id: 36,
-    title: 'Pain Relief',
+  43: {
+    id: 43,
+    title: 'Dengue Fever (2 doses)',
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: 'Naproxen for £8 ',
+    price: 'Qdenga - £130 per dose',
   },
-  37: {
-    id: 37,
-    title: 'Male pattern baldness (Androgenic Alopecia)',
-    duration: '20m',
-    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: 'Finasteride for £20',
-  },
-  38: {
-    id: 38,
-    title: 'Female',
-    duration: '20m',
-    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: 'Finasteride for £20',
-  },
+  // 44: {
+  //   id: 44,
+  //   title: 'Respiratory syncytial virus',
+  //   duration: '20m',
+  //   address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+  //   price: 'Qdenga - £130 per dose',
+  // },
+
 };
+
 
 type Category = 'NHS' | 'Private';
 function serviceCategory(id: number): Category {
@@ -454,6 +498,9 @@ const BookingPage: React.FC = () => {
     setView('form');
   };
 
+  const { session } = useSession();
+
+
   const handleBookingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const newErrors: typeof errors = {};
@@ -462,19 +509,31 @@ const BookingPage: React.FC = () => {
     setErrors(newErrors);
     if (Object.keys(newErrors).length) return;
 
-    const dateISO = selectedDate!.toISOString().split('T')[0];
+    const dateISO  = selectedDate!.toISOString().split('T')[0];
     const stripped = service.title.replace(/ treatment$/i, '');
-    const { error } = await supabase.from('bookings').insert([
-      {
-        date: dateISO,
-        start_time: chosenTime,
-        cat: category,
-        service: stripped,
-        patientName,
-        telNumber: patientPhone,
-        email: patientEmail,
-      },
-    ]);
+
+    const row: Record<string, any> = {
+      date:        dateISO,
+      start_time:  chosenTime,
+      cat:         category,
+      service:     stripped,
+      patientName,
+      telNumber:   patientPhone,
+      email:       patientEmail,
+    };
+
+    // if the user is signed in, session.user.id IS the profile.id (UUID)
+    if (session?.user?.id) {
+      // adjust case to match your column name in the database:
+      row.customerID   = session.user.id;
+      // or if your DB column is snake_case:
+      // row.customer_id = session.user.id;
+    }
+
+    const { error } = await supabase
+      .from('bookings')
+      .insert([row]);
+
     if (error) {
       alert('Error saving booking: ' + error.message);
     } else {
@@ -482,6 +541,58 @@ const BookingPage: React.FC = () => {
       navigate('/');
     }
   };
+  // const handleBookingSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   const newErrors: typeof errors = {};
+  //   if (!patientName.trim()) newErrors.name = 'Required - please enter your full name';
+  //   if (!patientPhone.trim()) newErrors.phone = 'Required - please enter your phone';
+  //   setErrors(newErrors);
+  //   if (Object.keys(newErrors).length) return;
+
+  //   const dateISO = selectedDate!.toISOString().split('T')[0];
+  //   const stripped = service.title.replace(/ treatment$/i, '');
+  //   // 1) fetch the profile.id for the logged-in user (if any)
+  //   let customerID: number | null = null;
+  //   if (session?.user?.id) {
+  //     const { data: profile, error: pfErr } = await supabase
+  //       .from('profiles')
+  //       .select('id')
+  //       .eq('auth_id', session.user.id)   // or .eq('id', session.user.id) if your profile PK is the same
+  //       .single();
+
+  //     if (pfErr) {
+  //       console.error('Could not fetch profile ID:', pfErr.message);
+  //     } else {
+  //       customerID = profile.id;
+  //     }
+  //   }
+
+  //   // 2) build the row, including customerID if we have one
+  //   const row: Record<string, any> = {
+  //     date:        dateISO,
+  //     start_time:  chosenTime,
+  //     cat:         category,
+  //     service:     stripped,
+  //     patientName,
+  //     telNumber:   patientPhone,
+  //     email:       patientEmail,
+  //   };
+
+  //   if (customerID !== null) {
+  //     row.customerID = customerID;
+  //   }
+
+  //   // 3) insert
+  //   const { error } = await supabase.from('bookings').insert([row]);
+
+  //   if (error) {
+  //     alert('Error saving booking: ' + error.message);
+  //   } else {
+  //     alert('Booking confirmed!');
+  //     navigate('/');
+  //   }
+  // };
+
 
   return (
     <>

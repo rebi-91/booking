@@ -1,0 +1,85 @@
+/* overlay to dim the background when modal is open */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .modal {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+  }
+  
+  .modal.small {
+    max-width: 300px;
+  }
+  
+  .modal h3 {
+    margin-top: 0;
+    color: #333;
+  }
+  
+  .modal label {
+    display: block;
+    margin: 0.75rem 0 0.25rem;
+    font-weight: 600;
+  }
+  
+  .modal input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .modal-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+  }
+  
+  .btn-confirm {
+    background: #28a745;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .btn-cancel {
+    background: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .btn-cancel-confirm {
+    background: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  /* table scrollbar */
+  .table-wrapper {
+    overflow-x: auto;
+    margin-top: 1rem;
+  }
+  
+  /* you can add any additional global tweaks here */
+  

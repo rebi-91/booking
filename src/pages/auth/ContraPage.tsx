@@ -4,6 +4,8 @@ import Header from '../Header';
 import './ContraPage.css';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
+import { Link } from 'react-router-dom';
+
 
 type AnswerValue = string | string[] | boolean;
 interface Answers {
@@ -2394,6 +2396,12 @@ return (
   <>
     <Header />
     <div className="contra-container">
+      {/* —————— Book Appointment Instead —————— */}
+           <Link to="/book/13">
+      <button className="book-appointment-btn">
+        Book Appointment Instead
+       </button>
+     </Link>
       <h1 className="page-title">Contraception Assessment</h1>
       <section className="question-card">
         {currentBlock.element}

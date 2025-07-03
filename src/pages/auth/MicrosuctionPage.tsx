@@ -70,7 +70,7 @@ const MicrosuctionPage: React.FC = () => {
             <li>Quick and simple, lasting just 15–20 minutes</li>
             <li>The most effective way to clean your ears & improve your hearing</li>
           </ul>
-          <button className="btn-accent" onClick={() => navigate('/book/19')}>
+          <button className="btn-accent" onClick={() => navigate('/book/18')}>
             Book your appointment now
           </button>
           <div className="hero-image-wrap">
@@ -138,7 +138,7 @@ const MicrosuctionPage: React.FC = () => {
           <p className="section-text">
             Having blocked ears can be one of the most frustrating feelings there is, but our team of professionals can quickly and efficiently remove the earwax using our microsuction technique.
           </p>
-          <button className="btn-accent" onClick={() => navigate('/book/19')}>
+          <button className="btn-accent" onClick={() => navigate('/book/18')}>
             Book your appointment now
           </button>
         </section>
@@ -153,7 +153,7 @@ const MicrosuctionPage: React.FC = () => {
             <li>Using the latest technology</li>
             <li>Detailed assessment of your ear health</li>
           </ul>
-          <button className="btn-accent" onClick={() => navigate('/book/19')}>
+          <button className="btn-accent" onClick={() => navigate('/book/18')}>
             Book your appointment now
           </button>
         </section>
@@ -172,7 +172,7 @@ const MicrosuctionPage: React.FC = () => {
         <section className="container py-5">
           <h2 className="section-title">Pricing & How it works</h2>
           <p className="section-text">
-            Our service is £50 for one ear and £65 for two ears. £25 consult fee if no wax removed.
+            Our service is £35 for one ear and £55 for two ears.
           </p>
           <div className="steps-row">
             <div className="step">
@@ -185,7 +185,9 @@ const MicrosuctionPage: React.FC = () => {
             </div>
             <div className="step">
               <h3>Receive treatment</h3>
-              <p>Collect your medication or choose home delivery.</p>
+              <p>Please book the appointment before coming in .</p>
+              <p>See above.</p>
+            
             </div>
           </div>
         </section>
@@ -232,7 +234,7 @@ export default MicrosuctionPage;
 //       <main className="pt-header microsuction-page">
 //         {/* Hero */}
 //         <section className="hero-section container py-5">
-//           <h1 className="hero-title">Professional Ear Wax Removal in Medway<br/>– Book Your Appointment Today!</h1>
+//           <h1 className="hero-title">Professional Ear Wax Removal in <br/>– Book Your Appointment Today!</h1>
 //           <ul className="hero-bullets">
 //             <li>10+ years of experience performing microsuction procedures</li>
 //             <li>Quick and simple, lasting just 15-20 minutes</li>

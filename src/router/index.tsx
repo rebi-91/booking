@@ -32,7 +32,7 @@
 // import FluVaccinationPage from '../pages/auth/FluVaccinationPage.tsx';
 // import CovidVaccinationPage from '../pages/auth/CovidVaccinationPage.tsx';
 
-// // existing "weight-loss-injections" pages
+// // existing "weight-loss-management" pages
 // import WeightlossPage from '../pages/auth/WeightlossPage.tsx';
 // import WeGovyPage from '../pages/auth/WeGovyPage.tsx';
 // import MounjaroPage from '../pages/auth/MounjaroPage.tsx';
@@ -90,7 +90,7 @@
 //       { path: '/covid-19-vaccination', element: <CovidVaccinationPage /> },
 
 //       // existing weight-loss injections
-//       { path: '/weight-loss-injections', element: <WeightlossPage /> },
+//       { path: '/weight-loss-management', element: <WeightlossPage /> },
 //       { path: '/wegovy', element: <WeGovyPage /> },
 //       { path: '/mounjaro', element: <MounjaroPage /> },
 
@@ -174,6 +174,8 @@ import TotalAverage from "../pages/student/TotalAverage.tsx";
 import StudentFeeGraph from "../pages/student/StudentFeeGraph.tsx";
 import StaffPage from "../pages/teacher/StaffPage.tsx";
 import BookingBoard from "../pages/teacher/BookingBoard.tsx";
+import MyBooking from "../pages/teacher/MyBooking.tsx";
+import EmergencySupply from "../pages/auth/EmergencySupply.tsx";
 
 const router = createBrowserRouter([
   {
@@ -190,7 +192,11 @@ const router = createBrowserRouter([
         element: <ServicePage />,
       },
       {
-        path: "/weight-loss-injections",
+        path: "/emergency-supply",
+        element: <EmergencySupply />,
+      },
+      {
+        path: "/weight-loss-management",
         element: <WeightlossPage />,
       },
       {
@@ -206,7 +212,7 @@ const router = createBrowserRouter([
         element: <MicrosuctionPage />,
       },
       {
-        path: "/oral-contraceptive",
+        path: "/oral-contraceptives",
         element: <ContraPage />,
       },
       {
@@ -247,6 +253,10 @@ const router = createBrowserRouter([
       {
         path: "/bookings",
         element: <BookingBoard />,
+      },
+      {
+        path: "/my-bookings",
+        element: <MyBooking />,
       },
       {
         path: "/dashboard2",

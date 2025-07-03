@@ -437,7 +437,7 @@ const HERO_CARD_LINKS: Record<string, string> = {
 const POPULAR_SERVICES = [
   {
     title: 'Weight loss management',
-    link: '/weight-loss-injections',
+    link: '/weight-loss-management',
     sub: 'Achieve your weight goals.',
     img:
       'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fweight-loss-4.webp&w=640&q=75',
@@ -465,7 +465,7 @@ const POPULAR_SERVICES = [
   },
   {
     title: 'Oral Contraception',
-    link: '/oral-contraceptive',
+    link: '/oral-contraceptives',
     sub: 'Fast, confidential help when you need it.',
     img:
     'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fmorning-after-pill.webp&w=640&q=75',
@@ -509,7 +509,7 @@ const VACCINATIONS = [
 const PHARMACY_FIRST = [
   {
     title: 'Sinusitis',
-    link: '/book/22',
+    link: '/book/21',
     img:
       'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fpharmacy-first%2Fsinusitis.webp&w=1200&q=75',
     subtitle: 'Ages 12+',
@@ -523,28 +523,28 @@ const PHARMACY_FIRST = [
   },
   {
     title: 'Earache',
-    link: '/book/20',
+    link: '/book/19',
     img:
       'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fpharmacy-first%2Fearache.webp&w=1200&q=75',
     subtitle: 'Ages 1–17',
   },
   {
     title: 'Infected insect bite',
-    link: '/book/9',
+    link: '/book/8',
     img:
       'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fpharmacy-first%2Finsect-bite.webp&w=1200&q=75',
     subtitle: 'Ages 1+',
   },
   {
     title: 'Impetigo',
-    link: '/book/8',
+    link: '/book/7',
     img:
       'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fpharmacy-first%2Fimpetigo.webp&w=1200&q=75',
     subtitle: 'Ages 1+',
   },
   {
     title: 'Shingles',
-    link: '/book/12',
+    link: '/book/44',
     img:
       'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fpharmacy-first%2Fshingles.webp&w=1200&q=75',
     subtitle: 'Ages 18+',
