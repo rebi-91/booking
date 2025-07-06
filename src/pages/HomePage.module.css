@@ -1,4 +1,6 @@
-/* HomePage.module.css */
+/* src/pages/HomePage.module.css */
+
+/* ── PAGE WRAPPER ───────────────────────────────────────────────────────── */
 .pageWrapper {
   background-color: #000000;
   min-height: 100vh;
@@ -9,86 +11,89 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: start;
+  justify-content: flex-start;
 }
 
-/* 2) Logo styling */
+/* ── HEADER (BACK BUTTON + BANNER) ──────────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;      /* vertically center button + banner */
+  justify-content: center;   /* center as a group */
+  gap: 1rem;                 /* space between button and banner */
+  margin-bottom: 2rem;       /* gap down to the card below */
+}
+
+/* back‐home chevron button */
+.backButton {
+  width: 5.5rem;             /* fixed width */
+  height: 8.5rem;            /* match banner height */
+  margin-left: -5.5rem;            /* match banner height */
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+.backButton img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* ── BANNER IMAGE ───────────────────────────────────────────────────────── */
+/* kept your existing border, shadow, etc. but removed absolute positioning */
+.bannerImage {
+  display: block;
+  height: 10.5rem !important;            /* same height as the backButton */
+  width: auto;
+    margin: 0;                 /* flow inline in header */
+  border: 8px solid #a3b1ec;
+  box-shadow: 0 0px 350px 10px #0860f8 !important;
+  border-radius: 10px;
+  z-index: 1;
+}
+
+/* ── LOGO (if you still need it elsewhere) ─────────────────────────────── */
 .logo {
-  width: 160px;              /* adjust as needed */
+  width: 180px !important;
   margin: 2rem 0 1rem;
-  border-radius: 50%;
-  background-color: #9eefef;   
-  border-radius: 20px; /* in case the JPEG has transparency */
+  border-radius: 20px;
+  background-color: #9eefef;
   padding: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.5);
   z-index: 2;
 }
 
-/* Main container styling */
+/* ── MAIN CARD CONTAINER ───────────────────────────────────────────────── */
 .container {
   width: 100%;
-  max-width: 500px;
+  max-width: 370px;
   padding: 20px;
-  background-color:#19192f !important;
+  background-color: #19192f !important;
   border-radius: 10px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-  border-top: 10px solid #4966e9; /* Supabase green border */
+  border-top: 10px solid #4966e9;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #ffffff;
-  position: absolute;
-  top: 60%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  box-sizing: border-box;
-  z-index: 2; /* Ensure container is above banner */
-}
-
-/* Banner image styling */
-.bannerImage {
-  display: block;
-  position: absolute;
-  left: 50.3% !important;
-  top: -10%;
-  /* Instead of a fixed pixel margin-top, we use percentage */
-  margin-top: 10%; 
-  transform: translate(-50%, -20%) scale(0.4) !important;
-  transform-origin: center;
+  margin-top: 0;             /* now flows under header */
+  position: relative;        /* above banner if overlapping */
   z-index: 2;
-  border: 8px solid #a3b1ec;
-  box-shadow: 0 0px 350px 10px #0860f8 !important;
+  box-sizing: border-box;
 }
 
-/* When logged in, display the banner behind the container,
-   slightly enlarged, faded and shifted upward */
-.signedInBanner {
-  position: absolute;
-  left: 49.8% !important;
-  /* Use percentage for vertical positioning */
-  top: -7%; 
-  transform: translate(-50%, -20%) scale(0.35) !important;
-  transform-origin: center;
-  opacity: 0.5;
-  z-index: 1;
-  border: 8px solid #a3b1ec;
-  box-shadow: 0 0px 350px 10px #0860f8 !important;
-}
-
-/* Header text styling */
+/* ── TEXT STYLES ────────────────────────────────────────────────────────── */
 .headerText {
   text-align: center;
   margin-bottom: 10px;
   color: #3ecf8e;
   font-size: 1.8em;
 }
-
-/* Subtext styling */
 .subText {
   text-align: center;
   margin-bottom: 20px;
   font-size: 16px;
 }
 
-/* Authentication button styling */
+/* ── AUTH BUTTONS & LINKS ───────────────────────────────────────────────── */
 .authButton {
   width: 100%;
   padding: 10px;
@@ -104,17 +109,20 @@
   text-align: center;
   transition: background-color 0.3s;
 }
-
 .authButton:hover:not(:disabled) {
-  background-color: #9eb4f3; /* Darker shade on hover */
+  background-color: #9eb4f3;
 }
-
 .authButton:disabled {
   background-color: #7ba0f5;
   cursor: not-allowed;
 }
 
-/* Role link styling */
+.roleLinksContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
 .roleLink {
   width: 100%;
   padding: 10px;
@@ -126,36 +134,24 @@
   cursor: pointer;
   margin-bottom: 10px;
   text-decoration: none;
-  display: inline-block;
   text-align: center;
   transition: background-color 0.3s;
 }
-
 .roleLink:hover {
   background-color: #666;
 }
 
-.roleLinksContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
-/* Status and error message styling */
+/* ── STATUS, ERROR, LOADER, DIVIDER ────────────────────────────────────── */
 .status {
   text-align: center;
   color: #28a745;
   margin-top: 10px;
 }
-
 .error {
   text-align: center;
   color: #dc3545;
   margin-top: 10px;
 }
-
-/* Loader spinner styling */
 .loader {
   border: 4px solid #f3f3f3;
   border-top: 4px solid #3ecf8e;
@@ -165,14 +161,9 @@
   animation: spin 1s linear infinite;
   margin: 0 auto;
 }
-
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
-
-/* Divider styling */
 .divider {
   width: 70%;
   height: 2px;
@@ -181,116 +172,12 @@
   border-radius: 100%;
 }
 
-/* Desktop Browser Styles */
-@media (min-width: 768px) {
-  .bannerImage {
-    margin-top: 15%; /* Adjust as needed */
-    transform: translate(-50%, -20%) scale(2.21);
-    left: 50%;
-    border-radius: 10px;
-  }
-  /* Signed-in adjustments on desktop */
-  .signedInBanner {
-    margin-top: 12%; /* Adjust as needed */
-    transform: translate(-50%, -20%) scale(1.1);
-    left: 50%;
-  }
-}
-
-.backgroundVideo {
-  width: 70%;
-  /* Set a fixed height or aspect ratio as needed */
-  max-width: 500px;  /* For example, limit the width if desired */
-  display: block;
-  margin: 0 auto;      /* Centers the video */
-  border-radius: 15px; /* Rounded corners */
-  margin-bottom: 0;    /* Remove any gap below the video */
-  margin-top: 225px;    /* Remove any gap below the video */
-  box-shadow: 0 0px 350px 10px #0860f8 !important;
-}
-
-/* Ensure the container sits exactly below the video */
-.container {
-  margin-top: 0;     /* Adjust if necessary */
-  padding: 20px;
-  box-shadow: 0 0px 350px 10px #0860f8 !important;
-  
-}
-
-/* You may already have styles for bannerImage and signedInBanner */
-.bannerImage {
-  width: 100%;
-  display: block;
-  margin: 0 auto;
-}
-
-
-/* Mobile Device Styles */
+/* ── RESPONSIVE TWEAKS ──────────────────────────────────────────────────── */
 @media (max-width: 767px) {
-  .container {
-    width: 98%;
-    max-width: 500px;
-    padding: 20px;
-    background-color: #1e1e1e;
-    border-radius: 10px;
-    border-top: 10px solid #4966e9;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #ffffff;
-    position: absolute;
-    top: 56.2%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    box-sizing: border-box;
-    z-index: 2;
+  .backButton, .bannerImage {
+    height: 7rem;
   }
-  
-  .bannerImage {
-    margin-top: 5%; /* Adjust as needed */
-    transform: translate(-50%, -20%) scale(0.36) !important;
-    left: 50%;
-    margin-top: 10px !important;
-    border-radius: 10px;
-    position: relative;
-    z-index: 2;
-    box-shadow: 0 0px 350px 10px #0860f8 !important;
+  .pageWrapper {
+    padding-top: 7rem;
   }
-  
-  .signedInBanner {
-    margin-top: 3%; /* Adjust as needed */
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translate(-50%, -20%) scale(0.23) !important;
-    opacity: 0.5;
-    z-index: 1;
-    box-shadow: 0 0px 350px 10px #0860f8 !important;
-  }
-  .backgroundVideo {
-    width: 98%;
-    /* Set a fixed height or aspect ratio as needed */
-    max-width: 600px !important;  /* For example, limit the width if desired */
-    display: block;
-    margin: 0 auto;      /* Centers the video */
-    border-radius: 15px; /* Rounded corners */
-    margin-bottom: 0;    /* Remove any gap below the video */
-    margin-top: 103px;    /* Remove any gap below the video */
-    box-shadow: 0 0px 150px 10px #0860f8 !important;
-  }
-  
-  /* Ensure the container sits exactly below the video */
-  .container {
-    margin-top: 0;     /* Adjust if necessary */
-    padding: 20px;
-    box-shadow: 10px 100px 200px 10px #0860f8 !important;
-    
-  }
-  
-  /* You may already have styles for bannerImage and signedInBanner */
-  .bannerImage {
-    width: 100%;
-    display: block;
-    margin: 0 auto;
-  }
-  
 }
-

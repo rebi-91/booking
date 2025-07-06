@@ -1,3 +1,4 @@
+
 // import React, { useState } from 'react';
 // import { useNavigate, Link } from 'react-router-dom';
 // import './Header.css';
@@ -21,117 +22,125 @@
 //     'NHS Treatments',
 //     'Pharmacy First',
 //   ],
-//   // 'NHS Services': ['NHS Services', 'NHS Repeat Prescriptions', 'Delivery Service'],
-//   'Weight Loss': ['Wegovy', 'Mounjaro'],
+//   'Weight Loss': [
+//     'Wegovy',
+//     'Mounjaro',
+//   ],
 //   'Travel Vaccinations': [
-//     'Chicken Pox',
-//     'Cholera',
+//     'Chicken pox',
+//     'Cholera (2 doses – special cases)',
 //     'Dengue Fever',
-//     'Diphtheria, Tetanus & Polio',
-//     'Hepatitis A',
-//     'Hepatitis B',
-//     'Human Papillomavirus (HPV)',
+//     'Diphtheria, Tetanus and Polio',
+//     'Hepatitis A (2 doses)',
+//     'Hepatitis B (3 doses)',
+//     'HPV',
 //     'Japanese Encephalitis',
-//     'Meningitis ACWY (for Hajj/Umrah)',
+//     'Meningitis ACWY (1 dose – for Hajj/Umrah)',
 //     'Meningitis B',
-//     'Rabies',
-//     'Respiratory Syncytial Virus (RSV)',
+//     'Rabies (3 doses)',
+//     // 'Respiratory Syncytial Virus (RSV)',
 //     'Shingles (Zostavax)',
-//     'Typhoid',
-//     'Yellow Fever (Coming Soon)',
+//     'Typhoid (1 dose or orally)',
+//     'Yellow fever',
 //   ],
 // };
 
 // const browseSubMenuData: Record<string, string[]> = {
 //   'Private Treatments': [
 //     'Microsuction Earwax Removal',
-//     'Weight Loss Clinic',
+//     'Weight Loss Management',
 //     'Private Flu Jab',
 //     'Period Delay',
 //     'Period Pain',
-//     'Altitude Sickness',
-//     'Vitamin B12',
+//     'Altitude sickness',
+//     'Vitamin B12 Injection',
 //     'Male Pattern Baldness (Androgenic Alopecia)',
-//     'Erectile Dysfunction',
-//     'Travellers Diarrhoea',
-//     'Facial Hirsutism in Women',
+//     'Erectile dysfunction',
+//     'Traveller’s Diarrhoea',
+//     'Female Hirsutism in Women',
 //     'Jet Lag',
 //     'Oral Thrush',
-//     'Hay Fever (Fexofenadine)',
-//     'Hay Fever (Dymista)',
-//     'Urinary Tract Infection (UTI)',
+//     'Pain Relief (Naproxen)',
+//     'Hay Fever (Fexofenadine or Dymista)',
+//     'Uncomplicated UTI (Women)',
 //   ],
 //   'NHS Treatments': [
 //     'Blood Pressure Check',
 //     'Oral Contraception',
 //     'Flu Vaccination',
-//     'COVID‐19 Vaccination',
+//     'COVID-19 Vaccination',
 //   ],
 //   'Pharmacy First': [
 //     'Sinusitis',
-//     'Sore Throat',
+//     'Sore throat',
 //     'Earache',
-//     'Infected Insect Bite',
+//     'Infected insect bite',
 //     'Impetigo',
 //     'Shingles',
 //     'Uncomplicated UTI (Women)',
-//   ]
+//   ],
 // };
 
 // const ROUTE_MAP: Record<string, string> = {
+//   // top-level
 //   'All Services': '/services',
-//   'Travel Clinic': '/book/4',
+//   'Travel Clinic': '/book/3',
 //   'Private Treatments': '/private-treatments',
 //   'NHS Treatments': '/nhs-treatments',
 //   'Pharmacy First': '/pharmacy-first',
-//   'Microsuction Earwax Removal': '/microsuction-earwax-removal',
-//   'Weight Loss Management': '/weight-loss-management',
-//   'Oral Contraception':             '/oral-contraceptives',
-//   'Mounjaro':             '/mounjaro',
-//   'Wegovy':             '/wegovy',
+//   'Weight loss management': '/weight-loss-management',
+//   // weight-loss
+//   'Wegovy': '/wegovy',
+//   'Mounjaro': '/mounjaro',
 
-//     'Altitude sickness': '/book/1',
-//     'Sore throat': '/book/2',
-//     'Travel Consultation': '/book/3',
-//     'Travel vaccine': '/book/4',
-//     'Uncomplicated UTI (Women)': '/book/5',
-//     'Vitamin B12 Injection': '/book/6',
-//     'Impetigo': '/book/7',
-//     'Infected insect bite': '/book/8',
-//     'Period delay': '/book/9',
-//     'Private flu jab': '/book/10',
-//     'Shingles': '/book/11',
-//     'Weight loss management': '/book/12',
-//     'Flu Vaccination': '/book/14',
-//     'Blood Pressure Check': '/book/15',
-//     'COVID-19 Vaccination': '/book/16',
-//     'Yellow fever': '/book/17',
-//     'Ear wax removal': '/book/18',
-//     'Earache': '/book/19',
-//     'Erectile dysfunction': '/book/20',
-//     'Sinusitis': '/book/21',
-//     'Acid Reflux': '/book/22',
-//     'Pain Relief': '/book/23',
-//     'Male Pattern Baldness (Androgenic Alopecia)': '/book/24',
-//     'Female Hirsutism in Women': '/book/25',
-//     'Jet Lag': '/book/26',
-//     'Traveller’s Diarrhoea': '/book/27',
-//     'Diphtheria, Tetanus and Polio': '/book/30',
-//     'Hepatitis A (2 doses)': '/book/31',
-//     'Hepatitis B (3 doses)': '/book/32',
-//     'Typhoid (1 dose or orally)': '/book/33',
-//     'Rabies (3 doses)': '/book/34',
-//     'Meningitis ACWY (1 dose – for Hajj/Umrah)': '/book/35',
-//     'Cholera (2 doses – special cases)': '/book/36',
-//     'Japanese Encephalitis': '/book/37',
-//     'Chicken pox': '/book/38',
-//     'Meningitis B': '/book/39',
-//     'Shingles vaccination (Zostavax)': '/book/40',
-//     'Anti-malarials': '/book/41',
-//     'HPV': '/book/42',
-//     'Dengue Fever': '/book/43',
-//   };
-  
+//   // core services
+//   'Altitude sickness': '/book/1',
+//   'Sore throat': '/book/2',
+//   'Travel Consultation': '/book/3',
+//   'Travel vaccine': '/book/4',
+//   'Uncomplicated UTI (Women)': '/book/5',
+//   'Vitamin B12 Injection': '/book/6',
+//   'Impetigo': '/book/7',
+//   'Infected insect bite': '/book/8',
+//   'Period Delay': '/book/90',
+//   'Period Pain': '/book/89',
+//   'Private Flu Jab': '/book/10',
+//   'Shingles': '/book/44',
+//   'Oral Contraception': '/oral-contraceptives',
+//   'Oral Thrush': '/book/28',
+//   'Hay Fever (Fexofenadine or Dymista)': '/book/29',
+//   'Flu Vaccination': '/book/14',
+//   'Blood Pressure Check': '/book/15',
+//   'COVID-19 Vaccination': '/book/16',
+//   'Yellow fever': '/book/17',
+//   'Ear wax removal': '/book/18',
+//   'Earache': '/book/19',
+//   'Erectile dysfunction': '/book/20',
+//   'Sinusitis': '/book/21',
+//   'Acid Reflux': '/book/22',
+//   'Pain Relief (Naproxen)': '/book/23',
+//   'Male Pattern Baldness (Androgenic Alopecia)': '/book/24',
+//   'Female Hirsutism in Women': '/book/25',
+//   'Jet Lag': '/book/26',
+//   'Traveller’s Diarrhoea': '/book/9',
+
+//   // travel vaccinations (matching dropdownData exactly)
+//   'Chicken pox': '/book/38',
+//   'Cholera (2 doses – special cases)': '/book/36',
+//   'Dengue Fever': '/book/43',
+//   'Diphtheria, Tetanus and Polio': '/book/30',
+//   'Hepatitis A (2 doses)': '/book/31',
+//   'Hepatitis B (3 doses)': '/book/32',
+//   'HPV': '/book/42',
+//   'Japanese Encephalitis': '/book/37',
+//   'Meningitis ACWY (1 dose – for Hajj/Umrah)': '/book/35',
+//   'Meningitis B': '/book/39',
+//   'Rabies (3 doses)': '/book/34',
+//   'Shingles (Zostavax)': '/book/40',
+//   'Typhoid (1 dose or orally)': '/book/33',
+//   // note: RSV (#54) should correspond to a real service id if added
+
+// };
 
 // const slugify = (s: string) =>
 //   s
@@ -140,7 +149,7 @@
 //     .replace(/[^a-z0-9]+/g, '-')
 //     .replace(/^-+|-+$/g, '');
 
-// const Header: React.FC = () => {
+// const HeaderMobile: React.FC = () => {
 //   const [mobileOpen, setMobileOpen] = useState(false);
 //   const [level1, setLevel1] = useState<string | null>(null);
 //   const [level2, setLevel2] = useState<string | null>(null);
@@ -153,24 +162,23 @@
 //   };
 
 //   const goTo = (label: string, prefix?: string) => {
-//     const basePath = ROUTE_MAP[label] ?? `/${slugify(label)}`;
-//     const path = prefix ? `${prefix}${basePath}` : basePath;
-//     navigate(path);
+//     const base = ROUTE_MAP[label] ?? `/${slugify(label)}`;
+//     navigate(prefix ? `${prefix}${base}` : base);
 //     closeAll();
 //   };
 
 //   return (
-//     <header>
+//     <header className="mobile-header-container">
 //       <div className="mobile-header d-flex d-md-none align-items-center">
 //         <Link to="/" onClick={closeAll}>
 //           <img
 //             src="https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//coleshill.jpg"
-//             alt="Coleshill Pharmacy Logo"
+//             alt="Logo"
 //             className="mobile-logo"
 //           />
 //         </Link>
-//         <a href="tel:01634404142" className="call-icon" aria-label="Call us">
-//           <img src={ICON_PHONE} alt="Call Icon" />
+//         <a href="tel:01634404142" className="call-icon">
+//           <img src={ICON_PHONE} alt="Call us" />
 //         </a>
 //         <div className="flex-fill" />
 //         <button
@@ -178,42 +186,39 @@
 //           onClick={() => (mobileOpen ? closeAll() : setMobileOpen(true))}
 //           aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
 //         >
-//           {mobileOpen ? (
-//             <img src={ICON_CLOSE} alt="Close menu" className="icon-close" />
-//           ) : (
-//             <img src={ICON_HAMBURGER} alt="Open menu" className="icon-hamburger" />
-//           )}
+//           <img
+//             src={mobileOpen ? ICON_CLOSE : ICON_HAMBURGER}
+//             alt={mobileOpen ? 'Close' : 'Menu'}
+//           />
 //         </button>
 //       </div>
 
 //       {mobileOpen && (
 //         <div className="mobile-drawer d-md-none">
-//           {/* Level 2 submenu */}
 //           {level2 && (
 //             <div className="mobile-list">
 //               <div className="mobile-back" onClick={() => setLevel2(null)}>
-//                 <img src={ICON_BACK} alt="Back" className="back-icon" />
-//                 {level2}
+//                 <img src={ICON_BACK} alt="Back" />
+//                 <span>{level2}</span>
 //               </div>
-//               {browseSubMenuData[level2].map(sub => (
+//               {browseSubMenuData[level2].map(item => (
 //                 <div
-//                   key={sub}
+//                   key={item}
 //                   className="mobile-item"
-//                   onClick={() => goTo(sub, level2 === 'Pharmacy First' ? '/pharmacy-first' : '')}
+//                   onClick={() => goTo(item)}
 //                 >
-//                   <span>{sub}</span>
-//                   <img src={ICON_CHEVRON} alt=">" className="chevron-icon" />
+//                   <span>{item}</span>
+//                   <img src={ICON_CHEVRON} alt=">" />
 //                 </div>
 //               ))}
 //             </div>
 //           )}
 
-//           {/* Level 1 submenu */}
-//           {level1 && !level2 && (
+//           {!level2 && level1 && (
 //             <div className="mobile-list">
 //               <div className="mobile-back" onClick={() => setLevel1(null)}>
-//                 <img src={ICON_BACK} alt="Back" className="back-icon" />
-//                 {level1}
+//                 <img src={ICON_BACK} alt="Back" />
+//                 <span>{level1}</span>
 //               </div>
 //               {dropdownData[level1].map(opt => (
 //                 <div
@@ -228,64 +233,31 @@
 //                   }}
 //                 >
 //                   <span>{opt}</span>
-//                   <img src={ICON_CHEVRON} alt=">" className="chevron-icon" />
+//                   <img src={ICON_CHEVRON} alt=">" />
 //                 </div>
 //               ))}
 //             </div>
 //           )}
 
-//           {/* Top-level menu */}
 //           {!level1 && !level2 && (
 //             <ul className="mobile-list start-menu">
 //               {Object.keys(dropdownData).map(menu => (
-//                 <li
-//                   key={menu}
-//                   className="mobile-item"
-//                   onClick={() => setLevel1(menu)}
-//                 >
+//                 <li key={menu} className="mobile-item" onClick={() => setLevel1(menu)}>
 //                   <span>{menu}</span>
 //                 </li>
 //               ))}
-//               <li
-//                 className="mobile-item"
-//                 onClick={() => {
-//                   closeAll();
-//                   navigate('/emergency-supply');
-//                 }}
-                
-//               >
+//               <li className="mobile-item" onClick={() => { closeAll(); navigate('/microsuction-earwax-removal'); }}>
+//                 <span>Microsuction Ear Wax Removal</span>
+//               </li>
+//               <li className="mobile-item" onClick={() => { closeAll(); navigate('/emergency-supply'); }}>
 //                 <span>Emergency Supply</span>
 //               </li>
-//               <li
-//                 className="mobile-item"
-//                 onClick={() => {
-//                   closeAll();
-//                   if (window.location.pathname !== '/') {
-//                     navigate('/');
-//                     setTimeout(() => {
-//                       document
-//                         .getElementById('find-us')
-//                         ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-//                     }, 50);
-//                   } else {
-//                     document
-//                       .getElementById('find-us')
-//                       ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-//                   }
-//                 }}
-//               >
+//               <li className="mobile-item" onClick={() => { closeAll(); navigate('/'); setTimeout(() => {
+//                 document.getElementById('find-us')?.scrollIntoView({ behavior: 'smooth' });
+//               }, 50); }}>
 //                 <span>Contact</span>
 //               </li>
-
-              
-//               <li
-//                 className="mobile-item2"
-//                 onClick={() => {
-//                   closeAll();
-//                   navigate('/login');
-//                 }}
-                
-//               >
+//               <li className="mobile-item2" onClick={() => { closeAll(); navigate('/login'); }}>
 //                 <span>Login</span>
 //               </li>
 //             </ul>
@@ -296,7 +268,9 @@
 //   );
 // };
 
-// export default Header;
+// export default HeaderMobile;
+
+
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './Header.css';
@@ -320,10 +294,7 @@ const dropdownData: Record<string, string[]> = {
     'NHS Treatments',
     'Pharmacy First',
   ],
-  'Weight Loss': [
-    'Wegovy',
-    'Mounjaro',
-  ],
+  'Weight Loss': ['Wegovy', 'Mounjaro'],
   'Travel Vaccinations': [
     'Chicken pox',
     'Cholera (2 doses – special cases)',
@@ -336,7 +307,6 @@ const dropdownData: Record<string, string[]> = {
     'Meningitis ACWY (1 dose – for Hajj/Umrah)',
     'Meningitis B',
     'Rabies (3 doses)',
-    // 'Respiratory Syncytial Virus (RSV)',
     'Shingles (Zostavax)',
     'Typhoid (1 dose or orally)',
     'Yellow fever',
@@ -387,10 +357,9 @@ const ROUTE_MAP: Record<string, string> = {
   'NHS Treatments': '/nhs-treatments',
   'Pharmacy First': '/pharmacy-first',
   'Weight loss management': '/weight-loss-management',
-  // weight-loss
-  'Wegovy': '/wegovy',
-  'Mounjaro': '/mounjaro',
-
+  // weight loss
+  Wegovy: '/wegovy',
+  Mounjaro: '/mounjaro',
   // core services
   'Altitude sickness': '/book/1',
   'Sore throat': '/book/2',
@@ -398,12 +367,12 @@ const ROUTE_MAP: Record<string, string> = {
   'Travel vaccine': '/book/4',
   'Uncomplicated UTI (Women)': '/book/5',
   'Vitamin B12 Injection': '/book/6',
-  'Impetigo': '/book/7',
+  Impetigo: '/book/7',
   'Infected insect bite': '/book/8',
   'Period Delay': '/book/90',
   'Period Pain': '/book/89',
   'Private Flu Jab': '/book/10',
-  'Shingles': '/book/44',
+  Shingles: '/book/44',
   'Oral Contraception': '/oral-contraceptives',
   'Oral Thrush': '/book/28',
   'Hay Fever (Fexofenadine or Dymista)': '/book/29',
@@ -414,30 +383,27 @@ const ROUTE_MAP: Record<string, string> = {
   'Ear wax removal': '/book/18',
   'Earache': '/book/19',
   'Erectile dysfunction': '/book/20',
-  'Sinusitis': '/book/21',
+  Sinusitis: '/book/21',
   'Acid Reflux': '/book/22',
   'Pain Relief (Naproxen)': '/book/23',
   'Male Pattern Baldness (Androgenic Alopecia)': '/book/24',
   'Female Hirsutism in Women': '/book/25',
   'Jet Lag': '/book/26',
   'Traveller’s Diarrhoea': '/book/9',
-
-  // travel vaccinations (matching dropdownData exactly)
+  // travel vaccinations
   'Chicken pox': '/book/38',
   'Cholera (2 doses – special cases)': '/book/36',
   'Dengue Fever': '/book/43',
   'Diphtheria, Tetanus and Polio': '/book/30',
   'Hepatitis A (2 doses)': '/book/31',
   'Hepatitis B (3 doses)': '/book/32',
-  'HPV': '/book/42',
+  HPV: '/book/42',
   'Japanese Encephalitis': '/book/37',
   'Meningitis ACWY (1 dose – for Hajj/Umrah)': '/book/35',
   'Meningitis B': '/book/39',
   'Rabies (3 doses)': '/book/34',
   'Shingles (Zostavax)': '/book/40',
   'Typhoid (1 dose or orally)': '/book/33',
-  // note: RSV (#54) should correspond to a real service id if added
-
 };
 
 const slugify = (s: string) =>
@@ -459,9 +425,9 @@ const HeaderMobile: React.FC = () => {
     setLevel2(null);
   };
 
-  const goTo = (label: string, prefix?: string) => {
+  const goTo = (label: string) => {
     const base = ROUTE_MAP[label] ?? `/${slugify(label)}`;
-    navigate(prefix ? `${prefix}${base}` : base);
+    navigate(base);
     closeAll();
   };
 
@@ -499,16 +465,30 @@ const HeaderMobile: React.FC = () => {
                 <img src={ICON_BACK} alt="Back" />
                 <span>{level2}</span>
               </div>
-              {browseSubMenuData[level2].map(item => (
-                <div
-                  key={item}
-                  className="mobile-item"
-                  onClick={() => goTo(item)}
-                >
-                  <span>{item}</span>
-                  <img src={ICON_CHEVRON} alt=">" />
-                </div>
-              ))}
+              {browseSubMenuData[level2].map(item => {
+                const isCovid =
+                  level2 === 'NHS Treatments' && item === 'COVID-19 Vaccination';
+                const isYellowFeverLS =
+                  level2 === 'Travel Vaccinations' && item === 'Yellow fever';
+                const disabled = isCovid || isYellowFeverLS;
+
+                return (
+                  <div
+                    key={item}
+                    className={`mobile-item${disabled ? ' disabled' : ''}`}
+                    onClick={() => !disabled && goTo(item)}
+                  >
+                    <span>{item}</span>
+                    {isCovid && <span className="tag seasonal">Seasonal</span>}
+                    {isYellowFeverLS && (
+                      <span className="tag coming-soon">Coming Soon</span>
+                    )}
+                    {!isCovid && !isYellowFeverLS && (
+                      <img src={ICON_CHEVRON} alt=">" />
+                    )}
+                  </div>
+                );
+              })}
             </div>
           )}
 
@@ -518,44 +498,91 @@ const HeaderMobile: React.FC = () => {
                 <img src={ICON_BACK} alt="Back" />
                 <span>{level1}</span>
               </div>
-              {dropdownData[level1].map(opt => (
-                <div
-                  key={opt}
-                  className="mobile-item"
-                  onClick={() => {
-                    if (level1 === 'Browse Services' && browseSubMenuData[opt]) {
-                      setLevel2(opt);
-                    } else {
-                      goTo(opt);
-                    }
-                  }}
-                >
-                  <span>{opt}</span>
-                  <img src={ICON_CHEVRON} alt=">" />
-                </div>
-              ))}
+              {dropdownData[level1].map(opt => {
+                const isFreeTag =
+                  level1 === 'Browse Services' &&
+                  (opt === 'NHS Treatments' || opt === 'Pharmacy First');
+                const isYellowFever =
+                  level1 === 'Travel Vaccinations' && opt === 'Yellow fever';
+                const disabled = isYellowFever;
+
+                return (
+                  <div
+                    key={opt}
+                    className={`mobile-item${disabled ? ' disabled' : ''}`}
+                    onClick={() => {
+                      if (
+                        level1 === 'Browse Services' &&
+                        browseSubMenuData[opt]
+                      ) {
+                        setLevel2(opt);
+                      } else if (!disabled) {
+                        goTo(opt);
+                      }
+                    }}
+                  >
+                    <span>{opt}</span>
+                    {/* {isFreeTag && <span className="tag free">Free</span>} */}
+                    {isYellowFever && (
+                      <span className="tag coming-soon">Coming Soon</span>
+                    )}
+                    {!isYellowFever && <img src={ICON_CHEVRON} alt=">" />}
+                  </div>
+                );
+              })}
             </div>
           )}
 
           {!level1 && !level2 && (
             <ul className="mobile-list start-menu">
               {Object.keys(dropdownData).map(menu => (
-                <li key={menu} className="mobile-item" onClick={() => setLevel1(menu)}>
+                <li
+                  key={menu}
+                  className="mobile-item"
+                  onClick={() => setLevel1(menu)}
+                >
                   <span>{menu}</span>
                 </li>
               ))}
-              <li className="mobile-item" onClick={() => { closeAll(); navigate('/microsuction-earwax-removal'); }}>
+              <li
+                className="mobile-item"
+                onClick={() => {
+                  closeAll();
+                  navigate('/microsuction-earwax-removal');
+                }}
+              >
                 <span>Microsuction Ear Wax Removal</span>
               </li>
-              <li className="mobile-item" onClick={() => { closeAll(); navigate('/emergency-supply'); }}>
+              <li
+                className="mobile-item"
+                onClick={() => {
+                  closeAll();
+                  navigate('/emergency-supply');
+                }}
+              >
                 <span>Emergency Supply</span>
               </li>
-              <li className="mobile-item" onClick={() => { closeAll(); navigate('/'); setTimeout(() => {
-                document.getElementById('find-us')?.scrollIntoView({ behavior: 'smooth' });
-              }, 50); }}>
+              <li
+                className="mobile-item"
+                onClick={() => {
+                  closeAll();
+                  navigate('/');
+                  setTimeout(() => {
+                    document
+                      .getElementById('find-us')
+                      ?.scrollIntoView({ behavior: 'smooth' });
+                  }, 50);
+                }}
+              >
                 <span>Contact</span>
               </li>
-              <li className="mobile-item2" onClick={() => { closeAll(); navigate('/login'); }}>
+              <li
+                className="mobile-item2"
+                onClick={() => {
+                  closeAll();
+                  navigate('/login');
+                }}
+              >
                 <span>Login</span>
               </li>
             </ul>

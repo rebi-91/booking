@@ -1,16 +1,144 @@
-/* Header.css */
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Lora:wght@400;700&display=swap');
 
-/* Make all elements use border-box sizing */
-* {
-    box-sizing: border-box;
-  }
-  
-  /* Top bar wrapper: centers the content, sets max width, and adds vertical + horizontal padding */
-  ._top-bar-wrapper__Y25dN {
-    max-width: 1184px;
-    width: 100%;
-    display: flex;
-    padding: 0.65rem 1rem;      /* 2.5rem top & bottom */
-    margin: auto 5rem !important;    /* auto top/bottom, 2.5rem left/right */
-  }
-  
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── BAR ─────────────────────────────────────────────────────────────── */
+.mobile-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 56px;
+  background: #ffffff;
+  box-shadow: 0 1px 13px rgba(196,213,233,0.8);
+  display: flex;
+  align-items: center;
+  padding: 0 0.5rem;
+  z-index: 1050;
+}
+
+.mobile-logo {
+  height: 29px;
+  object-fit: contain;
+}
+
+.call-icon {
+  margin-left: 0.85rem;
+}
+.call-icon img {
+  height: 24px;
+  width: 24px;
+}
+
+.flex-fill {
+  flex: 1;
+}
+
+.hamburger-btn {
+  background: none;
+  border: none;
+  width: 36px; height: 36px;
+  margin-left: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.hamburger-btn img {
+  width: 24px; height: 24px;
+}
+
+/* ── DRAWER ─────────────────────────────────────────────────────────── */
+.mobile-drawer {
+  position: fixed;
+  top: 56px; left: 0; right: 0; bottom: 0;
+  background: #cdd9f0;
+  overflow-y: auto;
+  padding: 1rem;
+  animation: slideDown 0.25s ease forwards;
+  z-index: 1040;
+}
+@keyframes slideDown {
+  from { transform: translateY(-100%); }
+  to   { transform: translateY(0); }
+}
+
+/* ── LISTS & ITEMS ───────────────────────────────────────────────────── */
+.mobile-list {
+  list-style: none;
+}
+
+.mobile-back {
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #00427b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+.mobile-back img {
+  width: 16px; height: 16px;
+  margin-right: 0.5rem;
+}
+
+.mobile-item,
+.mobile-item2,
+.mobile-item.book {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.15rem;
+  font-weight: 600;
+  padding: 1rem;
+  border-radius: 5px;
+  box-shadow: 0 3px 5px rgba(0,11,21,0.64), 0 4px 6px rgba(0,0,0,0.25);
+  margin-bottom: 0.6rem;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.mobile-item:active,
+.mobile-item2:active,
+.mobile-item.book:active {
+  transform: translateY(1px);
+}
+
+/* root‐level buttons (first screen) */
+.mobile-item.root {
+  background: #112e57;
+  color: #06ffb0;
+  text-align: center;
+}
+
+/* second‐level & third‐level */
+.mobile-item {
+  background: #4b86d9;
+  color: #072151;
+}
+.mobile-item.disabled {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* direct action items */
+.mobile-item2 {
+  background: #323e55;
+  color: #00e8fd;
+}
+.mobile-item.book {
+  background: #06ffb0;
+  color: #000;
+  font-weight: 700;
+}
+
+/* chevron icon on right */
+.mobile-item img {
+  width: 20px; height: 20px;
+  opacity: 0.6;
+}

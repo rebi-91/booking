@@ -1,5 +1,352 @@
-/* HomePage.css */
-.pt-header {
-    padding-top: 0px !important; /* equals your header height */
-  }
+.desktop-page {
+  background: #F5F6F8;
+  font-family: "Segoe UI", sans-serif;
+  color: #1C2B39;
+  padding-top: var(--header-height);
+}
+.hero-section {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  padding: 2rem 4rem;
+}
+.hero-text {
+  flex: 1;
+}
+.hero-text h1 {
+  font-size: 2.5rem;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+.hero-text p {
+  margin-bottom: 1.5rem;
+  color: #4F5B6A;
+}
+.hero-controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.browse-select {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 1px solid #CCC;
+  background: #FFF;
+  min-width: 200px;
+}
+.btn-get-started {
+  background: #00D364;
+  border: none;
+  color: #FFF;
+  padding: 0.6rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.btn-get-started:hover {
+  background: #00C358;
+}
+.hero-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.hero-rating img {
+  height: 1.2rem;
+}
+.hero-cards {
+  display: flex;
+  gap: 1rem;
+  flex: 1;
+}
+.stacked-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  cursor: pointer;
+  width: 346px;
+}
+.stacked-card .card-image {
+  flex: 1;
   
+}
+
+.stacked-card .card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.stacked-card .card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #FFF;
+  padding: 0.75rem 1rem;
+}
+.side-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.side-card {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  cursor: pointer;
+  width: 276px;
+}
+.side-card .card-image.small {
+  height: 100px;
+  overflow: hidden;
+}
+.side-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.popular-services,
+.pharmacy-first,
+.find-us {
+  background: #FFF;
+  margin: 0 4rem 2rem;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.05);
+}
+.popular-services header,
+.pharmacy-first header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.popular-services .grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 1.5rem;
+}
+.svc-card {
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+.svc-card:hover {
+  transform: translateY(-4px);
+}
+.svc-img {
+  height: 140px;
+  overflow: hidden;
+}
+.svc-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.svc-body {
+  padding: 1rem;
+  background: #FFF;
+}
+.pharmacy-first header {
+  margin-bottom: 1rem;
+}
+.pf-controls button {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  margin: 0 0.5rem;
+}
+.pf-track {
+  display: flex;
+  overflow: hidden;
+  gap: 16px;
+  scroll-behavior: smooth;
+}
+.pf-card {
+  border-radius: 12px;
+  overflow: hidden;
+  background: #FFF;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  width: 260px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.pf-card .pf-img {
+  height: 180px;
+  overflow: hidden;
+}
+.pf-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.pf-body {
+  padding: 1rem;
+  text-align: center;
+}
+.btn-start-sm {
+  background: #00D364;
+  border: none;
+  color: #FFF;
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+.find-us .row > * {
+  padding: 0 1rem;
+}
+.find-us iframe {
+  border: none;
+  border-radius: 8px;
+}
+/* Hero Cards Section */
+.hero-cards {
+  display: flex;
+  gap: 1.5rem;
+  flex: 1;
+  max-width: 800px;
+  max-height: 800px;
+}
+
+.featured-card {
+  flex: 1;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.featured-card:hover {
+  transform: translateY(-5px);
+}
+
+.featured-card .card-image {
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+}
+
+.featured-card .card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.featured-card:hover .card-image img {
+  transform: scale(1.03);
+}
+
+.card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 50%);
+  opacity: 0.8;
+}
+
+.featured-card .card-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  background: transparent;
+}
+
+.featured-card .card-footer h4 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.featured-card .card-footer i {
+  font-size: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.featured-card:hover .card-footer i {
+  transform: translateX(3px);
+}
+
+.side-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 40%;
+}
+
+.side-card {
+  flex: 1;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.side-card:hover {
+  transform: translateY(-5px);
+}
+
+.side-card .card-image {
+  position: relative;
+  height: 140px;
+  overflow: hidden;
+}
+
+.side-card .card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.side-card:hover .card-image img {
+  transform: scale(1.05);
+}
+
+.side-card .card-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  background: transparent;
+}
+
+.side-card .card-footer h5 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.side-card .card-footer i {
+  font-size: 0.875rem;
+  transition: transform 0.3s ease;
+}
+
+.side-card:hover .card-footer i {
+  transform: translateX(3px);
+}
+

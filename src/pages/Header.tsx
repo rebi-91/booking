@@ -1,712 +1,255 @@
-// // // import React, { useState } from 'react';
-// // import { useNavigate } from 'react-router-dom';
-// // import React, { useState } from 'react';
 
-// // const chevronDown =
-// //   'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//down-chevron.png';
-// // const MAIN_TEXT_COLOR = 'rgb(28, 43, 57)'; // #1C2B39
-
-// // // Top‐level menus
-// // const dropdownData: Record<string, string[]> = {
-// //   'Browse Services': [
-// //     'All Services',
-// //     'Travel Clinic',
-// //     'Private Treatments',
-// //     'NHS Treatments',
-// //     'Pharmacy First',
-// //   ],
-// //   'NHS Services': ['NHS Services', 'NHS Repeat Prescriptions', 'Delivery Service'],
-// //   'Weight Loss': ['Wegovy', 'Mounjaro'],
-// //   'Travel Vaccinations': [
-// //     'Cholera',
-// //     'Diphtheria, Tetanus & Polio',
-// //     'Rabies',
-// //     'Hepatitis A',
-// //     'Hepatitis B',
-// //     'Japanese Encephalitis',
-// //     'Tick-borne Encephalitis',
-// //     'Meningitis ACWY and Meningitis B',
-// //     'Typhoid',
-// //     'Mumps, Measles, and Rubella (MMR)',
-// //     'Yellow Fever Vaccination',
-// //   ],
-// // };
-
-// // // Second‐level for “Browse Services”
-// // const browseSubMenuData: Record<string, string[]> = {
-// //   'Private Treatments': [
-// //     'Microsuction Earwax Removal',
-// //     'Weight Loss Clinic',
-// //     'Private Flu Jab',
-// //     'Period Delay',
-// //     'Altitude Sickness',
-// //     'Vitamin B12 Injection',
-// //     'Hair Loss',
-// //     'Chickenpox Vaccine',
-// //     'Erectile Dysfunction',
-// //   ],
-// //   'NHS Treatments': [
-// //     'Blood Pressure Check',
-// //     'Oral Contraception',
-// //     'Flu Vaccination',
-// //     'COVID-19 Vaccination',
-// //   ],
-// //   'Pharmacy First': [
-// //     'Sinusitis',
-// //     'Sore Throat',
-// //     'Earache',
-// //     'Infected Insect Bite',
-// //     'Impetigo',
-// //     'Shingles',
-// //     'Uncomplicated UTI (Women)',
-// //   ],
-// // };
-
-// // // slugify for routes
-// // const slugify = (str: string) =>
-// //   str
-// //     .toLowerCase()
-// //     .replace(/[()]/g, '')
-// //     .replace(/[^a-z0-9]+/g, '-')
-// //     .replace(/^-+|-+$/g, '');
-
-// // const Header: React.FC = () => {
-// //   const [activeMenu, setActiveMenu] = useState<string | null>(null);
-// //   const [browseSelection, setBrowseSelection] = useState<string | null>(null);
-// //   const navigate = useNavigate();
-
-// //   const toggleMenu = (menu: string) => {
-// //     setBrowseSelection(null);
-// //     setActiveMenu(prev => (prev === menu ? null : menu));
-// //   };
-
-// //   return (
-// //     <div style={{ fontFamily: 'Work Sans, Arial, sans-serif', fontWeight: 500, fontSize: '1rem'   }}>
-// //       {/* ===== Fixed top bar ===== */}
-// //       <div       
-// //       style={{
-// //         position: 'fixed',
-// //          top: 0,
-// //         width: '100%',
-// //         background: 'white',
-// //          zIndex: 999,
-// //          /* no bottom-border here */
-// //      }}>
-// //         <div className="container d-flex justify-content-between align-items-center py-2">
-// //           <img
-// //             src="https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//coleshill.jpg"
-// //             alt="Logo"
-// //             style={{ height: 40 }}
-// //           />
-// //           <div className="d-flex align-items-center">
-// //             <a
-// //               href="mailto:coleshillpharmacy@nhs.com"
-// //               className="me-4 text-decoration-none"
-// //               style={{ color: MAIN_TEXT_COLOR }}
-// //             >
-// //               📧 coleshillpharmacy@nhs.com
-// //             </a>
-// //             <a
-// //               href="tel:01634404142"
-// //               className="text-decoration-none"
-// //               style={{ color: MAIN_TEXT_COLOR }}
-// //             >
-// //               📞 01634 404142
-// //             </a>
-// //           </div>
-// //         </div>
-
-// //         {/* ===== Nav bar ===== */}
-// //         <div
-// //           className="bg-light border-top border-bottom"
-// //           style={{
-// //             height: '55px',
-// //             fontFamily: 'Work Sans, Arial, sans-serif',
-// //             fontWeight: 500,
-// //             fontSize: '1rem',
-// //           }}
-// //         >
-// //           <div
-// //             className="container d-flex justify-content-between align-items-center h-100"
-// //             style={{
-// //               fontFamily: 'Work Sans, Arial, sans-serif',
-// //               fontWeight: 500,
-// //               fontSize: '1rem',
-// //             }}
-// //           >
-// //             <div
-// //               className="d-flex align-items-center flex-nowrap overflow-auto"
-// //               style={{
-// //                 fontFamily: 'Work Sans, Arial, sans-serif',
-              
-// //                 fontSize: '1rem',
-// //               }}
-// //             >
-// //               {[
-// //                 'Browse Services',
-// //                 'NHS Services',
-// //                 'Weight Loss',
-// //                 'Travel Vaccinations',
-// //               ].map(label => (
-// //                 <button
-// //                   key={label}
-// //                   onClick={() => toggleMenu(label)}
-// //                   className="d-flex align-items-center me-3 p-0"
-// //                   style={{
-// //                     background: 'none',
-// //                     border: 'none',
-// //                     padding: 0,
-// //                     margin: 0,
-// //                     fontWeight: 500,
-// //                     fontSize: '1rem',
-// //                     color: MAIN_TEXT_COLOR,
-// //                     cursor: 'pointer',
-// //                   }}
-// //                 >
-// //                   {label}
-// //                   <img
-// //                     src={chevronDown}
-// //                     alt=""
-// //                     style={{
-// //                       width: 20,
-// //                       marginLeft: 4,
-// //                       transform: activeMenu === label ? 'rotate(180deg)' : undefined,
-// //                       transition: 'transform 0.3s',
-// //                     }}
-// //                   />
-// //                 </button>
-// //               ))}
-
-// //               <span
-// //                 className="me-3"
-// //                 style={{
-// //                   fontSize: '1rem',
-// //                   cursor: 'pointer',
-// //                   color: MAIN_TEXT_COLOR,
-// //                   padding: '8px 12px',
-// //                 }}
-// //               >
-// //                 Blog
-// //               </span>
-// //               <span
-// //                 className="me-3"
-// //                 style={{
-// //                   fontSize: '1rem',
-// //                   cursor: 'pointer',
-// //                   color: MAIN_TEXT_COLOR,
-// //                   padding: '8px 28px',
-// //                 }}
-// //               >
-// //                 Contact
-// //               </span>
-// //             </div>
-// //             <button
-// //               className="btn"
-// //               style={{
-// //                 backgroundColor: 'rgb(80, 248, 228)',
-// //                 color: '#000',
-// //                 fontWeight: 'bold',
-// //                 fontSize: '1rem',
-// //                 padding: '8px 18px',
-// //               }}
-// //             >
-// //               Book Now
-// //             </button>
-// //           </div>
-// //         </div>
-// //       </div>
-
-// //       {/* ====== Dropdown Overlay ====== */}
-// //       {activeMenu && (
-// //         <>
-// //           {/* backdrop */}
-// //           <div
-// //             onClick={() => {
-// //               setActiveMenu(null);
-// //               setBrowseSelection(null);
-// //             }}
-// //             style={{
-// //               position: 'fixed',
-// //               top: 100,
-// //               left: 0,
-// //               width: '100%',
-// //               height: 'calc(100vh - 100px)',
-// //               background: 'rgba(0,0,0,0.3)',
-// //               zIndex: 997,
-// //             }}
-// //           />
-
-// //           {/* panel */}
-// //           <div
-// //             style={{
-// //               position: 'fixed',
-// //               top: 100,
-// //               left: 0,
-// //               width: '100%',
-// //               height: 'calc(100vh - 100px)',
-// //               background: '#fff',
-// //               zIndex: 998,
-// //               overflowY: 'auto',
-// //               padding: '2rem',
-// //             }}
-// //           >
-// //             {activeMenu === 'Browse Services' ? (
-// //               <div style={{ display: 'flex' }}>
-// //                 {/* First level */}
-// //                 <ul className="list-unstyled ps-0 me-4" style={{ minWidth: 200 }}>
-// //                   {dropdownData['Browse Services'].map((item, idx) => (
-// //                     <li
-// //                       key={idx}
-// //                       className="py-3 px-4 d-flex justify-content-between align-items-center"
-// //                       style={{
-// //                         color: MAIN_TEXT_COLOR,
-// //                         cursor: 'pointer',
-// //                         opacity:
-// //                           browseSelection && browseSelection !== item ? 0.5 : 1,
-// //                         fontWeight:
-// //                           browseSelection === item ? 700 : 500,
-// //                       }}
-// //                       onClick={() => {
-// //                         if (item === 'All Services') {
-// //                           navigate('/services');
-// //                           setActiveMenu(null);
-// //                         } else if (item === 'Travel Clinic') {
-// //                           navigate('/travel-clinic');
-// //                           setActiveMenu(null);
-// //                         } else {
-// //                           setBrowseSelection(item);
-// //                         }
-// //                       }}
-// //                     >
-// //                       {item}
-// //                       <img
-// //                         src={chevronDown}
-// //                         alt=""
-// //                         style={{ width: 20, marginLeft: 240, marginRight:-30, transform: 'rotate(-90deg)' }}
-// //                       />
-// //                     </li>
-// //                   ))}
-// //                 </ul>
-
-// //                 {/* Second level */}
-// //                 {browseSelection && (
-// //                   <ul
-// //                     className="list-unstyled ps-0 border-start border-end"
-// //                     style={{ flex: 1, paddingLeft: '1rem' }}
-// //                   >
-// //                     {browseSubMenuData[browseSelection].map((sub, idx) => (
-// //                       <li
-// //                         key={idx}
-// //                         className="py-3 px-4  d-flex justify-content-between align-items-center"
-// //                         style={{ color: MAIN_TEXT_COLOR, cursor: 'pointer' }}
-// //                         onClick={() => {
-// //                           const slug = slugify(sub);
-// //                           const path =
-// //                             browseSelection === 'Pharmacy First'
-// //                               ? `/pharmacy-first/${slug}`
-// //                               : `/${slug}`;
-// //                           navigate(path);
-// //                           setActiveMenu(null);
-// //                           setBrowseSelection(null);
-// //                         }}
-// //                       >
-// //                         {sub}
-// //                         <img
-// //                           src={chevronDown}
-// //                           alt=""
-// //                           style={{ width: 20, transform: 'rotate(-90deg)' }}
-// //                         />
-// //                       </li>
-// //                     ))}
-// //                   </ul>
-// //                 )}
-// //               </div>
-// //             ) : (
-// //               // fallback for other top‐level menus
-// //               <ul className="list-unstyled ps-0">
-// //                 {dropdownData[activeMenu]?.map((item, idx) => (
-// //                   <li
-// //                     key={idx}
-// //                     className="py-3 px-4 border-bottom d-flex justify-content-between align-items-center"
-// //                     style={{ color: MAIN_TEXT_COLOR, cursor: 'pointer' }}
-// //                     onClick={() => {
-// //                       navigate(`/${slugify(item)}`);
-// //                       setActiveMenu(null);
-// //                     }}
-// //                   >
-// //                     {item}
-// //                     <img
-// //                       src={chevronDown}
-// //                       alt=""
-// //                       style={{ width: 20, transform: 'rotate(-90deg)' }}
-// //                     />
-// //                   </li>
-// //                 ))}
-// //               </ul>
-// //             )}
-// //           </div>
-// //         </>
-// //       )}
-// //     </div>
-// //   );
-// // };
-
-// // export default Header;
-// // Header.tsx
-// // Header.tsx
-
-// import React, { useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import './Header.css';
-
-// const chevronDown =
-//   'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//down-chevron.png';
-// const MAIN_TEXT_COLOR = 'rgb(28, 43, 57)'; // #1C2B39
-
-// // Top‐level menus
-// const dropdownData: Record<string, string[]> = {
-//   'Browse Services': [
-//     'All Services',
-//     'Travel Clinic',
-//     'Private Treatments',
-//     'NHS Treatments',
-//     'Pharmacy First',
-//   ],
-//   'NHS Services': ['NHS Services', 'NHS Repeat Prescriptions', 'Delivery Service'],
-//   'Weight Loss': ['Wegovy', 'Mounjaro'],
-//   'Travel Vaccinations': [
-//     'Cholera',
-//     'Diphtheria, Tetanus & Polio',
-//     'Rabies',
-//     'Hepatitis A',
-//     'Hepatitis B',
-//     'Japanese Encephalitis',
-//     'Tick-borne Encephalitis',
-//     'Meningitis ACWY and Meningitis B',
-//     'Typhoid',
-//     'Mumps, Measles, and Rubella (MMR)',
-//     'Yellow Fever Vaccination',
-//   ],
-// };
-
-// // Second‐level for “Browse Services”
-// const browseSubMenuData: Record<string, string[]> = {
-//   'Private Treatments': [
-//     'Microsuction Earwax Removal',
-//     'Weight Loss Clinic',
-//     'Private Flu Jab',
-//     'Period Delay',
-//     'Altitude Sickness',
-//     'Vitamin B12 Injection',
-//     'Hair Loss',
-//     'Chickenpox Vaccine',
-//     'Erectile Dysfunction',
-//   ],
-//   'NHS Treatments': [
-//     'Blood Pressure Check',
-//     'Oral Contraception',
-//     'Flu Vaccination',
-//     'COVID-19 Vaccination',
-//   ],
-//   'Pharmacy First': [
-//     'Sinusitis',
-//     'Sore Throat',
-//     'Earache',
-//     'Infected Insect Bite',
-//     'Impetigo',
-//     'Shingles',
-//     'Uncomplicated UTI (Women)',
-//   ],
-// };
-
-// // slugify for routes
-// const slugify = (str: string) =>
-//   str
-//     .toLowerCase()
-//     .replace(/[()]/g, '')
-//     .replace(/[^a-z0-9]+/g, '-')
-//     .replace(/^-+|-+$/g, '');
+// import React from 'react';
+// import { useMediaQuery } from 'react-responsive';
+// import HeaderDesktop from './HeaderDesktop';
+// import HeaderMobile from './HeaderMobile';
 
 // const Header: React.FC = () => {
-//   const [activeMenu, setActiveMenu] = useState<string | null>(null);
-//   const [browseSelection, setBrowseSelection] = useState<string | null>(null);
-//   const navigate = useNavigate();
-
-//   const toggleMenu = (menu: string) => {
-//     setBrowseSelection(null);
-//     setActiveMenu(prev => (prev === menu ? null : menu));
-//   };
-
-//   return (
-//     <header
-//       className="fixed-top bg-white mt-0"
-//       style={{
-//         fontFamily: 'Work Sans, Arial, sans-serif',
-//         fontWeight: 500,
-//         fontSize: '1rem',
-//         zIndex: 999,
-//       }}
-//     >
-//       {/* ===== Fixed top bar ===== */}
-//       <div className="_top-bar-wrapper__Y25dN container d-flex justify-content-between align-items-center">
-//         <img
-//           src="https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//coleshill.jpg"
-//           alt="Logo"
-//           style={{ height: 40 }}
-//         />
-//         <div className="d-flex align-items-center">
-//           <a
-//             href="mailto:coleshillpharmacy@nhs.com"
-//             className="me-4 text-decoration-none"
-//             style={{ color: MAIN_TEXT_COLOR }}
-//           >
-//             📧 coleshillpharmacy@nhs.com
-//           </a>
-//           <button
-//   className="mobile-call-btn"
-//   onClick={() => window.location.href = 'tel:01634404142'}
-//   aria-label="Call us"
-// >
-//   📞
-// </button>
-//         </div>
-//       </div>
-
-//       {/* ===== Nav bar ===== */}
-//       <div className="bg-light border-top border-bottom" style={{ height: '55px' }}>
-//         <div
-//           className="container-fluid px-0 d-flex justify-content-between align-items-center h-100"
-//           style={{
-//             fontFamily: 'Work Sans, Arial, sans-serif',
-//             fontWeight: 500,
-//             fontSize: '1rem',
-//           }}
-//         >
-//           {/* ← container-fluid + px-0 removes all left padding */}
-//           <div
-//             className="d-flex align-items-center flex-nowrap overflow-auto ps-5"
-//             style={{ fontSize: '1rem' }}
-//           >
-//             {[
-//               'Browse Services',
-//               'NHS Services',
-//               'Weight Loss',
-//               'Travel Vaccinations',
-//             ].map(label => (
-//               <button
-//                 key={label}
-//                 onClick={() => toggleMenu(label)}
-//                 className="d-flex align-items-center me-1 p-3"
-//                 style={{
-//                   background: 'none',
-//                   border: 'none',
-//                   padding: 0,
-//                   marginLeft: -40,
-//                   marginRight: 0,
-//                   fontWeight: 500,
-//                   color: MAIN_TEXT_COLOR,
-//                   cursor: 'pointer',
-//                 }}
-//               >
-//                 {label}
-//                 <img
-//                   src={chevronDown}
-//                   alt=""
-//                   style={{
-//                     width: 20,
-//                     marginLeft: 9,
-//                     transform: activeMenu === label ? 'rotate(180deg)' : undefined,
-//                     transition: 'transform 0.3s',
-//                   }}
-//                 />
-//               </button>
-//             ))}
-
-//             <span
-//               className="me-3"
-//               style={{
-//                 fontSize: '1rem',
-//                 cursor: 'pointer',
-//                 color: MAIN_TEXT_COLOR,
-//                 padding: '8px 12px',
-//               }}
-//             >
-//               Blog
-//             </span>
-//             <span
-//               className="me-3"
-//               style={{
-//                 fontSize: '1rem',
-//                 cursor: 'pointer',
-//                 color: MAIN_TEXT_COLOR,
-//                 padding: '8px 28px',
-//               }}
-//             >
-//               Contact
-//             </span>
-//           </div>
-//           <button
-//             className="btn"
-//             style={{
-//               backgroundColor: 'rgb(80, 248, 228)',
-//               color: '#000',
-//               fontWeight: 'bold',
-//               fontSize: '1rem',
-//               marginRight: 200,
-//               padding: '8px 18px',
-//             }}
-//           >
-//             Book Now
-//           </button>
-//         </div>
-//       </div>
-
-//       {/* ===== Dropdown Overlay ===== */}
-//       {activeMenu && (
-//         <>
-//           {/* backdrop */}
-//           <div
-//             onClick={() => {
-//               setActiveMenu(null);
-//               setBrowseSelection(null);
-//             }}
-//             style={{
-//               position: 'fixed',
-//               top: 'calc(3.9rem + 55px)', // account for top-bar padding + nav height
-//               left: 0,
-//               width: '100%',
-//               height: `calc(100vh - ${2.5 /*rem*/ * 16}px - 75px)`,
-//               background: 'rgba(0,0,0,0.3)',
-//               zIndex: 997,
-//             }}
-//           />
-
-//           {/* panel */}
-//           <div
-//             style={{
-//               position: 'fixed',
-//               marginTop: 21,
-//               top: 'calc(2.5rem + 55px)',
-//               left: 0,
-//               width: '100%',
-//               height: `calc(100vh - ${2.5 /*rem*/ * 16}px - 55px)`,
-//               background: '#fff',
-//               zIndex: 998,
-//               overflowY: 'auto',
-//               padding: '2rem',
-//             }}
-//           >
-//             {activeMenu === 'Browse Services' ? (
-//               <div style={{ display: 'flex', marginTop: -20 }}>
-//                 {/* First level */}
-//                 <ul className="list-unstyled ps-0 me-4" style={{ minWidth: 200 }}>
-//                   {dropdownData['Browse Services'].map((item, idx) => (
-//                     <li
-//                       key={idx}
-//                       className="py-3 px-5 d-flex justify-content-between align-items-center"
-//                       style={{
-//                         color: MAIN_TEXT_COLOR,
-//                         cursor: 'pointer',
-//                         opacity:
-//                           browseSelection && browseSelection !== item ? 0.5 : 1,
-//                         fontWeight:
-//                           browseSelection === item ? 700 : 500,
-//                       }}
-//                       onClick={() => {
-//                         if (item === 'All Services') {
-//                           navigate('/services');
-//                           setActiveMenu(null);
-//                         } else if (item === 'Travel Clinic') {
-//                           navigate('/travel-clinic');
-//                           setActiveMenu(null);
-//                         } else {
-//                           setBrowseSelection(item);
-//                         }
-//                       }}
-//                     >
-//                       {item}
-//                       <img
-//                         src={chevronDown}
-//                         alt=""
-//                         style={{ width: 20, marginLeft: 240, marginRight: -30, transform: 'rotate(-90deg)' }}
-//                       />
-//                     </li>
-//                   ))}
-//                 </ul>
-
-//                 {/* Second level */}
-//                 {browseSelection && (
-//                   <ul
-//                     className="list-unstyled ps-0 border-start border-end"
-//                     style={{ flex: 1, paddingLeft: '1rem' }}
-//                   >
-//                     {browseSubMenuData[browseSelection].map((sub, idx) => (
-//                       <li
-//                         key={idx}
-//                         className="py-3 px-4 d-flex justify-content-between align-items-center"
-//                         style={{ color: MAIN_TEXT_COLOR, cursor: 'pointer' }}
-//                         onClick={() => {
-//                           const slug = slugify(sub);
-//                           const path =
-//                             browseSelection === 'Pharmacy First'
-//                               ? `/pharmacy-first/${slug}`
-//                               : `/${slug}`;
-//                           navigate(path);
-//                           setActiveMenu(null);
-//                           setBrowseSelection(null);
-//                         }}
-//                       >
-//                         {sub}
-//                         <img
-//                           src={chevronDown}
-//                           alt=""
-//                           style={{ width: 20, transform: 'rotate(-90deg)' }}
-//                         />
-//                       </li>
-//                     ))}
-//                   </ul>
-//                 )}
-//               </div>
-//             ) : (
-//               // fallback for other top-level menus
-//               <ul className="list-unstyled ps-0">
-//                 {dropdownData[activeMenu!].map((item, idx) => (
-//                   <li
-//                     key={idx}
-//                     className="py-3 px-4 border-bottom d-flex justify-content-between align-items-center"
-//                     style={{ color: MAIN_TEXT_COLOR, cursor: 'pointer' }}
-//                     onClick={() => {
-//                       navigate(`/${slugify(item)}`);
-//                       setActiveMenu(null);
-//                     }}
-//                   >
-//                     {item}
-//                     <img
-//                       src={chevronDown}
-//                       alt=""
-//                       style={{ width: 20, transform: 'rotate(-90deg)' }}
-//                     />
-//                   </li>
-//                 ))}
-//               </ul>
-//             )}
-//           </div>
-//         </>
-//       )}
-//     </header>
-//   );
+//   const isDesktop = useMediaQuery({ minWidth: 768 });
+//   return isDesktop ? <HeaderDesktop /> : <HeaderMobile />;
 // };
 
 // export default Header;
-// src/components/Header/Header.tsx
-import React from 'react';
-import { useMediaQuery } from 'react-responsive';
-import HeaderDesktop from './HeaderDesktop';
-import HeaderMobile from './HeaderMobile';
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import './Head.css';
 
-const Header: React.FC = () => {
-  const isDesktop = useMediaQuery({ minWidth: 768 });
-  return isDesktop ? <HeaderDesktop /> : <HeaderMobile />;
-};
+const ICON_HAMBURGER =
+  'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//menu-2.png';
+const ICON_CLOSE =
+  'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//close-2.png';
+const ICON_PHONE =
+  'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//phone.png';
+const ICON_CHEVRON =
+  'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//chevron.png';
+const ICON_BACK =
+  'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//back-arrow.png';
+  const ICON_LOGO =
+  'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//coleshill.jpg';
 
-export default Header;
+
+  const dropdownData: Record<string, string[]> = {
+    'Browse Services': [
+      'All Services',
+      'Travel Clinic',
+      'Private Treatments',
+      'NHS Treatments',
+      'Pharmacy First',
+    ],
+    'Weight Loss': ['Wegovy', 'Mounjaro'],
+    'Travel Vaccinations': [
+      'Chicken pox',
+      'Cholera (2 doses – special cases)',
+      'Dengue Fever',
+      'Diphtheria, Tetanus and Polio',
+      'Hepatitis A (2 doses)',
+      'Hepatitis B (3 doses)',
+      'HPV',
+      'Japanese Encephalitis',
+      'Meningitis ACWY (1 dose – for Hajj/Umrah)',
+      'Meningitis B',
+      'Rabies (3 doses)',
+      'Shingles (Zostavax)',
+      'Typhoid (1 dose or orally)',
+      'Yellow fever',
+    ],
+  };
+  
+  const browseSubMenuData: Record<string, string[]> = {
+    'Private Treatments': [
+      'Microsuction Earwax Removal',
+      'Weight Loss Management',
+      'Private Flu Jab',
+      'Period Delay',
+      'Period Pain',
+      'Altitude sickness',
+      'Vitamin B12 Injection',
+      'Male Pattern Baldness (Androgenic Alopecia)',
+      'Erectile dysfunction',
+      'Traveller’s Diarrhoea',
+      'Female Hirsutism in Women',
+      'Jet Lag',
+      'Oral Thrush',
+      'Pain Relief (Naproxen)',
+      'Hay Fever (Fexofenadine or Dymista)',
+      'Uncomplicated UTI (Women)',
+    ],
+    'NHS Treatments': [
+      'Blood Pressure Check',
+      'Oral Contraception',
+      'Flu Vaccination',
+      'COVID-19 Vaccination',
+    ],
+    'Pharmacy First': [
+      'Sinusitis',
+      'Sore throat',
+      'Earache',
+      'Infected insect bite',
+      'Impetigo',
+      'Shingles',
+      'Uncomplicated UTI (Women)',
+    ],
+  };
+  
+  const ROUTE_MAP: Record<string, string> = {
+    'All Services': '/services',
+    'Travel Clinic': '/book/3',
+    'Private Treatments': '/private-treatments',
+    'NHS Treatments': '/nhs-treatments',
+    'Pharmacy First': '/pharmacy-first',
+    'Weight loss management': '/weight-loss-management',
+    Wegovy: '/wegovy',
+    Mounjaro: '/mounjaro',
+    'Chicken pox': '/book/38',
+    'Cholera (2 doses – special cases)': '/book/36',
+    'Dengue Fever': '/book/43',
+    'Diphtheria, Tetanus and Polio': '/book/30',
+    'Hepatitis A (2 doses)': '/book/31',
+    'Hepatitis B (3 doses)': '/book/32',
+    HPV: '/book/42',
+    'Japanese Encephalitis': '/book/37',
+    'Meningitis ACWY (1 dose – for Hajj/Umrah)': '/book/35',
+    'Meningitis B': '/book/39',
+    'Rabies (3 doses)': '/book/34',
+    'Shingles (Zostavax)': '/book/40',
+    'Typhoid (1 dose or orally)': '/book/33',
+    'Yellow fever': '/book/17',
+    // more direct items:
+    'Microsuction Earwax Removal': '/microsuction-earwax-removal',
+    'Emergency Supply': '/emergency-supply',
+    Contact: '/#find-us',
+    Login: '/login',
+    'Order your prescription': '/order-prescription',
+  };
+  
+
+function slugify(s:string){
+  return s
+    .toLowerCase()
+    .replace(/[()]/g,'')
+    .replace(/[^a-z0-9]+/g,'-')
+    .replace(/^-+|-+$/g,'');
+}
+
+export default function Header(){
+  const [open,setOpen] = useState(false);
+  const [lvl1,setLvl1] = useState<string|null>(null);
+  const [lvl2,setLvl2] = useState<string|null>(null);
+  const nav = useNavigate();
+
+  const closeAll = ()=>{
+    setOpen(false);
+    setLvl1(null);
+    setLvl2(null);
+  };
+  const goTo = (label:string)=>{
+    closeAll();
+    const to = ROUTE_MAP[label] ?? '/'+slugify(label);
+    if(to.startsWith('#')) window.location.hash = to.slice(1);
+    else nav(to);
+  };
+
+  return (
+    <header className="header-bar d-flex align-items-center">
+      <Link to="/" onClick={closeAll}>
+        <img src={ICON_LOGO} alt="Logo" className="logo ms-2 header-logo"/>
+      </Link>
+      <a href="tel:01634404142" className="phone-link">
+        <img src={ICON_PHONE} alt="Call us" className="phone-icon"/>
+      </a>
+      <div className="flex-grow-1"></div>
+      <button
+        className="btn p-0 menu-button"
+        onClick={()=>setOpen(o=>!o)}
+        aria-label={open?'Close menu':'Open menu'}
+      >
+        <img
+          src={open?ICON_CLOSE:ICON_HAMBURGER}
+          alt=""
+          className="hamburger-icon"
+        />
+      </button>
+
+
+      {open && (
+        <div className="drawer">
+          {/* level2 submenu */}
+          {lvl2 && (
+            <ul className="list-unstyled px-3">
+              <li className="mb-2 back" onClick={()=>setLvl2(null)}>
+                <img src={ICON_BACK} alt="Back" className="me-2"/> {lvl2}
+              </li>
+              {browseSubMenuData[lvl2].map(item=>{
+                const disabled = (lvl2==='NHS Treatments' && item==='COVID-19 Vaccination')
+                              || (lvl2==='Travel Vaccinations' && item==='Yellow fever');
+                return (
+                  <li
+                    key={item}
+                    className={`item ${disabled?'disabled':''}`}
+                    onClick={()=>!disabled&&goTo(item)}
+                  >
+                    <span>{item}</span>
+                    {!disabled && <img src={ICON_CHEVRON} alt=">" className="chevron"/>}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+
+          {/* level1 submenu */}
+          {!lvl2 && lvl1 && (
+            <ul className="list-unstyled px-3">
+              <li className="mb-2 back" onClick={()=>setLvl1(null)}>
+                <img src={ICON_BACK} alt="Back" className="me-2"/> {lvl1}
+              </li>
+              {dropdownData[lvl1].map(opt=>{
+                const hasSub = !!browseSubMenuData[opt];
+                const disabled = opt==='Yellow fever';
+                return (
+                  <li
+                    key={opt}
+                    className={`item ${disabled?'disabled':''}`}
+                    onClick={()=>{
+                      if(hasSub) setLvl2(opt);
+                      else if(!disabled) goTo(opt);
+                    }}
+                  >
+                    <span>{opt}</span>
+                    {!disabled && <img src={ICON_CHEVRON} alt=">" className="chevron"/>}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+
+          {/* root menu */}
+          {!lvl1 && !lvl2 && (
+            <ul className="list-unstyled px-3">
+              {Object.keys(dropdownData).map(menu=>(
+                <li key={menu}
+                    className="item root"
+                    onClick={()=>setLvl1(menu)}
+                >{menu}</li>
+              ))}
+              {['Microsuction Earwax Removal','Emergency Supply','Contact']
+                .map(it=>(
+                  <li key={it} className="item alt" onClick={()=>goTo(it)}>
+                    {it}
+                  </li>
+                ))
+              }
+              {['Login']
+                .map(it=>(
+                  <li key={it} className="item alt1" onClick={()=>goTo(it)}>
+                    {it}
+                  </li>
+                ))
+              }
+             
+            </ul>
+          )}
+        </div>
+      )}
+    </header>
+  );
+}

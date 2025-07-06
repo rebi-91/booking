@@ -87,7 +87,7 @@ const MounjaroPage: React.FC = () => {
               {/* Book Appointment CTA */}
               <button
                 className="btn-accent"
-                onClick={() => navigate('/book/13')} 
+                onClick={() => navigate('/book/55')} 
               >
                 Book Your Mounjaro Consultation
               </button>
@@ -240,7 +240,7 @@ const MounjaroPage: React.FC = () => {
             <button
               className="btn-accent"
               style={{ padding: '0.75rem 2rem', fontSize: '1rem' }}
-              onClick={() => navigate('/book/13')}
+              onClick={() => navigate('/book/55')}
             >
               Book Your Appointment Now
             </button>

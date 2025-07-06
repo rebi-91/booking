@@ -2,11 +2,11 @@
 
 .container {
     width: 100%;
-    max-width: 400px;
+    max-width: 370px;
     padding: 20px;
     background-color: #1e1e1e;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 5px rgba(9, 9, 9, 0.842) !important;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #ffffff;
     

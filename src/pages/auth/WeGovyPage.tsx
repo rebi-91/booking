@@ -87,7 +87,7 @@ const WegovyPage: React.FC = () => {
               {/* Book Appointment CTA */}
               <button
                 className="btn-accent"
-                onClick={() => navigate('/book/13')} // Assuming 16 is the ID for Wegovy booking
+                onClick={() => navigate('/book/66')} // Assuming 16 is the ID for Wegovy booking
               >
                 Book Your Wegovy Consultation
               </button>
@@ -220,7 +220,7 @@ const WegovyPage: React.FC = () => {
             <button
               className="btn-accent"
               style={{ padding: '0.75rem 2rem', fontSize: '1rem' }}
-              onClick={() => navigate('/book/16')}
+              onClick={() => navigate('/book/66')}
             >
               Book Your Appointment Now
             </button>

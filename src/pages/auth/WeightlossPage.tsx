@@ -162,7 +162,7 @@ const WeightlossPage: React.FC = () => {
             </ul>
             <button
               className="btn-accent"
-              onClick={() => navigate('/book/13')}
+              onClick={() => navigate('/book/12')}
             >
               Book Your Free Consultation
             </button>

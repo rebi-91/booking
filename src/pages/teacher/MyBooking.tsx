@@ -170,19 +170,14 @@
 // // File: src/pages/teacher/BookingBoard.tsx
 // File: src/pages/patient/MyBooking.tsx
 // File: src/pages/patient/MyBooking.tsx
+// src/pages/teacher/MyBooking.tsx
 
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  CSSProperties,
-} from "react";
+import React, { useState, useEffect, useMemo, CSSProperties } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSession } from "../../context/SessionContext";
 import supabase from "../../supabase";
 import { DateRange, RangeKeyDict } from "react-date-range";
-import { FaHome } from "react-icons/fa";
-import { FaUserAlt } from "react-icons/fa";
+import { FaHome, FaUserAlt } from "react-icons/fa";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 
@@ -216,7 +211,7 @@ export default function MyBooking() {
     null
   );
 
-  // → redirect non-patients
+  // ── redirect non-patients ────────────────────────────────────────────────
   useEffect(() => {
     if (!session) return navigate("/sign-in");
     (async () => {
@@ -229,7 +224,7 @@ export default function MyBooking() {
     })();
   }, [session, navigate]);
 
-  // → load bookings
+  // ── load bookings ───────────────────────────────────────────────────────
   useEffect(() => {
     if (!session) return;
     (async () => {
@@ -240,7 +235,6 @@ export default function MyBooking() {
           .select("*")
           .eq("customerID", session.user.id);
         if (error) throw error;
-        // sort by date desc, then time asc
         const sorted = (data as Booking[]).sort((a, b) =>
           a.date !== b.date
             ? b.date.localeCompare(a.date)
@@ -255,50 +249,39 @@ export default function MyBooking() {
     })();
   }, [session]);
 
-  // → toggle Attending ↔ Cancelled
+  // ── toggle Attending ↔ Cancelled ────────────────────────────────────────
   const toggleStatus = async (b: Booking) => {
     const newStatus =
-      (b.pending || "Attending") === "Attending"
-        ? "Cancelled"
-        : "Attending";
+      (b.pending || "Attending") === "Attending" ? "Cancelled" : "Attending";
     await supabase
       .from("bookings")
       .update({ pending: newStatus })
       .eq("id", b.id);
     setAllBookings((prev) =>
-      prev.map((x) =>
-        x.id === b.id ? { ...x, pending: newStatus } : x
-      )
+      prev.map((x) => (x.id === b.id ? { ...x, pending: newStatus } : x))
     );
   };
 
+  // ── filter logic ────────────────────────────────────────────────────────
+  const filtered = useMemo(() => {
+    const s0 = range[0].startDate!;
+    const e0 = range[0].endDate!;
+    return allBookings.filter((b) => {
+      const d = new Date(b.date);
+      if (!showCalendar) {
+        return d >= s0 && d <= e0;
+      }
+      if (lastChanged === "start") {
+        return d >= s0;
+      }
+      if (lastChanged === "end") {
+        return d <= e0;
+      }
+      return true;
+    });
+  }, [allBookings, range, showCalendar, lastChanged]);
 
-  // …inside your MyBooking component…
-
-// 1) Add showCalendar and lastChanged to your deps:
-const filtered = useMemo(() => {
-  const s0 = range[0].startDate!;
-  const e0 = range[0].endDate!;
-  return allBookings.filter((b) => {
-    const d = new Date(b.date);
-    // If the calendar is collapsed (i.e. you've picked both), do the full range:
-    if (!showCalendar) {
-      return d >= s0 && d <= e0;
-    }
-    // Otherwise if you only just picked START, show everything from that day on:
-    if (lastChanged === "start") {
-      return d >= s0;
-    }
-    // Or if you only just picked END, show everything up to that day:
-    if (lastChanged === "end") {
-      return d <= e0;
-    }
-    // Before you pick anything, show all bookings:
-    return true;
-  });
-}, [allBookings, range, showCalendar, lastChanged]);
-
-  // → group by date
+  // ── group by date ───────────────────────────────────────────────────────
   const grouped = useMemo(() => {
     return filtered.reduce<Record<string, Booking[]>>((acc, b) => {
       (acc[b.date] ||= []).push(b);
@@ -306,104 +289,113 @@ const filtered = useMemo(() => {
     }, {});
   }, [filtered]);
 
-  // → styles
+  // ── styles ─────────────────────────────────────────────────────────────
   const styles: Record<string, CSSProperties> = {
     page: {
-      background: "#000",
+      background: "#121212",
       minHeight: "100vh",
-      color: "#fff",
-      padding: 20,
+      color: "#EEE",
+      padding: "2rem",
+      fontFamily: "Segoe UI, sans-serif",
     },
     container: {
       maxWidth: 900,
       margin: "0 auto",
-      background: "#111",
-      borderRadius: 8,
-      padding: 20,
+      background: "#1E1E1E",
+      borderRadius: 12,
+      padding: "2rem",
       position: "relative",
+      boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
     },
     homeBtn: {
       position: "absolute",
       top: 16,
       right: 16,
       fontSize: 24,
-      color: "#0af",
+      color: "#4A90E2",
       cursor: "pointer",
     },
-    homeBtn2: {
+    profileBtn: {
       position: "absolute",
-      top: 19.8,
-      right: 62,
-      fontSize: 19,
-      color: "#0af",
-     
+      top: 16,
+      right: 56,
+      fontSize: 20,
+      color: "#4A90E2",
       cursor: "pointer",
     },
     title: {
-      fontSize: "1.5rem",
+      fontSize: "2rem",
       fontWeight: 600,
-      marginBottom: 16,
-      color: "#3b7",
+      marginBottom: "1rem",
+      color: "#4A90E2",
+      textAlign: "center",
     },
     controls: {
       display: "flex",
-      gap: 10,
-      marginBottom: 20,
+      justifyContent: "center",
       alignItems: "center",
+      gap: "1rem",
+      marginBottom: "1.5rem",
     },
     dateRange: {
-      padding: 2,
-      background: "rgb(5,234,255)",
-      borderRadius: 0,
+      border: "1px solid #333",
+      borderRadius: 8,
+      overflow: "hidden",
     },
     dateButton: {
-      padding: "8px 12px",
-      borderRadius: 4,
-      background: "#222",
-      color: "#fff",
-      border: "1px solid #444",
+      padding: "0.5rem 1rem",
+      borderRadius: 6,
+      background: "#2A2A2A",
+      color: "#EEE",
+      border: "1px solid #333",
       cursor: "pointer",
-      outline:
-        lastChanged === "start"
-          ? "2px solid cyan"
-          : lastChanged === "end"
-          ? "2px solid magenta"
-          : undefined,
+      fontSize: "1rem",
+    },
+    dateButtonOutline: {
+      outline: "2px solid #4A90E2",
     },
     dateHeader: {
-      marginTop: 24,
-      marginBottom: 8,
+      marginTop: "2rem",
+      marginBottom: "0.5rem",
       fontWeight: 600,
-      color: "rgb(255,67,126)",
+      color: "#F23657",
     },
     tableWrapper: {
       overflowX: "auto",
-      marginBottom: 24,
+      marginBottom: "2rem",
+      boxShadow: "0 2px 10px rgba(0,0,0,0.3)",
+      borderRadius: 8,
     },
     table: {
       width: "100%",
       borderCollapse: "collapse",
-      background: "#fff",
-      color: "#000",
+      background: "#FFF",
+      color: "#222",
+      borderRadius: 8,
+      overflow: "hidden",
     },
     th: {
-      padding: 8,
-      border: "1px solid #ccc",
-      background: "rgba(28,65,199,0.92)",
-      color: "rgb(0,255,251)",
+      padding: "0.75rem 1rem",
+      background: "#4A90E2",
+      color: "#FFF",
+      textTransform: "uppercase",
+      fontSize: "0.875rem",
+      textAlign: "left",
     },
     td: {
-      padding: 8,
-      border: "1px solid #ccc",
-      textAlign: "center",
+      padding: "1rem",
+      borderBottom: "1px solid #EEE",
+      textAlign: "left",
+      verticalAlign: "middle",
     },
-    statusSelect: {
-      padding: 4,
-      borderRadius: 4,
-      border: "1px solid #666",
-      background: "#222",
-      color: "#fff",
+    select: {
+      padding: "0.5rem",
+      borderRadius: 6,
+      border: "1px solid #333",
+      background: "#2A2A2A",
+      color: "#EEE",
       cursor: "pointer",
+      fontSize: "1rem",
     },
   };
 
@@ -420,78 +412,67 @@ const filtered = useMemo(() => {
           onClick={() => navigate("/")}
           title="Home"
         />
-      
         <FaUserAlt
-          style={styles.homeBtn2}
+          style={styles.profileBtn}
           onClick={() => navigate("/login")}
           title="Profile"
         />
+
         <h1 style={styles.title}>My Bookings</h1>
 
-        {/* ── Date Picker / Buttons ──────────────────── */}
+        {/* Date Picker / Buttons */}
         <div style={styles.controls}>
           {showCalendar ? (
             <div style={styles.dateRange}>
               <DateRange
                 ranges={range}
-                  retainEndDateOnFirstSelection
-                  onChange={(item: RangeKeyDict) => {
-                   let { startDate, endDate } = item.selection;
-                   // if user picked “end” before “start”, swap for you
-                   if (startDate! > endDate!) [startDate, endDate] = [endDate!, startDate!];
-                   setRange([{ ...item.selection, startDate, endDate }]);
-                
-                  // detect which changed
+                retainEndDateOnFirstSelection
+                onChange={(item: RangeKeyDict) => {
+                  let { startDate, endDate } = item.selection;
+                  if (startDate! > endDate!) [startDate, endDate] = [endDate!, startDate!];
+                  setRange([{ ...item.selection, startDate, endDate }]);
                   const prev = range[0];
-                  if (
-                    startDate.getTime() !== prev.startDate!.getTime()
-                  ) {
+                  if (startDate!.getTime() !== prev.startDate!.getTime()) {
                     setLastChanged("start");
-                  } else if (
-                    endDate.getTime() !== prev.endDate!.getTime()
-                  ) {
+                  } else {
                     setLastChanged("end");
                   }
-                  setRange([{ ...item.selection, startDate, endDate }]);
-                  // only collapse once both picked
-                  if (startDate && endDate) {
-                    setShowCalendar(false);
-                  }
+                  if (startDate && endDate) setShowCalendar(false);
                 }}
-                rangeColors={["rgba(105,133,247,0.92)"]}
+                rangeColors={["#4A90E2"]}
               />
             </div>
           ) : (
             <>
               <button
-                style={styles.dateButton}
+                style={{
+                  ...styles.dateButton,
+                  ...(lastChanged === "start" ? styles.dateButtonOutline : {})
+                }}
                 onClick={() => setShowCalendar(true)}
               >
-                {startDate!.toLocaleDateString("en-GB")}
+                {startDate!.toLocaleDateString()}
               </button>
               <span>–</span>
               <button
                 style={{
                   ...styles.dateButton,
-                  outline:
-                    lastChanged === "end"
-                      ? "2px solid magenta"
-                      : undefined,
+                  ...(lastChanged === "end" ? styles.dateButtonOutline : {})
                 }}
                 onClick={() => setShowCalendar(true)}
               >
-                {endDate!.toLocaleDateString("en-GB")}
+                {endDate!.toLocaleDateString()}
               </button>
             </>
           )}
         </div>
 
-        {/* ── Bookings by Date ──────────────────────── */}
+        {/* Bookings by Date */}
         {Object.entries(grouped).map(([date, list]) => (
           <div key={date}>
             <h2 style={styles.dateHeader}>
-              {new Date(date).toLocaleDateString("en-GB")} —{" "}
-              {list.length} {list.length > 1 ? "bookings" : "booking"}
+              {new Date(date).toLocaleDateString()} — {list.length}{" "}
+              {list.length > 1 ? "bookings" : "booking"}
             </h2>
             <div style={styles.tableWrapper}>
               <table style={styles.table}>
@@ -507,38 +488,405 @@ const filtered = useMemo(() => {
                   </tr>
                 </thead>
                 <tbody>
-                  {list.map((b) => {
-                    const status = b.pending || "Attending";
-                    return (
-                      <tr key={b.id}>
-                        <td style={styles.td}>{b.start_time}</td>
-                        <td style={styles.td}>
-                          <select
-                            style={styles.statusSelect}
-                            value={status}
-                            onChange={() => toggleStatus(b)}
-                          >
-                            <option>Attending</option>
-                            <option>Cancelled</option>
-                          </select>
-                        </td>
-                        <td style={styles.td}>{b.cat}</td>
-                        <td style={styles.td}>{b.service}</td>
-                        <td style={styles.td}>{b.patientName}</td>
-                        <td style={styles.td}>{b.telNumber}</td>
-                        <td style={styles.td}>{b.email || "—"}</td>
-                      </tr>
-                    );
-                  })}
+                  {list.map((b) => (
+                    <tr key={b.id}>
+                      <td style={styles.td}>{b.start_time}</td>
+                      <td style={styles.td}>
+                        <select
+                          style={styles.select}
+                          value={b.pending || "Attending"}
+                          onChange={() => toggleStatus(b)}
+                        >
+                          <option>Attending</option>
+                          <option>Cancelled</option>
+                        </select>
+                      </td>
+                      <td style={styles.td}>{b.cat}</td>
+                      <td style={styles.td}>{b.service}</td>
+                      <td style={styles.td}>{b.patientName}</td>
+                      <td style={styles.td}>{b.telNumber}</td>
+                      <td style={styles.td}>{b.email || "—"}</td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
           </div>
         ))}
+
       </div>
     </div>
   );
 }
+
+// import React, {
+//   useState,
+//   useEffect,
+//   useMemo,
+//   CSSProperties,
+// } from "react";
+// import { useNavigate } from "react-router-dom";
+// import { useSession } from "../../context/SessionContext";
+// import supabase from "../../supabase";
+// import { DateRange, RangeKeyDict } from "react-date-range";
+// import { FaHome } from "react-icons/fa";
+// import { FaUserAlt } from "react-icons/fa";
+// import "react-date-range/dist/styles.css";
+// import "react-date-range/dist/theme/default.css";
+
+// interface Booking {
+//   id: number;
+//   createdAt: string;
+//   patientName: string;
+//   telNumber: string;
+//   email: string;
+//   start_time: string;
+//   cat: string;
+//   service: string;
+//   date: string;           // YYYY-MM-DD
+//   pending: string | null; // null, "Attending" or "Cancelled"
+// }
+
+// export default function MyBooking() {
+//   const { session } = useSession();
+//   const navigate = useNavigate();
+
+//   const [allBookings, setAllBookings] = useState<Booking[]>([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+
+//   // date-range filter
+//   const [range, setRange] = useState([
+//     { startDate: new Date(), endDate: new Date(), key: "selection" },
+//   ]);
+//   const [showCalendar, setShowCalendar] = useState(true);
+//   const [lastChanged, setLastChanged] = useState<"start" | "end" | null>(
+//     null
+//   );
+
+//   // → redirect non-patients
+//   useEffect(() => {
+//     if (!session) return navigate("/sign-in");
+//     (async () => {
+//       const { data } = await supabase
+//         .from("profiles")
+//         .select("role")
+//         .eq("id", session.user.id)
+//         .single();
+//       if (data?.role !== "Patient") navigate("/");
+//     })();
+//   }, [session, navigate]);
+
+//   // → load bookings
+//   useEffect(() => {
+//     if (!session) return;
+//     (async () => {
+//       setLoading(true);
+//       try {
+//         const { data, error } = await supabase
+//           .from("bookings")
+//           .select("*")
+//           .eq("customerID", session.user.id);
+//         if (error) throw error;
+//         // sort by date desc, then time asc
+//         const sorted = (data as Booking[]).sort((a, b) =>
+//           a.date !== b.date
+//             ? b.date.localeCompare(a.date)
+//             : a.start_time.localeCompare(b.start_time)
+//         );
+//         setAllBookings(sorted);
+//       } catch (e: any) {
+//         setError(e.message);
+//       } finally {
+//         setLoading(false);
+//       }
+//     })();
+//   }, [session]);
+
+//   // → toggle Attending ↔ Cancelled
+//   const toggleStatus = async (b: Booking) => {
+//     const newStatus =
+//       (b.pending || "Attending") === "Attending"
+//         ? "Cancelled"
+//         : "Attending";
+//     await supabase
+//       .from("bookings")
+//       .update({ pending: newStatus })
+//       .eq("id", b.id);
+//     setAllBookings((prev) =>
+//       prev.map((x) =>
+//         x.id === b.id ? { ...x, pending: newStatus } : x
+//       )
+//     );
+//   };
+
+
+//   // …inside your MyBooking component…
+
+// // 1) Add showCalendar and lastChanged to your deps:
+// const filtered = useMemo(() => {
+//   const s0 = range[0].startDate!;
+//   const e0 = range[0].endDate!;
+//   return allBookings.filter((b) => {
+//     const d = new Date(b.date);
+//     // If the calendar is collapsed (i.e. you've picked both), do the full range:
+//     if (!showCalendar) {
+//       return d >= s0 && d <= e0;
+//     }
+//     // Otherwise if you only just picked START, show everything from that day on:
+//     if (lastChanged === "start") {
+//       return d >= s0;
+//     }
+//     // Or if you only just picked END, show everything up to that day:
+//     if (lastChanged === "end") {
+//       return d <= e0;
+//     }
+//     // Before you pick anything, show all bookings:
+//     return true;
+//   });
+// }, [allBookings, range, showCalendar, lastChanged]);
+
+//   // → group by date
+//   const grouped = useMemo(() => {
+//     return filtered.reduce<Record<string, Booking[]>>((acc, b) => {
+//       (acc[b.date] ||= []).push(b);
+//       return acc;
+//     }, {});
+//   }, [filtered]);
+
+//   // → styles
+//   const styles: Record<string, CSSProperties> = {
+//     page: {
+//       background: "#000",
+//       minHeight: "100vh",
+//       color: "#fff",
+//       padding: 20,
+//     },
+//     container: {
+//       maxWidth: 900,
+//       margin: "0 auto",
+//       background: "#111",
+//       borderRadius: 8,
+//       padding: 20,
+//       position: "relative",
+//     },
+//     homeBtn: {
+//       position: "absolute",
+//       top: 16,
+//       right: 16,
+//       fontSize: 24,
+//       color: "#0af",
+//       cursor: "pointer",
+//     },
+//     homeBtn2: {
+//       position: "absolute",
+//       top: 19.8,
+//       right: 62,
+//       fontSize: 19,
+//       color: "#0af",
+     
+//       cursor: "pointer",
+//     },
+//     title: {
+//       fontSize: "1.5rem",
+//       fontWeight: 600,
+//       marginBottom: 16,
+//       color: "#3b7",
+//     },
+//     controls: {
+//       display: "flex",
+//       gap: 10,
+//       marginBottom: 20,
+//       alignItems: "center",
+//     },
+//     dateRange: {
+//       padding: 2,
+//       background: "rgb(5,234,255)",
+//       borderRadius: 0,
+//     },
+//     dateButton: {
+//       padding: "8px 12px",
+//       borderRadius: 4,
+//       background: "#222",
+//       color: "#fff",
+//       border: "1px solid #444",
+//       cursor: "pointer",
+//       outline:
+//         lastChanged === "start"
+//           ? "2px solid cyan"
+//           : lastChanged === "end"
+//           ? "2px solid magenta"
+//           : undefined,
+//     },
+//     dateHeader: {
+//       marginTop: 24,
+//       marginBottom: 8,
+//       fontWeight: 600,
+//       color: "rgb(255,67,126)",
+//     },
+//     tableWrapper: {
+//       overflowX: "auto",
+//       marginBottom: 24,
+//     },
+//     table: {
+//       width: "100%",
+//       borderCollapse: "collapse",
+//       background: "#fff",
+//       color: "#000",
+//     },
+//     th: {
+//       padding: 8,
+//       border: "1px solid #ccc",
+//       background: "rgba(28,65,199,0.92)",
+//       color: "rgb(0,255,251)",
+//     },
+//     td: {
+//       padding: 8,
+//       border: "1px solid #ccc",
+//       textAlign: "center",
+//     },
+//     statusSelect: {
+//       padding: 4,
+//       borderRadius: 4,
+//       border: "1px solid #666",
+//       background: "#222",
+//       color: "#fff",
+//       cursor: "pointer",
+//     },
+//   };
+
+//   if (loading) return <div style={styles.page}>Loading…</div>;
+//   if (error) return <div style={styles.page}>Error: {error}</div>;
+
+//   const { startDate, endDate } = range[0];
+
+//   return (
+//     <div style={styles.page}>
+//       <div style={styles.container}>
+//         <FaHome
+//           style={styles.homeBtn}
+//           onClick={() => navigate("/")}
+//           title="Home"
+//         />
+      
+//         <FaUserAlt
+//           style={styles.homeBtn2}
+//           onClick={() => navigate("/login")}
+//           title="Profile"
+//         />
+//         <h1 style={styles.title}>My Bookings</h1>
+
+//         {/* ── Date Picker / Buttons ──────────────────── */}
+//         <div style={styles.controls}>
+//           {showCalendar ? (
+//             <div style={styles.dateRange}>
+//               <DateRange
+//                 ranges={range}
+//                   retainEndDateOnFirstSelection
+//                   onChange={(item: RangeKeyDict) => {
+//                    let { startDate, endDate } = item.selection;
+//                    // if user picked “end” before “start”, swap for you
+//                    if (startDate! > endDate!) [startDate, endDate] = [endDate!, startDate!];
+//                    setRange([{ ...item.selection, startDate, endDate }]);
+                
+//                   // detect which changed
+//                   const prev = range[0];
+//                   if (
+//                     startDate.getTime() !== prev.startDate!.getTime()
+//                   ) {
+//                     setLastChanged("start");
+//                   } else if (
+//                     endDate.getTime() !== prev.endDate!.getTime()
+//                   ) {
+//                     setLastChanged("end");
+//                   }
+//                   setRange([{ ...item.selection, startDate, endDate }]);
+//                   // only collapse once both picked
+//                   if (startDate && endDate) {
+//                     setShowCalendar(false);
+//                   }
+//                 }}
+//                 rangeColors={["rgba(105,133,247,0.92)"]}
+//               />
+//             </div>
+//           ) : (
+//             <>
+//               <button
+//                 style={styles.dateButton}
+//                 onClick={() => setShowCalendar(true)}
+//               >
+//                 {startDate!.toLocaleDateString("en-GB")}
+//               </button>
+//               <span>–</span>
+//               <button
+//                 style={{
+//                   ...styles.dateButton,
+//                   outline:
+//                     lastChanged === "end"
+//                       ? "2px solid magenta"
+//                       : undefined,
+//                 }}
+//                 onClick={() => setShowCalendar(true)}
+//               >
+//                 {endDate!.toLocaleDateString("en-GB")}
+//               </button>
+//             </>
+//           )}
+//         </div>
+
+//         {/* ── Bookings by Date ──────────────────────── */}
+//         {Object.entries(grouped).map(([date, list]) => (
+//           <div key={date}>
+//             <h2 style={styles.dateHeader}>
+//               {new Date(date).toLocaleDateString("en-GB")} —{" "}
+//               {list.length} {list.length > 1 ? "bookings" : "booking"}
+//             </h2>
+//             <div style={styles.tableWrapper}>
+//               <table style={styles.table}>
+//                 <thead>
+//                   <tr>
+//                     <th style={styles.th}>Time</th>
+//                     <th style={styles.th}>Status</th>
+//                     <th style={styles.th}>Category</th>
+//                     <th style={styles.th}>Service</th>
+//                     <th style={styles.th}>Patient</th>
+//                     <th style={styles.th}>Phone</th>
+//                     <th style={styles.th}>Email</th>
+//                   </tr>
+//                 </thead>
+//                 <tbody>
+//                   {list.map((b) => {
+//                     const status = b.pending || "Attending";
+//                     return (
+//                       <tr key={b.id}>
+//                         <td style={styles.td}>{b.start_time}</td>
+//                         <td style={styles.td}>
+//                           <select
+//                             style={styles.statusSelect}
+//                             value={status}
+//                             onChange={() => toggleStatus(b)}
+//                           >
+//                             <option>Attending</option>
+//                             <option>Cancelled</option>
+//                           </select>
+//                         </td>
+//                         <td style={styles.td}>{b.cat}</td>
+//                         <td style={styles.td}>{b.service}</td>
+//                         <td style={styles.td}>{b.patientName}</td>
+//                         <td style={styles.td}>{b.telNumber}</td>
+//                         <td style={styles.td}>{b.email || "—"}</td>
+//                       </tr>
+//                     );
+//                   })}
+//                 </tbody>
+//               </table>
+//             </div>
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// }
 
 // import React, { useState, useEffect, useMemo, CSSProperties } from "react";
 // import { useNavigate } from "react-router-dom";

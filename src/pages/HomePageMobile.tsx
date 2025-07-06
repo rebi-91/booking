@@ -444,14 +444,14 @@ const POPULAR_SERVICES = [
   },
   {
     title: 'Ear Wax Removal',
-    link: '/book/19',
+    link: '/microsuction-earwax-removal',
     sub: 'Safe microsuction for clear, comfortable ears.',
     img:
     'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/123156/AHHct1yZUR.webp',
   },
   {
     title: 'Travel Vaccinations',
-    link: '/book/4',
+    link: '/book/3',
     sub: 'Comprehensive vaccine service for your trip.',
     img:
     'https://clinic-digital.lon1.cdn.digitaloceanspaces.com/100/530057/yyrgMObVYh.webp',
