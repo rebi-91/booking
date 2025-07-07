@@ -420,9 +420,9 @@ const ServicePage: React.FC = () => {
                       {children}
                     </div>
                   ) : (
-                    <Link to={`/book/${s.id}`} style={styles.card}>
-                      {children}
-                    </Link>
+                    <Link to={s.id === 13 ? '/oral-contraceptives' : `/book/${s.id}`} style={styles.card}>
+  {children}
+</Link>
                   );
 
                 return (
