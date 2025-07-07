@@ -64,7 +64,7 @@ const popularServices = [
   },
   {
     title: 'Erectile dysfunction',
-    link: '/book/21',
+    link: '/book/20',
     sub: 'Effective solutions tailored to your needs.',
     img:
       'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fed-3.webp&w=640&q=75',
