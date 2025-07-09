@@ -696,7 +696,7 @@ alert(`Booking confirmed! Your appointment has been successfully booked. A confi
   navigate("/");
   
     }
-  }
+  }  
   
   
   return (
