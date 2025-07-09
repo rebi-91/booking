@@ -176,6 +176,8 @@ import StaffPage from "../pages/teacher/StaffPage.tsx";
 import BookingBoard from "../pages/teacher/BookingBoard.tsx";
 import MyBooking from "../pages/teacher/MyBooking.tsx";
 import EmergencySupply from "../pages/auth/EmergencySupply.tsx";
+import OrderingPatientPage from "../pages/teacher/OrderPatientPage.tsx";
+import OrderPage from "../pages/teacher/OrderPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -255,6 +257,10 @@ const router = createBrowserRouter([
         element: <BookingBoard />,
       },
       {
+        path: "/my-orders",
+        element: <OrderingPatientPage />,
+      },
+      {
         path: "/my-bookings",
         element: <MyBooking />,
       },
@@ -307,6 +313,10 @@ const router = createBrowserRouter([
       {
         path: "/my-attendance",
         element: <StaffPage />,
+      },
+      {
+        path: "/orders",
+        element: <OrderPage />,
       },
       
       // Auth Protected routes

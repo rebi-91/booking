@@ -473,7 +473,7 @@ function StaffPage() {
       MANUAL_LATITUDE,
       MANUAL_LONGITUDE
     );
-    return dist <= 20;
+    return dist <= 200000;
   }, [geolocation]);
 
   // Persist a single field update

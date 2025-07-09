@@ -1,924 +1,4 @@
 
-// import React, {
-//   useLayoutEffect,
-//   useEffect,
-//   useState,
-//   useRef,
-// } from 'react';
-// import { useNavigate, useParams } from 'react-router-dom';
-// import Header from '../Header';
-// import './BookingPage.css';
-// import supabase from '../../supabase';
-// import { useSession } from "../../context/SessionContext";
-
-// interface Service {
-//   id: number;
-//   title: string;
-//   duration: string;
-//   address: string;
-//   price: string;
-// }
-
-// const sampleServices: Record<number, Service> = {
-//   1: {
-//     id: 1,
-//     title: 'Altitude sickness',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: '£10.00',
-//   },
-//   2: {
-//     id: 2,
-//     title: 'Sore throat (Ages 5+)',
-//     duration: '10m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Free NHS',
-//   },
-//   3: {
-//     id: 3,
-//     title: 'Travel Consultation',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: '£10.00 – deducted if go ahead with treatment',
-//   },
-//   4: {
-//     id: 4,
-//     title: 'Travel vaccine',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Varies – depends on what vaccine(s) needed',
-//   },
-//   5: {
-//     id: 5,
-//     title: 'Uncomplicated UTI (Women aged 16–64)',
-//     duration: '10m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Free NHS',
-//   },
-//   6: {
-//     id: 6,
-//     title: 'Vitamin B12 Injection',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: '£30.00',
-//   },
-//   7: {
-//     id: 7,
-//     title: 'Impetigo (Ages 1+)',
-//     duration: '10m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Free NHS',
-//   },
-//   8: {
-//     id: 8,
-//     title: 'Infected insect bite (Ages 1+)',
-//     duration: '10m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Free NHS',
-//   },
-//   90: {
-//     id: 90,
-//     title: 'Period Delay',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: '£20.00',
-//   },
-//   89: {
-//     id: 89,
-//     title: 'Period Pain',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Varies depending on treatment',
-//   },
-//   10: {
-//     id: 10,
-//     title: 'Private flu jab',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: '£20.00',
-//   },
-//   44: {
-//     id: 44,
-//     title: 'Shingles (Ages 18+)',
-//     duration: '10m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Free NHS',
-//   },
-//   12: {
-//     id: 12,
-//     title: 'Weight Loss Management',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Varies depending on Treatment',
-//   },
-//   55: {
-//     id: 55,
-//     title: 'Mounjaro',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Starts at £140.00 (4 weeks supply)',
-//   },
-//   66: {
-//     id: 66,
-//     title: 'Wegovy',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Starts at £118.98 (4 weeks supply)',
-//   },
-//   13: {
-//     id: 13,
-//     title: 'Oral Contraception',
-//     duration: '10m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Free NHS',
-//   },
-//   14: {
-//     id: 14,
-//     title: 'Flu Vaccination',
-//     duration: '10m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Free NHS',
-//   },
-//   15: {
-//     id: 15,
-//     title: 'Blood Pressure Check',
-//     duration: '10m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Free NHS',
-//   },
-//   16: {
-//     id: 16,
-//     title: 'COVID-19 Vaccination',
-//     duration: '10m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Free NHS',
-//   },
-//   17: {
-//     id: 17,
-//     title: 'Yellow fever',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: '—',
-//   },
-//   18: {
-//     id: 18,
-//     title: 'Ear wax removal',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: '£35 one ear / £55 both ears',
-//   },
-//   19: {
-//     id: 19,
-//     title: 'Earache (Ages 1–17)',
-//     duration: '10m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Free NHS',
-//   },
-//   20: {
-//     id: 20,
-//     title: 'Erectile dysfunction',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Sildenafil/Tadalafil – 2 tabs £10, 4 tabs £15, 8 tabs £25',
-//   },
-//   21: {
-//     id: 21,
-//     title: 'Sinusitis (Ages 12+)',
-//     duration: '10m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Free NHS',
-//   },
-//   22: {
-//     id: 22,
-//     title: 'Acid Reflux',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'PPIs (omeprazole etc.) for £8',
-//   },
-//   23: {
-//     id: 23,
-//     title: 'Pain Relief',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Naproxen 500mg for £8',
-//   },
-//   24: {
-//     id: 24,
-//     title: 'Male Pattern Baldness (Androgenic Alopecia)',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Finasteride 1mg for £20',
-//   },
-//   25: {
-//     id: 25,
-//     title: 'Female Hirsutism in Women',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Vaniqa cream for £69.99',
-//   },
-//   26: {
-//     id: 26,
-//     title: 'Jet Lag',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Melatonin MR – 5 tabs £18.99 / 30 tabs £39.99',
-//   },
-//   9: {
-//     id: 9,
-//     title: 'Traveller’s Diarrhoea',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Azithromycin for £20',
-//   },
-//   28: {
-//     id: 28,
-//     title: 'Oral Thrush',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Varies depending on treatment',
-//   },
-//   30: {
-//     id: 30,
-//     title: 'Diphtheria, Tetanus and Polio',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: '£40.00 - only 1 dose',
-//   },
-//   31: {
-//     id: 31,
-//     title: 'Hepatitis A (2 doses)',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: '£60.00 per dose',
-//   },
-//   32: {
-//     id: 32,
-//     title: 'Hepatitis B (3 doses)',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: '£60.00 per dose',
-//   },
-//   33: {
-//     id: 33,
-//     title: 'Typhoid (1 dose or orally)',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: '£40.00',
-//   },
-//   34: {
-//     id: 34,
-//     title: 'Rabies (3 doses)',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: '£90.00 per dose',
-//   },
-//   35: {
-//     id: 35,
-//     title: 'Meningitis ACWY (1 dose – for Hajj/Umrah)',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: '£60.00',
-//   },
-//   36: {
-//     id: 36,
-//     title: 'Cholera (2 doses – special cases)',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: '£90.00',
-//   },
-//   37: {
-//     id: 37,
-//     title: 'Japanese Encephalitis',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: '£100.00 per dose',
-//   },
-//   38: {
-//     id: 38,
-//     title: 'Chicken Pox',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: '£80.00',
-//   },
-//   39: {
-//     id: 39,
-//     title: 'Meningitis B',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: '£140.00',
-//   },
-//   40: {
-//     id: 40,
-//     title: 'Shingles vaccination (Zostavax)',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: '£200.00',
-//   },
-//   41: {
-//     id: 41,
-//     title: 'Anti-malarials',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Malarone £40 / Doxycycline £25',
-//   },
-//   42: {
-//     id: 42,
-//     title: 'HPV',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Gardasil-9 – £184.50/dose, £362 (2 doses), £540 (3 doses)',
-//   },
-//   43: {
-//     id: 43,
-//     title: 'Dengue Fever (2 doses)',
-//     duration: '20m',
-//     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//     price: 'Qdenga - £130 per dose',
-//   },
-//   // 44: {
-//   //   id: 44,
-//   //   title: 'Respiratory syncytial virus',
-//   //   duration: '20m',
-//   //   address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-//   //   price: 'Qdenga - £130 per dose',
-//   // },
-
-// };
-
-
-// type Category = 'NHS' | 'Private';
-// function serviceCategory(id: number): Category {
-//   const nhs = new Set([2,5,8,9,12,14,15,16,17,20,22]);
-//   return nhs.has(id) ? 'NHS' : 'Private';
-// }
-
-// async function fetchExistingBookings(
-//   dateISO: string,
-//   category: Category
-// ): Promise<string[]> {
-//   const { data, error } = await supabase
-//     .from('bookings')
-//     .select('start_time')
-//     .eq('date', dateISO)
-//     .eq('cat', category);
-//   if (error) {
-//     console.error('Supabase fetch error:', error.message);
-//     return [];
-//   }
-//   return (data as { start_time: string }[]).map((r) => r.start_time);
-// }
-
-// function generateTimeSlots(
-//   sh: number, sm: number,
-//   eh: number, em: number,
-//   step: number
-// ): string[] {
-//   const slots: string[] = [];
-//   let cur = new Date();
-//   cur.setHours(sh, sm, 0, 0);
-//   const end = new Date();
-//   end.setHours(eh, em, 0, 0);
-//   while (cur <= end) {
-//     slots.push(
-//       `${String(cur.getHours()).padStart(2,'0')}:${String(
-//         cur.getMinutes()
-//       ).padStart(2,'0')}`
-//     );
-//     cur = new Date(cur.getTime() + step * 60000);
-//   }
-//   return slots;
-// }
-
-// function slotsForDayAndCategory(
-//   dow: number,
-//   cat: Category
-// ): string[] {
-//   const step = cat === 'Private' ? 20 : 10;
-//   if (cat === 'NHS') {
-//     if (dow >= 1 && dow <= 4)
-//       return generateTimeSlots(9,30,17,10,step);
-//     if (dow === 5)
-//       return [
-//         ...generateTimeSlots(9,30,12,10,step),
-//         ...generateTimeSlots(15,30,17,10,step),
-//       ];
-//     return [];
-//   } else {
-//     if (dow >= 1 && dow <= 3)
-//       return generateTimeSlots(9,30,17,10,step);
-//     if (dow === 5)
-//       return [
-//         ...generateTimeSlots(9,30,12,10,step),
-//         ...generateTimeSlots(15,0,17,10,step),
-//       ];
-//     return [];
-//   }
-// }
-
-// const BookingPage: React.FC = () => {
-//   const navigate = useNavigate();
-//   const { id } = useParams<{ id: string }>();
-//   const sid = parseInt(id || '0', 10);
-//   const service = sampleServices[sid] || sampleServices[1];
-//   const category = serviceCategory(sid);
-
-//   const [view, setView] = useState<'calendar' | 'form'>('calendar');
-//   const today = new Date();
-//   const [displayYear, setDisplayYear] = useState(today.getFullYear());
-//   const [displayMonth, setDisplayMonth] = useState(today.getMonth());
-//   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-//   const [availableTimes, setAvailableTimes] = useState<string[]>([]);
-//   const [chosenTime, setChosenTime] = useState<string | null>(null);
-//   const timeSlotRef = useRef<HTMLDivElement | null>(null);
-
-//   // form state + validation
-//   const [patientName, setPatientName] = useState('');
-//   const [patientPhone, setPatientPhone] = useState('');
-//   const [patientEmail, setPatientEmail] = useState('');
-//   const [errors, setErrors] = useState<{
-//     name?: string;
-//     phone?: string;
-//   }>({});
-
-//   useEffect(() => {
-//     async function loadSlots() {
-//       if (!selectedDate) return setAvailableTimes([]);
-//       const dow = selectedDate.getDay();
-//       const all = slotsForDayAndCategory(dow, category);
-//       const dateISO = selectedDate.toISOString().split('T')[0];
-//       const booked = await fetchExistingBookings(dateISO, category);
-//       setAvailableTimes(all.filter((t) => !booked.includes(t)));
-//     }
-//     loadSlots();
-//   }, [selectedDate, category]);
-
-//   useEffect(() => {
-//     if (selectedDate && timeSlotRef.current) {
-//       setTimeout(() => {
-//         timeSlotRef.current!.scrollIntoView({
-//           behavior: 'smooth',
-//           block: 'start',
-//         });
-//       }, 100);
-//     }
-//   }, [selectedDate]);
-
-//   useLayoutEffect(() => {
-//     window.scrollTo(0, 0);
-//   }, []);
-
-//   // calendar helpers
-//   const firstOfMonth = new Date(displayYear, displayMonth, 1);
-//   const firstColumnIndex = (firstOfMonth.getDay() + 6) % 7;
-//   const daysInMonth = new Date(displayYear, displayMonth + 1, 0).getDate();
-
-//   const handlePrev = () => {
-//     if (
-//       displayYear > today.getFullYear() ||
-//       (displayYear === today.getFullYear() && displayMonth > today.getMonth())
-//     ) {
-//       const p = new Date(displayYear, displayMonth - 1, 1);
-//       setDisplayYear(p.getFullYear());
-//       setDisplayMonth(p.getMonth());
-//       setSelectedDate(null);
-//       setChosenTime(null);
-//     }
-//   };
-//   const handleNext = () => {
-//     const n = new Date(displayYear, displayMonth + 1, 1);
-//     setDisplayYear(n.getFullYear());
-//     setDisplayMonth(n.getMonth());
-//     setSelectedDate(null);
-//     setChosenTime(null);
-//   };
-//   const isCurrentMonth =
-//     displayYear === today.getFullYear() &&
-//     displayMonth === today.getMonth();
-
-//   const footerText =
-//     selectedDate &&
-//     selectedDate.toLocaleDateString('en-GB', {
-//       weekday: 'long',
-//       day: 'numeric',
-//       month: 'short',
-//     });
-
-//   const handleDayClick = (d: number) => {
-//     setSelectedDate(new Date(displayYear, displayMonth, d));
-//     setChosenTime(null);
-//   };
-//   const handleTimeClick = (t: string) => {
-//     setChosenTime(t);
-//     setView('form');
-//   };
-
-//   const { session } = useSession();
-
-
-//   const handleBookingSubmit = async (e: React.FormEvent) => {
-//     e.preventDefault();
-//     const newErrors: typeof errors = {};
-//     if (!patientName.trim()) newErrors.name = 'Required - please enter your full name';
-//     if (!patientPhone.trim()) newErrors.phone = 'Required - please enter your phone';
-//     setErrors(newErrors);
-//     if (Object.keys(newErrors).length) return;
-
-//     const dateISO  = selectedDate!.toISOString().split('T')[0];
-//     const stripped = service.title.replace(/ treatment$/i, '');
-
-//     const row: Record<string, any> = {
-//       date:        dateISO,
-//       start_time:  chosenTime,
-//       cat:         category,
-//       service:     stripped,
-//       patientName,
-//       telNumber:   patientPhone,
-//       email:       patientEmail,
-//     };
-
-//     // if the user is signed in, session.user.id IS the profile.id (UUID)
-//     if (session?.user?.id) {
-//       // adjust case to match your column name in the database:
-//       row.customerID   = session.user.id;
-//       // or if your DB column is snake_case:
-//       // row.customer_id = session.user.id;
-//     }
-
-//     const { error } = await supabase
-//       .from('bookings')
-//       .insert([row]);
-
-//     if (error) {
-//       alert('Error saving booking: ' + error.message);
-//     } else {
-//       alert('Booking confirmed!');
-//       navigate('/');
-//     }
-//   };
-//   // const handleBookingSubmit = async (e: React.FormEvent) => {
-//   //   e.preventDefault();
-//   //   const newErrors: typeof errors = {};
-//   //   if (!patientName.trim()) newErrors.name = 'Required - please enter your full name';
-//   //   if (!patientPhone.trim()) newErrors.phone = 'Required - please enter your phone';
-//   //   setErrors(newErrors);
-//   //   if (Object.keys(newErrors).length) return;
-
-//   //   const dateISO = selectedDate!.toISOString().split('T')[0];
-//   //   const stripped = service.title.replace(/ treatment$/i, '');
-//   //   // 1) fetch the profile.id for the logged-in user (if any)
-//   //   let customerID: number | null = null;
-//   //   if (session?.user?.id) {
-//   //     const { data: profile, error: pfErr } = await supabase
-//   //       .from('profiles')
-//   //       .select('id')
-//   //       .eq('auth_id', session.user.id)   // or .eq('id', session.user.id) if your profile PK is the same
-//   //       .single();
-
-//   //     if (pfErr) {
-//   //       console.error('Could not fetch profile ID:', pfErr.message);
-//   //     } else {
-//   //       customerID = profile.id;
-//   //     }
-//   //   }
-
-//   //   // 2) build the row, including customerID if we have one
-//   //   const row: Record<string, any> = {
-//   //     date:        dateISO,
-//   //     start_time:  chosenTime,
-//   //     cat:         category,
-//   //     service:     stripped,
-//   //     patientName,
-//   //     telNumber:   patientPhone,
-//   //     email:       patientEmail,
-//   //   };
-
-//   //   if (customerID !== null) {
-//   //     row.customerID = customerID;
-//   //   }
-
-//   //   // 3) insert
-//   //   const { error } = await supabase.from('bookings').insert([row]);
-
-//   //   if (error) {
-//   //     alert('Error saving booking: ' + error.message);
-//   //   } else {
-//   //     alert('Booking confirmed!');
-//   //     navigate('/');
-//   //   }
-//   // };
-
-
-//   return (
-//     <>
-//       <Header />
-//       <div className="page-wrapper">
-//         <div className="container py-3">
-//           {view === 'calendar' && (
-//             <>
-//               <button
-//                 className="round-back"
-//                 onClick={() => navigate(-1)}
-//               >
-//                 ←
-//               </button>
-
-//               <div className="service-header">
-//                 <h2 className="booking-title">{service.title}</h2>
-//                 <p className="booking-subtitle">
-//                   Book your Appointment now!
-//                 </p>
-//                 <div className="service-info-row">
-//                   <div className="info-item">
-//                     <i className="bi bi-clock"></i>
-//                     <span>
-//                       {category === 'Private'
-//                         ? '20m'
-//                         : '10m'}
-//                     </span>
-//                   </div>
-//                   <div className="info-item">
-//                     <i className="bi bi-geo-alt"></i>
-//                     <span>{service.address}</span>
-//                   </div>
-//                   <div className="info-item">
-//                     <i className="bi bi-wallet2"></i>
-//                     <span>{service.price}</span>
-//                   </div>
-//                 </div>
-//                 <hr />
-//               </div>
-
-//               <div className="calendar-container">
-//                 <div className="calendar-header-box">
-//                   <button
-//                     className="btn header-arrow"
-//                     onClick={handlePrev}
-//                     disabled={isCurrentMonth}
-//                   >
-//                     ‹
-//                   </button>
-//                   <span className="header-month">
-//                     {new Date(displayYear, displayMonth).toLocaleDateString(
-//                       'en-GB',
-//                       {
-//                         month: 'long',
-//                         year: 'numeric',
-//                       }
-//                     )}
-//                   </span>
-//                   <button
-//                     className="btn header-arrow"
-//                     onClick={handleNext}
-//                   >
-//                     ›
-//                   </button>
-//                 </div>
-
-//                 {/* header days */}
-//                 {/* after */}
-// <div className="calendar-grid mb-2">
-//   {['MON','TUE','WED','THU','FRI','SAT','SUN'].map((d) => (
-//     <div key={d} className="col-1 px-0">
-//       <button className="day-btn header-day" disabled>
-//         {d}
-//       </button>
-//     </div>
-//   ))}
-// </div>
-
-
-//                 <div className="calendar-grid">
-//                   {Array.from({ length: firstColumnIndex }).map(
-//                     (_, idx) => (
-//                       <div
-//                         key={`empty-${idx}`}
-//                         className="col-1 px-0"
-//                       />
-//                     )
-//                   )}
-//                   {Array.from(
-//                     { length: daysInMonth },
-//                     (_, i) => i + 1
-//                   ).map((day) => {
-//                     const dObj = new Date(
-//                       displayYear,
-//                       displayMonth,
-//                       day
-//                     );
-//                     const isToday =
-//                       dObj.toDateString() === today.toDateString();
-//                     const isSelected =
-//                       selectedDate &&
-//                       dObj.toDateString() ===
-//                         selectedDate.toDateString();
-//                     const inPast =
-//                       dObj <
-//                       new Date(
-//                         today.getFullYear(),
-//                         today.getMonth(),
-//                         today.getDate()
-//                       );
-//                     let cls = '';
-//                     if (isSelected) cls = 'selected-day';
-//                     else if (isToday) cls = 'today-day';
-
-//                     return (
-//                       <div
-//                         key={day}
-//                         className="col-1 px-0"
-//                       >
-//                         <button
-//                           disabled={inPast}
-//                           className={`btn day-btn ${
-//                             inPast ? 'past-day' : cls
-//                           }`}
-//                           onClick={() =>
-//                             !inPast && handleDayClick(day)
-//                           }
-//                         >
-//                           {day}
-//                         </button>
-//                       </div>
-//                     );
-//                   })}
-//                 </div>
-//               </div>
-
-//               <hr />
-
-//               {selectedDate ? (
-//                 <div className="times-container">
-//                   <div
-//                     className="selected-date-label"
-//                     ref={timeSlotRef}
-//                   >
-//                     {footerText}
-//                   </div>
-//                   <div className="row gx-0 time-row">
-//                     {availableTimes.length ? (
-//                       availableTimes.map((t) => (
-//                         <div
-//                           key={t}
-//                           className="col-12 px-0 mb-2"
-//                         >
-//                           <button
-//                             className={`btn time-slot-btn ${
-//                               chosenTime === t
-//                                 ? 'selected-time'
-//                                 : ''
-//                             }`}
-//                             onClick={() => handleTimeClick(t)}
-//                           >
-//                             {t}
-//                           </button>
-//                         </div>
-//                       ))
-//                     ) : (
-//                       <p className="select-date-text">
-//                         No available slots for this date.
-//                       </p>
-//                     )}
-//                   </div>
-//                 </div>
-//               ) : (
-//                 <p className="select-date-text">
-//                   Select a date to see available times
-//                 </p>
-//               )}
-//             </>
-//           )}
-
-//           {view === 'form' && selectedDate && chosenTime && (
-//             <div className="form-fullpage">
-//               <div className="form-header">
-//                 <button
-//                   className="back-btn"
-//                   onClick={() => {
-//                     setView('calendar');
-//                     setChosenTime(null);
-//                   }}
-//                 >
-//                   ←
-//                 </button>
-//                 <span className="form-title">
-//                   {service.title}
-//                 </span>
-//               </div>
-
-//               <div className="booking-details">
-//                 <div className="detail-row">
-//                   <strong>Category:</strong> {category}
-//                 </div>
-//                 <div className="detail-row">
-//                   <strong>Treatment:</strong> {service.title}
-//                 </div>
-//                 <div className="detail-row">
-//                   <strong>Provider:</strong> Coleshill Pharmacy
-//                 </div>
-//                 <div className="detail-row">
-//                   <strong>Date:</strong>{' '}
-//                   {selectedDate.toLocaleDateString(
-//                     'en-GB',
-//                     {
-//                       weekday: 'long',
-//                       day: 'numeric',
-//                       month: 'short',
-//                       year: 'numeric',
-//                     }
-//                   )}
-//                 </div>
-//                 <div className="detail-row">
-//                   <strong>Time:</strong> {chosenTime}
-//                 </div>
-//               </div>
-
-//               <form
-//                 className="booking-form"
-//                 onSubmit={handleBookingSubmit}
-//                 noValidate
-//               >
-//                 <label
-//                   htmlFor="patientName"
-//                   className="form-label"
-//                 >
-//                   Name
-//                   <span className="required">*</span>
-//                 </label>
-//                 <input
-//                   type="text"
-//                   id="patientName"
-//                   className={`form-control ${
-//                     errors.name ? 'input-error' : ''
-//                   }`}
-//                   value={patientName}
-//                   onChange={(e) =>
-//                     setPatientName(e.target.value)
-//                   }
-//                 />
-//                 {errors.name && (
-//                   <div className="error-message">
-//                     {errors.name}
-//                   </div>
-//                 )}
-
-//                 <label
-//                   htmlFor="patientPhone"
-//                   className="form-label"
-//                 >
-//                   Phone
-//                   <span className="required">*</span>
-//                 </label>
-//                 <input
-//                   type="tel"
-//                   id="patientPhone"
-//                   className={`form-control ${
-//                     errors.phone ? 'input-error' : ''
-//                   }`}
-//                   value={patientPhone}
-//                   onChange={(e) =>
-//                     setPatientPhone(e.target.value)
-//                   }
-//                 />
-//                 {errors.phone && (
-//                   <div className="error-message">
-//                     {errors.phone}
-//                   </div>
-//                 )}
-
-//                 <label
-//                   htmlFor="patientEmail"
-//                   className="form-label"
-//                 >
-//                   Email
-//                 </label>
-//                 <input
-//                   type="email"
-//                   id="patientEmail"
-//                   className="form-control"
-//                   value={patientEmail}
-//                   onChange={(e) =>
-//                     setPatientEmail(e.target.value)
-//                   }
-//                 />
-
-//                 <button
-//                   type="submit"
-//                   className="submit-btn"
-//                 >
-//                   Confirm Booking
-//                 </button>
-//               </form>
-//             </div>
-//           )}
-//         </div>
-//       </div>
-//     </>
-//   );
-// };
-
-// export default BookingPage;
-// File: src/pages/teacher/BookingPage.tsx
-
 import React, {
   useLayoutEffect,
   useEffect,
@@ -1390,13 +470,21 @@ function slotsForDayAndCategory(
     return [];
   }
 }
-
+interface ModalParams {
+  title: string;
+  message: string;
+  onClose: () => void;
+}
 const BookingPage: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const sid = parseInt(id || '1', 10);
   const service = sampleServices[sid] || sampleServices[1];
   const category = serviceCategory(sid);
+  const [modalParams, setModalParams] = useState<ModalParams | null>(null);
+  function showModal(params: ModalParams) {
+    setModalParams(params);
+  }
 
   // Calendar state
   const [view, setView] = useState<'calendar' | 'form'>('calendar');
@@ -1497,47 +585,120 @@ const BookingPage: React.FC = () => {
   };
 
   // Submit booking
-  const handleBookingSubmit = async (e: FormEvent) => {
+  // const handleBookingSubmit = async (e: FormEvent) => {
+  //   e.preventDefault();
+
+  //   const newErrors: typeof errors = {};
+  //   if (!patientTitle) newErrors.title = 'Required – please select a title';
+  //   if (!patientDob) newErrors.dob = 'Required – please enter DOB';
+  //   if (!patientName.trim()) newErrors.name = 'Required – please enter your full name';
+  //   if (!patientPhone.trim()) newErrors.phone = 'Required – please enter your phone';
+  //   setErrors(newErrors);
+  //   if (Object.keys(newErrors).length) return;
+
+  //   const dateISO = selectedDate!.toISOString().split('T')[0];
+  //   const stripped = service.title.replace(/ treatment$/i, '');
+  //   const national = patientPhone.replace(/^0+/, '');
+  //   const e164 = countryCode + national;
+
+  //   const row: Record<string, any> = {
+  //     date:       dateISO,
+  //     start_time: chosenTime,
+  //     cat:        category,
+  //     service:    stripped,
+  //     title:      patientTitle,
+  //     dateBirth:  patientDob,
+  //     patientName,
+  //     telNumber:  e164,
+  //     email:      patientEmail,
+  //   };
+
+  //   if (session?.user?.id) {
+  //     row.customerID = session.user.id;
+  //   }
+
+  //   const { error } = await supabase.from('bookings').insert([row]);
+  //   if (error) {
+  //     alert('Error saving booking: ' + error.message);
+  //   } else {
+  //     alert('Booking confirmed!');
+  //     navigate('/');
+  //   }
+  // };
+  interface BookingData {
+    date: string;
+    start_time: string;
+    cat: 'NHS' | 'Private';
+    service: string;
+    title: string;
+    dateBirth: string;
+    patientName: string;
+    telNumber: string;
+    email: string;
+    status: string;
+    customerID?: string;
+  }
+  
+  async function handleBookingSubmit(e: FormEvent) {
     e.preventDefault();
-
-    const newErrors: typeof errors = {};
-    if (!patientTitle) newErrors.title = 'Required – please select a title';
-    if (!patientDob) newErrors.dob = 'Required – please enter DOB';
-    if (!patientName.trim()) newErrors.name = 'Required – please enter your full name';
-    if (!patientPhone.trim()) newErrors.phone = 'Required – please enter your phone';
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length) return;
-
-    const dateISO = selectedDate!.toISOString().split('T')[0];
-    const stripped = service.title.replace(/ treatment$/i, '');
-    const national = patientPhone.replace(/^0+/, '');
-    const e164 = countryCode + national;
-
-    const row: Record<string, any> = {
+  
+    // 1) Validate
+    const errs: Record<string,string> = {};
+    if (!patientTitle)        errs.title = "Required";
+    if (!patientDob)          errs.dob   = "Required";
+    if (!patientName.trim())  errs.name  = "Required";
+    if (!patientPhone.trim()) errs.phone = "Required";
+    setErrors(errs);
+    if (Object.keys(errs).length) return;
+  
+    // 2) Build payload
+    const dateISO       = selectedDate!.toISOString().slice(0,10);
+    const e164          = countryCode + patientPhone.replace(/^0+/, "");
+    const strippedTitle = service.title.replace(/ treatment$/i, "");
+  
+    // 3) Insert booking
+    const { error } = await supabase
+    .from('bookings')
+    .insert<BookingData>([{
       date:       dateISO,
-      start_time: chosenTime,
+      start_time: chosenTime!,
       cat:        category,
-      service:    stripped,
+      service:    strippedTitle,
       title:      patientTitle,
       dateBirth:  patientDob,
       patientName,
       telNumber:  e164,
       email:      patientEmail,
-    };
-
-    if (session?.user?.id) {
-      row.customerID = session.user.id;
-    }
-
-    const { error } = await supabase.from('bookings').insert([row]);
+      status:     'Pending Confirmation',
+      ...(session?.user?.id && { customerID: session.user.id }),
+    }]);
+  
+  
+    // 4) Handle insert result
     if (error) {
-      alert('Error saving booking: ' + error.message);
+      alert("Error saving booking: " + error.message);
     } else {
-      alert('Booking confirmed!');
-      navigate('/');
+      // 5) Fire off your Edge Function (best‐effort)
+      const { error: fnErr } = await supabase.functions.invoke("resend-email", {
+        body: {
+          to:      patientEmail,
+          name:    `${patientTitle} ${patientName}`,
+          service: service.title,
+          date:    selectedDate!.toISOString(),
+          time:    chosenTime!
+        }
+      });
+      if (fnErr) console.warn("Email function error:", fnErr.message);
+  
+      // 6) Final success flow
+alert(`Booking confirmed! Your appointment has been successfully booked. A confirmation email has been sent to your email address.
+  Please check your inbox (including spam folder) for details.`);
+  navigate("/");
+  
     }
-  };
-
+  }
+  
+  
   return (
     <>
       <Header />
@@ -1762,6 +923,7 @@ const BookingPage: React.FC = () => {
                 <button type="submit" className="submit-btn">
                   Confirm Booking
                 </button>
+                
               </form>
             </div>
           )}

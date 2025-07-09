@@ -107,7 +107,7 @@ const HomePage: React.FC = () => {
           <div className={styles.roleLinksContainer}>
             {role === "Patient" ? (
               <>
-                <Link to="/orders" className={styles.roleLink}>
+                <Link to="/my-orders" className={styles.roleLink}>
                   Orders
                 </Link>
                 <Link to="/my-bookings" className={styles.roleLink}>
@@ -124,6 +124,9 @@ const HomePage: React.FC = () => {
                 </Link>
                 <Link to="/bookings" className={styles.roleLink}>
                   Bookings
+                </Link>
+                <Link to="/orders" className={styles.roleLink}>
+                  Orders
                 </Link>
               </>
             )}
