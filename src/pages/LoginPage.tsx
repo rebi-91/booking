@@ -265,8 +265,8 @@ const HomePage: React.FC = () => {
               </>
             ) : role === "ADMIN" ? (
               <>
-                <Link to="/attendance" className={styles.roleLink}>
-                  Staff Attendance
+                <Link to="/staffattendance" className={styles.roleLink}>
+                  Attendance
                 </Link>
                 <Link to="/bookings" className={styles.roleLink}>
                   Bookings
@@ -277,8 +277,8 @@ const HomePage: React.FC = () => {
               </>
             ) : (
               // role === "Staff"
-              <Link to="/my-attendance" className={styles.roleLink}>
-                My Attendance
+              <Link to="/attendance" className={styles.roleLink}>
+                Staff Attendance
               </Link>
             )}
           </div>
