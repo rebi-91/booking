@@ -173,6 +173,7 @@ import ProgressGraph from "../pages/student/ProgressGraph.tsx";
 import TotalAverage from "../pages/student/TotalAverage.tsx";
 import StudentFeeGraph from "../pages/student/StudentFeeGraph.tsx";
 import StaffPage from "../pages/teacher/StaffPage.tsx";
+import StaffLog from "../pages/teacher/StaffLog.tsx";
 import BookingBoard from "../pages/teacher/BookingBoard.tsx";
 import MyBooking from "../pages/teacher/MyBooking.tsx";
 import EmergencySupply from "../pages/auth/EmergencySupply.tsx";
@@ -303,7 +304,7 @@ const router = createBrowserRouter([
       },
       //TEACHER
       {
-        path: "/attendance",
+        path: "/staffattendance",
         element: <AttendancePage />,
       },
       {
@@ -313,6 +314,10 @@ const router = createBrowserRouter([
       {
         path: "/my-attendance",
         element: <StaffPage />,
+      },
+      {
+        path: "/attendance",
+        element: <StaffLog />,
       },
       {
         path: "/orders",

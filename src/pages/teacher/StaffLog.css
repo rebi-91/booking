@@ -1,0 +1,110 @@
+/* File: StaffLog.css */
+
+/* 1. Page Background */
+.staffpage-container {
+    background-color: #000 !important;
+    min-height: 100vh !important;
+    padding: 2rem 0 !important;
+  }
+  
+  /* 2. Card Styling */
+  .staffpage-container .bg-dark {
+    background-color: #111 !important;
+    color: #fff !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5) !important;
+  }
+  
+  /* 3. Header Container */
+  .header-container {
+    position: relative !important;
+    background-color: #1e1b4a82 !important;
+    padding: 15px !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  /* 4. Clickable Names */
+  .clickable {
+    cursor: pointer;
+    color: #62a4fa !important;
+    transition: color 0.2s !important;
+  }
+  .clickable:hover {
+    color: #0d6efd !important;
+  }
+  
+  /* 5. Table */
+  .table-custom thead th.th-day {
+    background-color: #42566c !important;
+    color: #fff !important;
+  }
+  .table-custom td:nth-child(1) {
+    background-color: #0f1822 !important;
+    color: #fff !important;
+  }
+  .th-morning {
+    background: linear-gradient(135deg, #007bff, #0d1b2a) !important;
+    color: #fff !important;
+    font-weight: bold !important;
+  }
+  .th-evening {
+    background: linear-gradient(135deg, #40af46, #284e2a) !important;
+    color: #fff !important;
+    font-weight: bold !important;
+  }
+  .table-custom th, .table-custom td {
+    border: 1px solid #444 !important;
+    background-color: #222 !important;
+    color: #ddd !important;
+    padding: 0.5rem !important;
+    text-align: center !important;
+  }
+  .table-custom tbody tr:hover {
+    background-color: #333 !important;
+  }
+  
+  /* 6. Buttons */
+  .btn-primary, .btn-secondary {
+    padding: 1rem 1rem !important;
+    border-radius: 0.5rem !important;
+    font-size: 1rem !important;
+  }
+  .time-text {
+    margin-top: 0.25rem !important;
+    font-size: 0.9rem !important;
+    color: #ccc !important;
+  }
+  
+  /* 7. Hours Box */
+  .hours-box {
+    background: #222 !important;
+    border: 1px solid #444 !important;
+    padding: 1rem !important;
+    border-radius: 0.5rem !important;
+    margin-bottom: 1rem !important;
+  }
+  .hours-box h5 {
+    color: #fff !important;
+  }
+  .hours-value {
+    color: #0d6efd !important;
+    font-size: 1.5rem !important;
+    font-weight: bold !important;
+  }
+  
+  /* 8. Modals */
+  .modal-content {
+    background-color: #111 !important;
+    color: #fff !important;
+  }
+  .modal-header, .modal-footer {
+    border-color: #444 !important;
+  }
+  
+  /* 9. Responsive */
+  @media(max-width:768px) {
+    .header-container {
+      padding: 10px !important;
+      margin-bottom: 1rem !important;
+    }
+  }
+  

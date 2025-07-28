@@ -40,7 +40,8 @@
     "react-responsive": "^10.0.1",
     "react-router-dom": "^6.23.1",
     "react-select": "^5.9.0",
-    "styled-components": "^6.1.13"
+    "styled-components": "^6.1.13",
+    "tesseract.js": "^6.0.1"
   },
   "devDependencies": {
     "@types/deno": "^2.3.0",

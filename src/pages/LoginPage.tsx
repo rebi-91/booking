@@ -29,7 +29,7 @@ const HomePage: React.FC = () => {
         navigate("/setup-profile");
       } else {
         const r = data.role;
-        if (r === "Patient" || r === "Staff") {
+        if (r === "Patient" || r === "Staff" || r === "ADMIN") {
           setRole(r);
         } else {
           navigate("/setup-profile");
@@ -119,9 +119,12 @@ const HomePage: React.FC = () => {
               </>
             ) : (
               <>
-                <Link to="/my-attendance" className={styles.roleLink}>
-                  My Attendance
+                <Link to="/attendance" className={styles.roleLink}>
+                  Staff Attendance
                 </Link>
+                {/* <Link to="/my-attendance" className={styles.roleLink}>
+                  My Attendance
+                </Link> */}
                 <Link to="/bookings" className={styles.roleLink}>
                   Bookings
                 </Link>
