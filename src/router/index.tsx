@@ -304,7 +304,7 @@ const router = createBrowserRouter([
       },
       //TEACHER
       {
-        path: "/staffattendance",
+        path: "/attendance",
         element: <AttendancePage />,
       },
       {
@@ -316,7 +316,7 @@ const router = createBrowserRouter([
         element: <StaffPage />,
       },
       {
-        path: "/attendance",
+        path: "/staffattendance",
         element: <StaffLog />,
       },
       {
