@@ -1,110 +1,106 @@
-/* File: StaffLog.css */
+/* File: src/pages/teacher/StaffLog.css */
 
-/* 1. Page Background */
+/* 1. Page container background & width */
 .staffpage-container {
-    background-color: #000 !important;
-    min-height: 100vh !important;
-    padding: 2rem 0 !important;
-  }
-  
-  /* 2. Card Styling */
-  .staffpage-container .bg-dark {
-    background-color: #111 !important;
-    color: #fff !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.5) !important;
-  }
-  
-  /* 3. Header Container */
-  .header-container {
-    position: relative !important;
-    background-color: #1e1b4a82 !important;
-    padding: 15px !important;
-    margin-bottom: 1rem !important;
-  }
-  
-  /* 4. Clickable Names */
-  .clickable {
-    cursor: pointer;
-    color: #62a4fa !important;
-    transition: color 0.2s !important;
-  }
-  .clickable:hover {
-    color: #0d6efd !important;
-  }
-  
-  /* 5. Table */
-  .table-custom thead th.th-day {
-    background-color: #42566c !important;
-    color: #fff !important;
-  }
-  .table-custom td:nth-child(1) {
-    background-color: #0f1822 !important;
-    color: #fff !important;
-  }
-  .th-morning {
-    background: linear-gradient(135deg, #007bff, #0d1b2a) !important;
-    color: #fff !important;
-    font-weight: bold !important;
-  }
-  .th-evening {
-    background: linear-gradient(135deg, #40af46, #284e2a) !important;
-    color: #fff !important;
-    font-weight: bold !important;
-  }
-  .table-custom th, .table-custom td {
-    border: 1px solid #444 !important;
-    background-color: #222 !important;
-    color: #ddd !important;
-    padding: 0.5rem !important;
-    text-align: center !important;
-  }
-  .table-custom tbody tr:hover {
-    background-color: #333 !important;
-  }
-  
-  /* 6. Buttons */
-  .btn-primary, .btn-secondary {
-    padding: 1rem 1rem !important;
-    border-radius: 0.5rem !important;
-    font-size: 1rem !important;
-  }
-  .time-text {
-    margin-top: 0.25rem !important;
-    font-size: 0.9rem !important;
-    color: #ccc !important;
-  }
-  
-  /* 7. Hours Box */
-  .hours-box {
-    background: #222 !important;
-    border: 1px solid #444 !important;
-    padding: 1rem !important;
-    border-radius: 0.5rem !important;
-    margin-bottom: 1rem !important;
-  }
-  .hours-box h5 {
-    color: #fff !important;
-  }
-  .hours-value {
-    color: #0d6efd !important;
-    font-size: 1.5rem !important;
-    font-weight: bold !important;
-  }
-  
-  /* 8. Modals */
-  .modal-content {
-    background-color: #111 !important;
-    color: #fff !important;
-  }
-  .modal-header, .modal-footer {
-    border-color: #444 !important;
-  }
-  
-  /* 9. Responsive */
-  @media(max-width:768px) {
-    .header-container {
-      padding: 10px !important;
-      margin-bottom: 1rem !important;
-    }
-  }
-  
+  background-color: #000 !important;
+  min-height: 100vh !important;
+  padding: 2rem 0 !important;
+}
+.staffpage-container .bg-dark {
+  background-color: #111 !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5) !important;
+  max-width: 900px !important;
+  margin: 0 auto !important;
+  padding: 1rem !important;
+}
+
+/* 2. Home button styling */
+.home-button {
+  position: absolute;
+  margin-top: 0.2rem !important;
+  margin-bottom: 1.3rem !important;
+  top: 2rem;
+  right: 29rem;
+  font-size: 2.5rem;
+  color: #fff;
+  background-color: #403b9051;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: color 0.2s;
+  z-index: 1000;
+}
+.home-button:hover {
+  color: #0d6efd;
+}
+
+/* 3. Table responsiveness & fit */
+.table-responsive {
+  overflow-x: auto !important;
+}
+.table-custom {
+  width: 100% !important;
+  table-layout: auto !important;
+}
+
+/* 4. Shrink all buttons for tighter fit */
+.staffpage-container .btn {
+  padding: 0.25rem 0.5rem !important;
+  font-size: 0.85rem !important;
+}
+
+/* 5. Darker blue for End Break & Logout buttons */
+.btn-endbreak,
+.btn-logout {
+  background-color: #004085 !important;
+  border-color: #002752 !important;
+  color: #fff !important;
+}
+
+/* 6. Taller & tucked Show Attendance toggle */
+.show-attendance-btn {
+  min-height: 3.5rem !important;
+  padding-top: 0.75rem !important;
+  padding-bottom: 0.75rem !important;
+  margin-left: 2rem !important;
+}
+
+/* 7. Align the staff-name column to the left */
+.table-custom td:first-child,
+.table-custom th:first-child {
+  text-align: left !important;
+}
+
+/* 8. Dark theme for Bootstrap modals */
+.modal-content {
+  background-color: #1a1a1a !important;
+  color: #eee !important;
+  border: 1px solid #333 !important;
+}
+.modal-header,
+.modal-footer {
+  background-color: #1a1a1a !important;
+  border-color: #333 !important;
+}
+.modal-header .btn-close {
+  filter: invert(1);
+}
+.modal-title {
+  color: #fff !important;
+}
+.modal-body {
+  background-color: #1a1a1a !important;
+}
+.modal-footer {
+  background-color: #1a1a1a!important;
+}
+
+/* 9. Dark inputs and labels in modals */
+.modal-content .form-label {
+  color: #ccc !important;
+}
+.modal-content .form-control {
+  background-color: #222 !important;
+  color: #ddd !important;
+  border: 1px solid #444 !important;
+}
