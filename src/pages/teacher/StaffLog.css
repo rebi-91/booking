@@ -1,6 +1,5 @@
 /* File: src/pages/teacher/StaffLog.css */
 
-/* 1. Page container background & width */
 .staffpage-container {
   background-color: #000 !important;
   min-height: 100vh !important;
@@ -15,14 +14,13 @@
   padding: 1rem !important;
 }
 
-/* 2. Home button styling */
 .home-button {
   position: absolute;
   margin-top: 0.2rem !important;
   margin-bottom: 1.3rem !important;
-  top: 2rem;
-  right: 29rem;
-  font-size: 2.5rem;
+  top: 3rem;
+  right: 22rem;
+  font-size: 3rem;
   color: #fff;
   background-color: #403b9051;
   padding: 0.5rem;
@@ -34,22 +32,33 @@
   color: #0d6efd;
 }
 
-/* 3. Table responsiveness & fit */
+.top-table-wrapper {
+  display: flex;
+  justify-content: center;
+}
+.top-table-inner {
+  width: 50%;
+  margin-top: 100px;
+}
+
 .table-responsive {
   overflow-x: auto !important;
+  max-width: 100% !important;
 }
 .table-custom {
   width: 100% !important;
   table-layout: auto !important;
+  min-width: 700px !important;
 }
 
-/* 4. Shrink all buttons for tighter fit */
 .staffpage-container .btn {
   padding: 0.25rem 0.5rem !important;
-  font-size: 0.85rem !important;
+  font-size: 0.9rem !important;
+  min-width: 70px !important;
+  max-width: 160px !important;
+  white-space: nowrap !important;
 }
 
-/* 5. Darker blue for End Break & Logout buttons */
 .btn-endbreak,
 .btn-logout {
   background-color: #004085 !important;
@@ -57,21 +66,51 @@
   color: #fff !important;
 }
 
-/* 6. Taller & tucked Show Attendance toggle */
-.show-attendance-btn {
-  min-height: 3.5rem !important;
-  padding-top: 0.75rem !important;
-  padding-bottom: 0.75rem !important;
-  margin-left: 2rem !important;
+/* Centered pie chart with button on the right */
+.pie-button-wrapper {
+  margin-top: 1.5rem;
+  flex-wrap: nowrap;
 }
 
-/* 7. Align the staff-name column to the left */
+.pie-container {
+  width: 240px;
+  height: 240px;
+}
+
+.show-attendance-btn {
+  padding: 0.75rem 1.5rem !important;
+  min-width: 180px !important;
+  white-space: nowrap !important;
+  text-align: center;
+}
+
+/* Responsive behavior for mobile */
+@media (max-width: 768px) {
+  .pie-button-wrapper {
+    flex-direction: column;
+  }
+
+  .pie-container {
+    margin-bottom: 1rem;
+  }
+
+  .show-attendance-btn {
+    width: 100% !important;
+  }
+}
+
+
+
 .table-custom td:first-child,
-.table-custom th:first-child {
+.table-custom td:last-child,
+.table-custom th:first-child,
+
+.table-custom th:last-child {
+  background-color: #0d151c !important;
   text-align: left !important;
 }
 
-/* 8. Dark theme for Bootstrap modals */
+
 .modal-content {
   background-color: #1a1a1a !important;
   color: #eee !important;
@@ -95,7 +134,6 @@
   background-color: #1a1a1a!important;
 }
 
-/* 9. Dark inputs and labels in modals */
 .modal-content .form-label {
   color: #ccc !important;
 }
