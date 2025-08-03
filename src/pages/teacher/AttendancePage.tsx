@@ -1,11 +1,10 @@
+// FULL UPDATED StaffAttendance.tsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import supabase from "../../supabase";
 import { useSession } from "../../context/SessionContext";
-
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-
 import {
   Container,
   Row,
@@ -17,7 +16,7 @@ import {
   Modal,
   Form,
 } from "react-bootstrap";
-
+import { ChevronLeft, ChevronRight } from "react-bootstrap-icons";
 import "./StaffLog.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -28,19 +27,19 @@ function StaffAttendance() {
 
   const [roleChecked, setRoleChecked] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string>("");
-
+  const [error, setError] = useState("");
   const [staffList, setStaffList] = useState<any[]>([]);
   const [selectedStaff, setSelectedStaff] = useState<any | null>(null);
   const [showAttendanceTable, setShowAttendanceTable] = useState(false);
-
   const [showTimeModal, setShowTimeModal] = useState(false);
   const [modalStaff, setModalStaff] = useState<any | null>(null);
   const [modalAction, setModalAction] = useState<"in" | "startBreak" | "endBreak" | "out" | null>(null);
   const [modalTime, setModalTime] = useState<string>("");
-
   const [editingCell, setEditingCell] = useState<{ day: number; field: string } | null>(null);
   const [editingValue, setEditingValue] = useState("");
+  const [animClass, setAnimClass] = useState("");
+  const [showStaffModal, setShowStaffModal] = useState(false);
+
 
   useEffect(() => {
     if (!session?.user?.id) {
@@ -86,6 +85,21 @@ function StaffAttendance() {
     })();
   }, [session, navigate]);
 
+  if (!roleChecked || loading) {
+    return (
+      <Container className="d-flex vh-100 justify-content-center align-items-center">
+        <Spinner /> <span>Loading…</span>
+      </Container>
+    );
+  }
+  if (error) {
+    return (
+      <Container className="d-flex vh-100 justify-content-center align-items-center">
+        <Alert variant="danger">{error}</Alert>
+      </Container>
+    );
+  }
+
   const today = new Date();
   const D = today.getDate();
   const Y = today.getFullYear();
@@ -103,14 +117,25 @@ function StaffAttendance() {
     }
   };
 
+  const goToStaff = (direction: "prev" | "next") => {
+    if (!selectedStaff) return;
+    const idx = staffList.findIndex((s) => s.staffID === selectedStaff.staffID);
+    let newIndex = direction === "next" ? idx + 1 : idx - 1;
+    if (newIndex >= staffList.length) newIndex = 0;
+    if (newIndex < 0) newIndex = staffList.length - 1;
+    setAnimClass(direction === "next" ? "slide-left" : "slide-right");
+    setTimeout(() => {
+      setSelectedStaff(staffList[newIndex]);
+      setAnimClass("");
+    }, 300);
+  };
+
   const openTimeModal = (staff: any, action: "in" | "startBreak" | "endBreak" | "out") => {
     if (action === "out" && !staff[`in${D}`]) return alert("Must log in first.");
     if (action === "startBreak" && !staff[`in${D}`]) return alert("Must log in first.");
     if (action === "endBreak" && !staff[`startBreak${D}`]) return alert("Must start break first.");
-
     setModalStaff(staff);
     setModalAction(action);
-
     const existing = staff[`${action}${D}`];
     const now = new Date();
     const hh = String(existing ? Number(existing.slice(0, 2)) : now.getHours()).padStart(2, "0");
@@ -121,21 +146,16 @@ function StaffAttendance() {
 
   const confirmTime = async () => {
     if (!modalStaff || !modalAction) return;
-    const [hh, mm] = modalTime.split(":").map(Number);
+    const [hh, mm] = modalTime.split(":" ).map(Number);
     const formatted = `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`;
-
     if (!window.confirm(`Are you sure you want to ${modalAction} at ${formatted}?`)) {
       setShowTimeModal(false);
       return;
     }
-
     const field = `${modalAction}${D}`;
     try {
       await supabase.from("attendance").update({ [field]: formatted }).eq("staffID", modalStaff.staffID);
-
-      setStaffList((list) =>
-        list.map((s) => (s.staffID === modalStaff.staffID ? { ...s, [field]: formatted } : s))
-      );
+      setStaffList((list) => list.map((s) => s.staffID === modalStaff.staffID ? { ...s, [field]: formatted } : s));
       if (selectedStaff?.staffID === modalStaff.staffID) {
         setSelectedStaff((prev) => (prev ? { ...prev, [field]: formatted } : prev));
       }
@@ -148,7 +168,6 @@ function StaffAttendance() {
 
   const renderEditableCell = (day: number, field: string, value: string | null) => {
     const isEditing = editingCell?.day === day && editingCell?.field === field;
-
     if (isEditing) {
       return (
         <input
@@ -159,6 +178,23 @@ function StaffAttendance() {
             if (/^\d{0,2}:?\d{0,2}$/.test(val)) setEditingValue(val);
           }}
           onBlur={async () => {
+            const fieldName = `${field}${day}`; // Move this to the top
+          
+            if (!editingValue.trim()) {
+              // If cleared, update to null
+              const { error } = await supabase
+                .from("attendance")
+                .update({ [fieldName]: null })
+                .eq("staffID", selectedStaff.staffID);
+              if (!error) {
+                setSelectedStaff((prev) =>
+                  prev ? { ...prev, [fieldName]: null } : prev
+                );
+              }
+              setEditingCell(null);
+              return;
+            }
+          
             const [hh, mm] = editingValue.split(":").map(Number);
             if (isNaN(hh) || isNaN(mm) || hh > 23 || mm > 59) {
               alert("Invalid time format");
@@ -166,24 +202,22 @@ function StaffAttendance() {
               return;
             }
             const formatted = `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`;
-            const fieldName = `${field}${day}`;
             const { error } = await supabase
               .from("attendance")
               .update({ [fieldName]: formatted })
               .eq("staffID", selectedStaff.staffID);
-
             if (!error) {
-              setSelectedStaff((prev) => (prev ? { ...prev, [fieldName]: formatted } : prev));
-            } else {
-              alert("Failed to update time.");
+              setSelectedStaff((prev) =>
+                prev ? { ...prev, [fieldName]: formatted } : prev
+              );
             }
             setEditingCell(null);
           }}
+          
           onKeyDown={(e) => {
             if (!editingValue.includes(":")) return;
-            const [hh, mm] = editingValue.split(":").map((v) => parseInt(v) || 0);
+            const [hh, mm] = editingValue.split(":" ).map((v) => parseInt(v) || 0);
             const pos = e.currentTarget.selectionStart || 0;
-
             if (e.key === "ArrowUp" || e.key === "ArrowDown") {
               const delta = e.key === "ArrowUp" ? 1 : -1;
               if (pos <= 2) {
@@ -202,7 +236,6 @@ function StaffAttendance() {
         />
       );
     }
-
     return (
       <span
         onDoubleClick={() => {
@@ -216,23 +249,21 @@ function StaffAttendance() {
     );
   };
 
-  const totalHours = selectedStaff
-    ? daysArray.reduce((sum, d) => {
-        const inT = selectedStaff[`in${d}`];
-        const outT = selectedStaff[`out${d}`];
-        const sb = selectedStaff[`startBreak${d}`] || "00:00";
-        const eb = selectedStaff[`endBreak${d}`] || "00:00";
-        if (inT && outT) {
-          const [ih, im] = inT.split(":").map(Number);
-          const [oh, om] = outT.split(":").map(Number);
-          const [sh, sm] = sb.split(":").map(Number);
-          const [eh, em] = eb.split(":").map(Number);
-          const minsWorked = oh * 60 + om - (ih * 60 + im) - (eh * 60 + em - (sh * 60 + sm));
-          return sum + Math.max(minsWorked, 0) / 60;
-        }
-        return sum;
-      }, 0)
-    : 0;
+  const totalHours = selectedStaff ? daysArray.reduce((sum, d) => {
+    const inT = selectedStaff[`in${d}`];
+    const outT = selectedStaff[`out${d}`];
+    const sb = selectedStaff[`startBreak${d}`] || "00:00";
+    const eb = selectedStaff[`endBreak${d}`] || "00:00";
+    if (inT && outT) {
+      const [ih, im] = inT.split(":" ).map(Number);
+      const [oh, om] = outT.split(":" ).map(Number);
+      const [sh, sm] = sb.split(":" ).map(Number);
+      const [eh, em] = eb.split(":" ).map(Number);
+      const minsWorked = oh * 60 + om - (ih * 60 + im) - ((eh * 60 + em) - (sh * 60 + sm));
+      return sum + Math.max(minsWorked, 0) / 60;
+    }
+    return sum;
+  }, 0) : 0;
 
   const hrs = Math.floor(totalHours);
   const mins = Math.round((totalHours - hrs) * 60);
@@ -243,28 +274,13 @@ function StaffAttendance() {
     datasets: [{ data: [presentCount, absentCount] }],
   };
 
-  if (!roleChecked || loading) {
-    return (
-      <Container className="d-flex vh-100 justify-content-center align-items-center">
-        <Spinner /> <span>Loading…</span>
-      </Container>
-    );
-  }
-
-  if (error) {
-    return (
-      <Container className="d-flex vh-100 justify-content-center align-items-center">
-        <Alert variant="danger">{error}</Alert>
-      </Container>
-    );
-  }
-
   return (
     <Container fluid className="staffpage-container py-4">
-     <Row className="justify-content-center mb-4">
+      {/* Staff list & other elements remain unchanged here */}
+      <Row className="justify-content-center mb-4">
   <Col xs={12} md={10} lg={8}>
     <div className="bg-dark p-4 rounded shadow">
-      <h3 className="text-primary2 mb-3">Staff Log</h3>
+      <h3 className="text-primary2 mb-5"></h3>
       <Table bordered hover className="table-custom text-center">
         <thead>
           <tr>
@@ -329,6 +345,9 @@ function StaffAttendance() {
                     </Button>
                   )}
                 </td>
+                <td className="fw-bold clickable" onClick={() => handleNameClick(st)}>
+                            {st.staffName}
+                          </td>
               </tr>
             );
           })}
@@ -341,38 +360,76 @@ function StaffAttendance() {
       {selectedStaff && (
         <Row className="justify-content-center">
           <Col xs={12} md={10} lg={8}>
-            <div className="bg-dark p-4 rounded shadow mb-4">
-              <div className="header-container d-flex justify-content-between align-items-center mb-3">
-                <h4 className="text-primary2 mb-1">{selectedStaff.staffName}</h4>
-                <div className="current-month-year">
-                  <strong>ID:</strong> {selectedStaff.staffID} | {today.toLocaleDateString()}
-                </div>
-              </div>
+            <div className={`bg-dark p-4 rounded shadow mb-4 ${animClass}`}>
+            <div className="header-container d-flex justify-content-between align-items-center mb-3">
+  <div className="d-flex align-items-center">
+    <h4
+      className="text-primary2 mb-1"
+      style={{ marginLeft: "4px" }}
+    >
+      {selectedStaff.staffName}
+    </h4>
+    <Button
+  variant="light"
+  className="p-0 d-flex justify-content-center align-items-center shadow-sm"
+  style={{
+    width: "20px",
+    height: "40px",
+    marginLeft: "20px",
+    fontSize: "28px",
+    fontWeight: "bold",
+    backgroundColor: "#686ce9", // Bootstrap primary
+    color: "none",
+    border: "none",
+    transition: "transform 0.2s, box-shadow 0.2s",
+  }}
+  onClick={() => setShowStaffModal(true)}
+  title="Change Staff"
+  onMouseOver={(e) =>
+    (e.currentTarget.style.transform = "scale(1.2)")
+  }
+  onMouseOut={(e) =>
+    (e.currentTarget.style.transform = "scale(1)")
+  }
+>
+  📋
+</Button>
+
+  </div>
+
+  <div className="current-month-year">
+    <strong>ID:</strong> {selectedStaff.staffID} |{" "}
+    {today.toLocaleDateString()}
+  </div>
+</div>
+
+
               <div className="hours-box text-center mb-3">
                 <h5>Total Hours Worked</h5>
                 <div className="hours-value">{hrs}h {mins}m</div>
               </div>
-              <div className="d-flex">
-                <Pie data={pieData} options={{ maintainAspectRatio: false }} />
-                <Button
-                  variant="outline-light"
-                  className="ms-3 align-self-center rounded"
-                  onClick={() => setShowAttendanceTable(!showAttendanceTable)}
-                >
-                  {showAttendanceTable ? "Hide Attendance" : "Show Attendance"}
-                </Button>
-              </div>
-
+              <div className="pie-button-wrapper d-flex justify-content-center align-items-center">
+                              <div className="pie-container">
+                                <Pie data={pieData} options={{ maintainAspectRatio: false }} />
+                              </div>
+                              <Button
+                                variant="outline-light"
+                                className="ms-4 rounded show-attendance-btn"
+                                onClick={() => setShowAttendanceTable(!showAttendanceTable)}
+                              >
+                                {showAttendanceTable ? "Hide Attendance" : "Show Attendance"}
+                              </Button>
+                            </div>
               {showAttendanceTable && (
                 <div className="table-responsive mt-4">
                   <Table bordered hover className="table-custom text-center">
                     <thead>
                       <tr>
-                        <th>Day</th>
-                        <th>In</th>
-                        <th>Out</th>
-                        <th>SB</th>
-                        <th>EB</th>
+                        <th className="th-day">Day</th>
+                        <th className="th-morning">In</th>
+                        <th className="th-evening">Out</th>
+                        <th className="th-morning">SB</th>
+                        <th className="th-evening">EB</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -394,35 +451,485 @@ function StaffAttendance() {
         </Row>
       )}
 
-      {/* Time Modal */}
       <Modal show={showTimeModal} onHide={() => setShowTimeModal(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Select Time</Modal.Title>
+          <Modal.Title>
+            {modalAction === "in" ? "Login" : modalAction === "out" ? "Logout" : modalAction === "startBreak" ? "Start Break" : "End Break"} at…
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form.Group>
-            <Form.Label>Time</Form.Label>
-            <Form.Control
-              type="time"
-              value={modalTime}
-              onChange={(e) => setModalTime(e.target.value)}
-            />
+            <Form.Label>Select time</Form.Label>
+            <Form.Control type="time" value={modalTime} onChange={(e) => setModalTime(e.target.value)} />
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="danger" onClick={() => setShowTimeModal(false)}>
-            Cancel
-          </Button>
-          <Button variant="success" onClick={confirmTime}>
-            Confirm
-          </Button>
+          <Button variant="danger" onClick={() => setShowTimeModal(false)}>Cancel</Button>
+          <Button variant="success" onClick={confirmTime}>Yes</Button>
         </Modal.Footer>
       </Modal>
+      <Modal
+  show={showStaffModal}
+  onHide={() => setShowStaffModal(false)}
+  centered
+>
+  <Modal.Header closeButton>
+    <Modal.Title>Select Staff Member</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    {staffList.map((staff) => (
+      <div
+        key={staff.staffID}
+        className="p-2 border rounded mb-2 text-primary2 clickable"
+        onClick={() => {
+          setSelectedStaff(staff);
+          setShowAttendanceTable(false);
+          setShowStaffModal(false);
+        }}
+        style={{
+          backgroundColor:
+            selectedStaff?.staffID === staff.staffID ? "#686ce9" : "transparent",
+          cursor: "pointer",
+        }}
+      >
+        {staff.staffName}
+      </div>
+    ))}
+  </Modal.Body>
+</Modal>
+
     </Container>
   );
 }
 
 export default StaffAttendance;
+
+
+// import React, { useState, useEffect } from "react";
+// import { useNavigate } from "react-router-dom";
+// import supabase from "../../supabase";
+// import { useSession } from "../../context/SessionContext";
+
+// import { Pie } from "react-chartjs-2";
+// import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+
+// import {
+//   Container,
+//   Row,
+//   Col,
+//   Table,
+//   Spinner,
+//   Alert,
+//   Button,
+//   Modal,
+//   Form,
+// } from "react-bootstrap";
+
+// import "./StaffLog.css";
+
+// ChartJS.register(ArcElement, Tooltip, Legend);
+
+// function StaffAttendance() {
+//   const { session } = useSession();
+//   const navigate = useNavigate();
+
+//   const [roleChecked, setRoleChecked] = useState(false);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState<string>("");
+
+//   const [staffList, setStaffList] = useState<any[]>([]);
+//   const [selectedStaff, setSelectedStaff] = useState<any | null>(null);
+//   const [showAttendanceTable, setShowAttendanceTable] = useState(false);
+
+//   const [showTimeModal, setShowTimeModal] = useState(false);
+//   const [modalStaff, setModalStaff] = useState<any | null>(null);
+//   const [modalAction, setModalAction] = useState<"in" | "startBreak" | "endBreak" | "out" | null>(null);
+//   const [modalTime, setModalTime] = useState<string>("");
+
+//   const [editingCell, setEditingCell] = useState<{ day: number; field: string } | null>(null);
+//   const [editingValue, setEditingValue] = useState("");
+
+//   useEffect(() => {
+//     if (!session?.user?.id) {
+//       navigate("/sign-in");
+//       return;
+//     }
+//     (async () => {
+//       try {
+//         const { data, error } = await supabase
+//           .from("profiles")
+//           .select("role")
+//           .eq("id", session.user.id)
+//           .single();
+//         if (error || !data) throw error || new Error("No profile");
+//         if (data.role !== "ADMIN") {
+//           navigate("/sign-in");
+//           return;
+//         }
+//       } catch {
+//         navigate("/sign-in");
+//       } finally {
+//         setRoleChecked(true);
+//       }
+//     })();
+//   }, [session, navigate]);
+
+//   useEffect(() => {
+//     if (!session) {
+//       navigate("/sign-up");
+//       return;
+//     }
+//     (async () => {
+//       setLoading(true);
+//       try {
+//         const { data, error: le } = await supabase.from("attendance").select("*");
+//         if (le) throw le;
+//         setStaffList(data || []);
+//       } catch (e: any) {
+//         setError(e.message);
+//       } finally {
+//         setLoading(false);
+//       }
+//     })();
+//   }, [session, navigate]);
+
+//   const today = new Date();
+//   const D = today.getDate();
+//   const Y = today.getFullYear();
+//   const M = today.getMonth();
+//   const daysInMonth = new Date(Y, M + 1, 0).getDate();
+//   const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+
+//   const handleNameClick = (staff: any) => {
+//     if (selectedStaff?.staffID === staff.staffID) {
+//       setSelectedStaff(null);
+//       setShowAttendanceTable(false);
+//     } else {
+//       setSelectedStaff(staff);
+//       setShowAttendanceTable(false);
+//     }
+//   };
+
+//   const openTimeModal = (staff: any, action: "in" | "startBreak" | "endBreak" | "out") => {
+//     if (action === "out" && !staff[`in${D}`]) return alert("Must log in first.");
+//     if (action === "startBreak" && !staff[`in${D}`]) return alert("Must log in first.");
+//     if (action === "endBreak" && !staff[`startBreak${D}`]) return alert("Must start break first.");
+
+//     setModalStaff(staff);
+//     setModalAction(action);
+
+//     const existing = staff[`${action}${D}`];
+//     const now = new Date();
+//     const hh = String(existing ? Number(existing.slice(0, 2)) : now.getHours()).padStart(2, "0");
+//     const mm = String(existing ? Number(existing.slice(3, 5)) : now.getMinutes()).padStart(2, "0");
+//     setModalTime(`${hh}:${mm}`);
+//     setShowTimeModal(true);
+//   };
+
+//   const confirmTime = async () => {
+//     if (!modalStaff || !modalAction) return;
+//     const [hh, mm] = modalTime.split(":").map(Number);
+//     const formatted = `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`;
+
+//     if (!window.confirm(`Are you sure you want to ${modalAction} at ${formatted}?`)) {
+//       setShowTimeModal(false);
+//       return;
+//     }
+
+//     const field = `${modalAction}${D}`;
+//     try {
+//       await supabase.from("attendance").update({ [field]: formatted }).eq("staffID", modalStaff.staffID);
+
+//       setStaffList((list) =>
+//         list.map((s) => (s.staffID === modalStaff.staffID ? { ...s, [field]: formatted } : s))
+//       );
+//       if (selectedStaff?.staffID === modalStaff.staffID) {
+//         setSelectedStaff((prev) => (prev ? { ...prev, [field]: formatted } : prev));
+//       }
+//     } catch {
+//       alert("Update failed.");
+//     } finally {
+//       setShowTimeModal(false);
+//     }
+//   };
+
+//   const renderEditableCell = (day: number, field: string, value: string | null) => {
+//     const isEditing = editingCell?.day === day && editingCell?.field === field;
+
+//     if (isEditing) {
+//       return (
+//         <input
+//           type="text"
+//           value={editingValue}
+//           onChange={(e) => {
+//             const val = e.target.value;
+//             if (/^\d{0,2}:?\d{0,2}$/.test(val)) setEditingValue(val);
+//           }}
+//           onBlur={async () => {
+//             const [hh, mm] = editingValue.split(":").map(Number);
+//             if (isNaN(hh) || isNaN(mm) || hh > 23 || mm > 59) {
+//               alert("Invalid time format");
+//               setEditingCell(null);
+//               return;
+//             }
+//             const formatted = `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`;
+//             const fieldName = `${field}${day}`;
+//             const { error } = await supabase
+//               .from("attendance")
+//               .update({ [fieldName]: formatted })
+//               .eq("staffID", selectedStaff.staffID);
+
+//             if (!error) {
+//               setSelectedStaff((prev) => (prev ? { ...prev, [fieldName]: formatted } : prev));
+//             } else {
+//               alert("Failed to update time.");
+//             }
+//             setEditingCell(null);
+//           }}
+//           onKeyDown={(e) => {
+//             if (!editingValue.includes(":")) return;
+//             const [hh, mm] = editingValue.split(":").map((v) => parseInt(v) || 0);
+//             const pos = e.currentTarget.selectionStart || 0;
+
+//             if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+//               const delta = e.key === "ArrowUp" ? 1 : -1;
+//               if (pos <= 2) {
+//                 const newHH = (hh + delta + 24) % 24;
+//                 setEditingValue(`${String(newHH).padStart(2, "0")}:${String(mm).padStart(2, "0")}`);
+//               } else {
+//                 const newMM = (mm + delta + 60) % 60;
+//                 setEditingValue(`${String(hh).padStart(2, "0")}:${String(newMM).padStart(2, "0")}`);
+//               }
+//               e.preventDefault();
+//             }
+//           }}
+//           autoFocus
+//           className="form-control form-control-sm"
+//           style={{ width: "80px", textAlign: "center" }}
+//         />
+//       );
+//     }
+
+//     return (
+//       <span
+//         onDoubleClick={() => {
+//           setEditingCell({ day, field });
+//           setEditingValue(value || "00:00");
+//         }}
+//         style={{ cursor: "pointer" }}
+//       >
+//         {value || "—"}
+//       </span>
+//     );
+//   };
+
+//   const totalHours = selectedStaff
+//     ? daysArray.reduce((sum, d) => {
+//         const inT = selectedStaff[`in${d}`];
+//         const outT = selectedStaff[`out${d}`];
+//         const sb = selectedStaff[`startBreak${d}`] || "00:00";
+//         const eb = selectedStaff[`endBreak${d}`] || "00:00";
+//         if (inT && outT) {
+//           const [ih, im] = inT.split(":").map(Number);
+//           const [oh, om] = outT.split(":").map(Number);
+//           const [sh, sm] = sb.split(":").map(Number);
+//           const [eh, em] = eb.split(":").map(Number);
+//           const minsWorked = oh * 60 + om - (ih * 60 + im) - (eh * 60 + em - (sh * 60 + sm));
+//           return sum + Math.max(minsWorked, 0) / 60;
+//         }
+//         return sum;
+//       }, 0)
+//     : 0;
+
+//   const hrs = Math.floor(totalHours);
+//   const mins = Math.round((totalHours - hrs) * 60);
+//   const presentCount = selectedStaff ? daysArray.filter((d) => !!selectedStaff[`in${d}`]).length : 0;
+//   const absentCount = selectedStaff ? daysInMonth - presentCount : 0;
+//   const pieData = {
+//     labels: ["Present", "Absent"],
+//     datasets: [{ data: [presentCount, absentCount] }],
+//   };
+
+//   if (!roleChecked || loading) {
+//     return (
+//       <Container className="d-flex vh-100 justify-content-center align-items-center">
+//         <Spinner /> <span>Loading…</span>
+//       </Container>
+//     );
+//   }
+
+//   if (error) {
+//     return (
+//       <Container className="d-flex vh-100 justify-content-center align-items-center">
+//         <Alert variant="danger">{error}</Alert>
+//       </Container>
+//     );
+//   }
+
+//   return (
+//     <Container fluid className="staffpage-container py-4">
+//      <Row className="justify-content-center mb-4">
+//   <Col xs={12} md={10} lg={8}>
+//     <div className="bg-dark p-4 rounded shadow">
+//       <h3 className="text-primary2 mb-3">Staff Log</h3>
+//       <Table bordered hover className="table-custom text-center">
+//         <thead>
+//           <tr>
+//             <th>Staff Name</th>
+//             <th>Login</th>
+//             <th>Start Break</th>
+//             <th>End Break</th>
+//             <th>Logout</th>
+//           </tr>
+//         </thead>
+//         <tbody>
+//           {staffList.map((st) => {
+//             const li = st[`in${D}`];
+//             const sb = st[`startBreak${D}`];
+//             const eb = st[`endBreak${D}`];
+//             const lo = st[`out${D}`];
+//             return (
+//               <tr key={st.staffID}>
+//                 <td
+//                   className="fw-bold clickable"
+//                   onClick={() => handleNameClick(st)}
+//                 >
+//                   {st.staffName}
+//                 </td>
+//                 <td>
+//                   {li || (
+//                     <Button
+//                       size="sm"
+//                       onClick={() => openTimeModal(st, "in")}
+//                     >
+//                       Login
+//                     </Button>
+//                   )}
+//                 </td>
+//                 <td>
+//                   {sb || (
+//                     <Button
+//                       size="sm"
+//                       onClick={() => openTimeModal(st, "startBreak")}
+//                     >
+//                       Start Break
+//                     </Button>
+//                   )}
+//                 </td>
+//                 <td>
+//                   {eb || (
+//                     <Button
+//                       size="sm"
+//                       onClick={() => openTimeModal(st, "endBreak")}
+//                     >
+//                       End Break
+//                     </Button>
+//                   )}
+//                 </td>
+//                 <td>
+//                   {lo || (
+//                     <Button
+//                       size="sm"
+//                       onClick={() => openTimeModal(st, "out")}
+//                     >
+//                       Logout
+//                     </Button>
+//                   )}
+//                 </td>
+//               </tr>
+//             );
+//           })}
+//         </tbody>
+//       </Table>
+//     </div>
+//   </Col>
+// </Row>
+
+//       {selectedStaff && (
+//         <Row className="justify-content-center">
+//           <Col xs={12} md={10} lg={8}>
+//             <div className="bg-dark p-4 rounded shadow mb-4">
+//               <div className="header-container d-flex justify-content-between align-items-center mb-3">
+//                 <h4 className="text-primary2 mb-1">{selectedStaff.staffName}</h4>
+//                 <div className="current-month-year">
+//                   <strong>ID:</strong> {selectedStaff.staffID} | {today.toLocaleDateString()}
+//                 </div>
+//               </div>
+//               <div className="hours-box text-center mb-3">
+//                 <h5>Total Hours Worked</h5>
+//                 <div className="hours-value">{hrs}h {mins}m</div>
+//               </div>
+//               <div className="d-flex">
+//                 <Pie data={pieData} options={{ maintainAspectRatio: false }} />
+//                 <Button
+//                   variant="outline-light"
+//                   className="ms-3 align-self-center rounded"
+//                   onClick={() => setShowAttendanceTable(!showAttendanceTable)}
+//                 >
+//                   {showAttendanceTable ? "Hide Attendance" : "Show Attendance"}
+//                 </Button>
+//               </div>
+
+//               {showAttendanceTable && (
+//                 <div className="table-responsive mt-4">
+//                   <Table bordered hover className="table-custom text-center">
+//                     <thead>
+//                       <tr>
+//                         <th>Day</th>
+//                         <th>In</th>
+//                         <th>Out</th>
+//                         <th>SB</th>
+//                         <th>EB</th>
+//                       </tr>
+//                     </thead>
+//                     <tbody>
+//                       {daysArray.map((d) => (
+//                         <tr key={d}>
+//                           <td className="fw-bold">{d}</td>
+//                           <td>{renderEditableCell(d, "in", selectedStaff[`in${d}`])}</td>
+//                           <td>{renderEditableCell(d, "out", selectedStaff[`out${d}`])}</td>
+//                           <td>{renderEditableCell(d, "startBreak", selectedStaff[`startBreak${d}`])}</td>
+//                           <td>{renderEditableCell(d, "endBreak", selectedStaff[`endBreak${d}`])}</td>
+//                         </tr>
+//                       ))}
+//                     </tbody>
+//                   </Table>
+//                 </div>
+//               )}
+//             </div>
+//           </Col>
+//         </Row>
+//       )}
+
+//       {/* Time Modal */}
+//       <Modal show={showTimeModal} onHide={() => setShowTimeModal(false)} centered>
+//         <Modal.Header closeButton>
+//           <Modal.Title>Select Time</Modal.Title>
+//         </Modal.Header>
+//         <Modal.Body>
+//           <Form.Group>
+//             <Form.Label>Time</Form.Label>
+//             <Form.Control
+//               type="time"
+//               value={modalTime}
+//               onChange={(e) => setModalTime(e.target.value)}
+//             />
+//           </Form.Group>
+//         </Modal.Body>
+//         <Modal.Footer>
+//           <Button variant="danger" onClick={() => setShowTimeModal(false)}>
+//             Cancel
+//           </Button>
+//           <Button variant="success" onClick={confirmTime}>
+//             Confirm
+//           </Button>
+//         </Modal.Footer>
+//       </Modal>
+//     </Container>
+//   );
+// }
+
+// export default StaffAttendance;
 
 // import React, { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";

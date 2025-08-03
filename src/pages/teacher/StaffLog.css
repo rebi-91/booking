@@ -79,6 +79,8 @@
 
 .show-attendance-btn {
   padding: 0.75rem 1.5rem !important;
+  background-color: #ea5878 !important;
+  color: #fffcfd !important;
   min-width: 180px !important;
   white-space: nowrap !important;
   text-align: center;
@@ -101,13 +103,21 @@
 
 
 
-.table-custom td:first-child,
-.table-custom td:last-child,
-.table-custom th:first-child,
 
+.table-custom td:last-child{
+  background-color: #0d151c !important;
+    text-align: left !important}
+
+    .table-custom td:first-child{
+      background-color: #5c9cd4 !important;
+        text-align: left !important};
+
+.table-custom th:first-child{
+background-color: #0d151c !important;
+  text-align: left !important};
 .table-custom th:last-child {
   background-color: #0d151c !important;
-  text-align: left !important;
+  text-align: left !important
 }
 
 
