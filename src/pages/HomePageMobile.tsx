@@ -434,6 +434,24 @@ const HERO_CARD_LINKS: Record<string, string> = {
   'Ear wax removal': '/book/19',
 };
 
+const covidvaccine = [
+  {
+    title: 'COVID vaccine (over 65)',
+    link: '/book/16',
+    sub: 'Free COVID-19 booster for eligible patients (over 65).',
+    img:
+      'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/542160/8ruIf7vdRW.webp',
+  },
+  {
+    title: 'Flu jab',
+    link: '/book/14',
+    sub: 'Free NHS flu jab to keep you protected.',
+    img:
+    'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/101404/2-EtcvQ5-J.webp',
+  },
+ 
+];
+
 const POPULAR_SERVICES = [
   {
     title: 'Weight loss management',
@@ -706,6 +724,84 @@ const HomePage: React.FC = () => {
         </section>
 
         {/* Popular Services */}
+        <section className="container py-5 bg-light rounded popular-services">
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <h2
+              style={{
+                color: MAINS_TEXT_COLOR,
+                fontWeight: 500,
+                fontSize: '1.5rem',
+              }}
+            >
+              Free NHS vaccination
+            </h2>
+          </div>
+          <div className="row g-4">
+            {covidvaccine.map((svc) => {
+              const isSoon = COMING_SOON.has(svc.title);
+              return (
+                <div key={svc.title} className="col-sm-6 col-md-4">
+                  <div
+                    className={`card h-100 shadow-sm border-0 ${
+                      isSoon ? 'coming-soon' : ''
+                    }`}
+                    style={{
+                      cursor: isSoon ? 'default' : 'pointer',
+                      position: 'relative',
+                    }}
+                    onClick={() => {
+                      if (!isSoon) navigate(svc.link);
+                    }}
+                  >
+                    <div style={{ height: 140, overflow: 'hidden' }}>
+                      <img
+                        src={svc.img}
+                        alt={svc.title}
+                        className="w-100 h-100"
+                        style={{ objectFit: 'cover', transition: 'transform 0.3s' }}
+                        onMouseEnter={(e) => {
+                          if (!isSoon) e.currentTarget.style.transform = 'scale(1.05)';
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isSoon) e.currentTarget.style.transform = 'scale(1)';
+                        }}
+                      />
+                    </div>
+
+                    {isSoon && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          background: 'rgba(227, 233, 233, 0.67)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontWeight: 600,
+                          color: 'rgba(6, 133, 133, 0.67)',
+                          fontSize: '1.25rem',
+                          borderRadius: '0.25rem',
+                        }}
+                      >
+                        Coming Soon
+                      </div>
+                    )}
+
+                    <div className="card-body">
+                      <h5 className="card-title mb-1" style={{ fontSize: '1rem' }}>
+                        {svc.title}
+                      </h5>
+                      <p className="text-muted small mb-0">{svc.sub}</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
         <section className="container py-5 bg-light rounded popular-services">
           <div className="d-flex justify-content-between align-items-center mb-4">
             <h2

@@ -1,3 +1,4 @@
+
 .desktop-page {
   background: #F5F6F8;
   font-family: "Segoe UI", sans-serif;
@@ -115,12 +116,29 @@
   border-radius: 12px;
   box-shadow: 0 4px 24px rgba(0,0,0,0.05);
 }
-.popular-services header,
-.pharmacy-first header {
+
+.pharmacy-first{
+  background: #001F54;
+  margin: 0 4rem 2rem !important;
+  margin-left: 15.5rem !important;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.05);
+}
+.popular-services header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
+}
+
+.pharmacy-first header {
+  color: #FFF;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  
 }
 .popular-services .grid-3 {
   display: grid;
@@ -158,6 +176,7 @@
   font-size: 1.25rem;
   cursor: pointer;
   margin: 0 0.5rem;
+  margin-right: 5.5rem;
 }
 .pf-track {
   display: flex;
@@ -175,7 +194,7 @@
   flex-shrink: 0;
 }
 .pf-card .pf-img {
-  height: 180px;
+  height: 220px;
   overflow: hidden;
 }
 .pf-card img {
@@ -192,6 +211,16 @@
   border: none;
   color: #FFF;
   padding: 0.4rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+.btn-start-sm2 {
+  background: #00D364;
+  border: none;
+  color: #FFF;
+  width: 99%;
+  padding: 0.4rem 1rem !important;
   border-radius: 6px;
   cursor: pointer;
   margin-top: 0.5rem;

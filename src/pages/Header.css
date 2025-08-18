@@ -26,13 +26,13 @@
 .mobile-logo {
   height: 29px;
   object-fit: contain;
-  margin-left: 0.9rem;
+  margin-left: 1.7rem !important;
 }
 
 .call-icon {
-  margin-left: 0.85rem;
-  display: flex;
-  align-items: center;
+  margin-left: 1.5rem !important;
+  
+ 
 }
 .call-icon img {
   height: 24px;

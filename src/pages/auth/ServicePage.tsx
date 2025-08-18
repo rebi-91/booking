@@ -68,9 +68,9 @@ export const allServices: Service[] = [
   { id: 44, title: 'Shingles', img: 'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/314321/sewm1HLfSk.webp', duration: '10 mins', category: 'Pharmacy First', description: 'Immediate access to shingles vaccination.' },
   { id: 12, title: 'Weight Loss Management', img: 'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/904592/c10d6P2jks.webp', duration: '20 mins', category: 'Private Service', description: 'Clinical support for sustainable weight loss.' },
   { id: 13, title: 'Oral Contraception', img: 'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/769543/KbbzRigIaf.webp', duration: '10 mins', category: 'NHS Service', description: 'Fast, confidential contraception service.' },
-  { id: 14, title: 'Flu Vaccination', img: 'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/101404/2-EtcvQ5-J.webp', duration: '10 mins', category: 'NHS Service', description: 'Free NHS flu jab to keep you protected.' },
+  { id: 14, title: 'Flu Vaccination', img: 'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/101404/2-EtcvQ5-J.webp', duration: '5 mins', category: 'NHS Service', description: 'Free NHS flu jab to keep you protected.' },
   { id: 15, title: 'Blood pressure check', img: 'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/865410/rcaOjteI-1.webp', duration: '10 mins', category: 'NHS Service', description: 'Quick assessment to detect hypertension.' },
-  { id: 16, title: 'COVID-19 Vaccination', img: 'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/542160/8ruIf7vdRW.webp', duration: '10 mins', category: 'NHS Service', description: 'Free COVID-19 booster for eligible patients.' },
+  { id: 16, title: 'COVID-19 Vaccination', img: 'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/542160/8ruIf7vdRW.webp', duration: '5 mins', category: 'NHS Service', description: 'Free COVID-19 booster for eligible patients.' },
   { id: 17, title: 'Yellow fever', img: 'https://www.leamingtontravelclinic.co.uk/wp-content/uploads/2023/08/Yellow_fever2.jpg', duration: '20 mins', category: 'Private Service', description: 'Coming Soon' },
   { id: 18, title: 'Ear wax removal', img: 'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/123156/AHHct1yZUR.webp', duration: '20 mins', category: 'Private Service', description: 'Safe microsuction for clear, comfortable ears.' },
   { id: 19, title: 'Earache', img: 'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/91567/H_SCOcxLz4.webp', duration: '10 mins', category: 'Pharmacy First', description: 'Treatment and advice for painful ear infections.' },
@@ -103,7 +103,7 @@ export const allServices: Service[] = [
 // IDs configuration
 const PRIVATE_IDS    = [1,3,4,6,7,8,10,12,18,20,22,23,24,25,26,9,28,29,90,89];
 const VACCINE_IDS    = [17, 30,31,32,33,34,35,36,37,38,39,40];
-const SEASONAL_IDS   = [16];  // COVID-19
+const SEASONAL_IDS   = [];  // COVID-19
 const COMING_SOON_IDS= [17];  // Yellow fever
 
 const tabs = [

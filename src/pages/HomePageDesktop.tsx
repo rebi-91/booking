@@ -70,6 +70,23 @@ const popularServices = [
       'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fed-3.webp&w=640&q=75',
   },
 ];
+const covidvaccine = [
+  {
+    title: 'COVID vaccine (over 65)',
+    link: '/book/16',
+    sub: 'Free COVID-19 booster for eligible patients (over 65).',
+    img:
+      'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/542160/8ruIf7vdRW.webp',
+  },
+  {
+    title: 'Flu jab',
+    link: '/book/14',
+    sub: 'Free NHS flu jab to keep you protected.',
+    img:
+    'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/101404/2-EtcvQ5-J.webp',
+  },
+ 
+];
 
 // const VACCINATIONS = [
 //   {
@@ -241,7 +258,7 @@ export default function HomePageDesktop() {
         <section className="popular-services">
           <header>
             <h2>Popular services</h2>
-            <button className="link-all" onClick={()=>navigate('/services')}>
+            <button className="btn-start-sm" onClick={()=>navigate('/services')}>
               See all services →
             </button>
           </header>
@@ -285,7 +302,34 @@ export default function HomePageDesktop() {
                 <div className="pf-body">
                   <h5>{svc.title}</h5>
                   <small>{svc.subtitle}</small>
-                  <button className="btn-start-sm">Get started</button>
+                  <button className="btn-start-sm2">Get started</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+            
+            <section className="popular-services">
+          <header>
+            <h2>Free NHS vaccination</h2>
+            {/* <button className="btn-start-sm" onClick={()=>navigate('/services')}>
+              See all services →
+            </button> */}
+          </header>
+          <div className="grid-3">
+            {covidvaccine.map(svc=>(
+              <div
+                key={svc.title}
+                className="card svc-card"
+                onClick={()=>navigate(svc.link)}
+              >
+                <div className="svc-img">
+                  <img src={svc.img} alt={svc.title}/>
+                </div>
+                <div className="svc-body">
+                  <h5>{svc.title}</h5>
+                  <p>{svc.sub}</p>
                 </div>
               </div>
             ))}

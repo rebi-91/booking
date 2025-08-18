@@ -199,7 +199,7 @@ const sampleServices: Record<number, Service> = {
   14: {
     id: 14,
     title: 'Flu Vaccination',
-    duration: '10m',
+    duration: '5m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
     price: 'Free NHS',
   },
@@ -213,7 +213,7 @@ const sampleServices: Record<number, Service> = {
   16: {
     id: 16,
     title: 'COVID-19 Vaccination',
-    duration: '10m',
+    duration: '5m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
     price: 'Free NHS',
   },
@@ -445,31 +445,129 @@ function generateTimeSlots(
 }
 
 // Available slots by day-of-week and category
+// function slotsForDayAndCategory(
+//   dow: number,
+//   cat: 'NHS' | 'Private'
+// ): string[] {
+//   const step = cat === 'Private' ? 20 : 10;
+//   if (cat === 'NHS') {
+//     if (dow >= 1 && dow <= 4)
+//       return generateTimeSlots(9, 30, 17, 10, step);
+//     if (dow === 5)
+//       return [
+//         ...generateTimeSlots(9, 30, 12, 10, step),
+//         ...generateTimeSlots(15, 30, 17, 10, step),
+//       ];
+//     return [];
+//   } else {
+//     if (dow >= 1 && dow <= 3)
+//       return generateTimeSlots(9, 30, 17, 10, step);
+//     if (dow === 5)
+//       return [
+//         ...generateTimeSlots(9, 30, 12, 10, step),
+//         ...generateTimeSlots(15, 0, 17, 10, step),
+//       ];
+//     return [];
+//   }
+// }
 function slotsForDayAndCategory(
   dow: number,
-  cat: 'NHS' | 'Private'
+  cat: 'NHS' | 'Private',
+  sid?: number,
+  date?: Date
 ): string[] {
   const step = cat === 'Private' ? 20 : 10;
-  if (cat === 'NHS') {
-    if (dow >= 1 && dow <= 4)
-      return generateTimeSlots(9, 30, 17, 10, step);
-    if (dow === 5)
-      return [
-        ...generateTimeSlots(9, 30, 12, 10, step),
-        ...generateTimeSlots(15, 30, 17, 10, step),
-      ];
-    return [];
-  } else {
-    if (dow >= 1 && dow <= 3)
-      return generateTimeSlots(9, 30, 17, 10, step);
-    if (dow === 5)
-      return [
-        ...generateTimeSlots(9, 30, 12, 10, step),
-        ...generateTimeSlots(15, 0, 17, 10, step),
-      ];
+
+  // Flu & COVID special rules
+  const cutoff = new Date(2025, 9, 1); // 1st Oct 2025
+  const useNewRules = date && date >= cutoff;
+  if (sid === 14 || sid === 16) {
+    if (!useNewRules) return []; // before 1 Oct 2025 → no slots
+    if (dow >= 1 && dow <= 4) return [...generateTimeSlots(9, 30, 12, 55, 5), ...generateTimeSlots(14, 0, 17, 55, 5)];
+    if (dow === 5) return [...generateTimeSlots(9, 30, 11, 55, 5), ...generateTimeSlots(15, 0, 17, 55, 5)];
     return [];
   }
+
+  // --- Non-Flu/COVID rules ---
+  const startHour = 9, startMin = 30, endHour = 18, endMin = 0;
+  if (dow >= 1 && dow <= 4) {
+    // Mon–Thu, 1–2pm blocked
+    return [
+      ...generateTimeSlots(startHour, startMin, 12, 0 - step, step),
+      ...generateTimeSlots(14, 0, endHour - 1, endMin - 1, step)
+    ];
+  }
+  if (dow === 5) {
+    // Fri, 12–3pm blocked
+    return [
+      ...generateTimeSlots(startHour, startMin, 12, 0 - step, step),
+      ...generateTimeSlots(15, 0, endHour - 1, endMin - 1, step)
+    ];
+  }
+
+  // Sat/Sun → no slots
+  return [];
 }
+
+// function slotsForDayAndCategory(
+//   dow: number,
+//   cat: 'NHS' | 'Private',
+//   sid?: number,
+//   date?: Date
+// ): string[] {
+//   const step = cat === 'Private' ? 20 : 10;
+
+//   // Check if we’re on/after 1st Oct 2025
+//   const cutoff = new Date(2025, 9, 1); // Oct = 9 (0-indexed)
+//   const useNewRules = date && date >= cutoff;
+
+//   // Flu & Covid special rules
+//   if (sid === 14 || sid === 16) {
+//     if (!useNewRules) {
+//       // ❌ Before Oct 1, 2025 → no slots at all
+//       return [];
+//     }
+
+//     // ✅ From Oct 1, 2025 onwards → 5-min slots, blocked hours
+//     if (dow >= 1 && dow <= 4) {
+//       // Mon–Thu, 9:30–18:00 with 13:00–14:00 blocked
+//       return [
+//         ...generateTimeSlots(9, 30, 12, 55, 5),
+//         ...generateTimeSlots(14, 0, 17, 55, 5),
+//       ];
+//     }
+//     if (dow === 5) {
+//       // Friday, 9:30–18:00 with 12:00–15:00 blocked
+//       return [
+//         ...generateTimeSlots(9, 30, 11, 55, 5),
+//         ...generateTimeSlots(15, 0, 17, 55, 5),
+//       ];
+//     }
+//     return [];
+//   }
+
+//   // --- existing rules for all other NHS/Private services ---
+//   if (cat === 'NHS') {
+//     if (dow >= 1 && dow <= 4)
+//       return generateTimeSlots(9, 30, 17, 10, 10);
+//     if (dow === 5)
+//       return [
+//         ...generateTimeSlots(9, 30, 12, 10, 10),
+//         ...generateTimeSlots(15, 30, 17, 10, 10),
+//       ];
+//     return [];
+//   } else {
+//     if (dow >= 1 && dow <= 3)
+//       return generateTimeSlots(9, 30, 17, 10, 20);
+//     if (dow === 5)
+//       return [
+//         ...generateTimeSlots(9, 30, 12, 10, 20),
+//         ...generateTimeSlots(15, 0, 17, 10, 20),
+//       ];
+//     return [];
+//   }
+// }
+
 interface ModalParams {
   title: string;
   message: string;
@@ -489,8 +587,19 @@ const BookingPage: React.FC = () => {
   // Calendar state
   const [view, setView] = useState<'calendar' | 'form'>('calendar');
   const today = new Date();
-  const [displayYear, setDisplayYear] = useState(today.getFullYear());
-  const [displayMonth, setDisplayMonth] = useState(today.getMonth());
+  // const today = new Date();
+let initialYear = today.getFullYear();
+let initialMonth = today.getMonth();
+
+if (sid === 14 || sid === 16) {
+  initialYear = 2025;
+  initialMonth = 9; // October (0-indexed)
+}
+
+const [displayYear, setDisplayYear] = useState(initialYear);
+const [displayMonth, setDisplayMonth] = useState(initialMonth);
+  // const [displayYear, setDisplayYear] = useState(today.getFullYear());
+  // const [displayMonth, setDisplayMonth] = useState(today.getMonth());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [availableTimes, setAvailableTimes] = useState<string[]>([]);
   const [chosenTime, setChosenTime] = useState<string | null>(null);
@@ -517,7 +626,7 @@ const BookingPage: React.FC = () => {
     async function loadSlots() {
       if (!selectedDate) return setAvailableTimes([]);
       const dow = selectedDate.getDay();
-      const all = slotsForDayAndCategory(dow, category);
+      const all = slotsForDayAndCategory(dow, category, sid, selectedDate);
       const dateISO = selectedDate.toISOString().split('T')[0];
       const booked = await fetchExistingBookings(dateISO, category);
       setAvailableTimes(all.filter((t) => !booked.includes(t)));
@@ -691,7 +800,7 @@ const BookingPage: React.FC = () => {
       if (fnErr) console.warn("Email function error:", fnErr.message);
   
       // 6) Final success flow
-alert(`Booking confirmed! Your appointment has been successfully booked. A confirmation email has been sent to your email address.
+alert(`Booking confirmed! A confirmation email has been sent to your email address.
   Please check your inbox (including spam folder) for details.`);
   navigate("/");
   
@@ -713,7 +822,28 @@ alert(`Booking confirmed! Your appointment has been successfully booked. A confi
 
               <div className="service-header">
                 <h2 className="booking-title">{service.title}</h2>
-                <p className="booking-subtitle">Book your Appointment now!</p>
+                {/* <p className="booking-subtitle">Book your Appointment now!</p> */}
+                <p className="booking-subtitle">
+  {sid === 14 && (
+    <>
+      Flu vaccinations are available from 1st October 2025. {" "}
+      <a href="/book/16" className="text-blue-600 underline">
+        COVID
+      </a>{" "}
+      vaccinations are also available.
+    </>
+  )}
+  {sid === 16 && (
+    <>
+      COVID vaccinations are available from 1st October 2025.{" "}
+      <a href="/book/14" className="text-blue-600 underline">
+        Flu
+      </a>{" "}
+      vaccinations are also available.
+    </>
+  )}
+  {sid !== 14 && sid !== 16 && "Book your Appointment now!"}
+</p>
                 <div className="service-info-row">
                   <div className="info-item">
                     <i className="bi bi-clock"></i>
@@ -763,7 +893,15 @@ alert(`Booking confirmed! Your appointment has been successfully booked. A confi
                     const dObj = new Date(displayYear, displayMonth, day);
                     const isToday = dObj.toDateString() === today.toDateString();
                     const isSelected = selectedDate && dObj.toDateString() === selectedDate.toDateString();
-                    const inPast = dObj < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                    // const inPast = dObj < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                    const cutoff = new Date(2025, 9, 1); // 1st Oct 2025
+let inPast = dObj < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+// Apply Flu/COVID restriction
+if (sid === 14 || sid === 16) {
+  inPast = inPast || dObj < cutoff;
+}
+
                     let cls = '';
                     if (isSelected) cls = 'selected-day';
                     else if (isToday) cls = 'today-day';
