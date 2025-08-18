@@ -212,7 +212,7 @@ const sampleServices: Record<number, Service> = {
   },
   16: {
     id: 16,
-    title: 'COVID-19 Vaccination',
+    title: 'COVID-19 Vaccination (over 75)',
     duration: '5m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
     price: 'Free NHS',
