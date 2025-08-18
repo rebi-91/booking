@@ -72,9 +72,9 @@ const popularServices = [
 ];
 const covidvaccine = [
   {
-    title: 'COVID vaccine (over 65)',
+    title: 'COVID vaccine',
     link: '/book/16',
-    sub: 'Free COVID-19 booster for eligible patients (over 65).',
+    sub: 'Free COVID-19 booster for eligible patients (over 75).',
     img:
       'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/542160/8ruIf7vdRW.webp',
   },
