@@ -408,20 +408,49 @@ function serviceCategory(id: number): 'NHS' | 'Private' {
 }
 
 // Fetch existing booked times for a given date & category
+// async function fetchExistingBookings(
+//   dateISO: string,
+//   category: 'NHS' | 'Private'
+// ): Promise<string[]> {
+//   const { data, error } = await supabase
+//     .from('bookings')
+//     .select('start_time')
+//     .eq('date', dateISO)
+//     .eq('cat', category);
+//   if (error) {
+//     console.error('Supabase fetch error:', error.message);
+//     return [];
+//   }
+//   return (data as { start_time: string }[]).map((r) => r.start_time);
+// }
+// Fetch existing booked times for a given date & category
 async function fetchExistingBookings(
   dateISO: string,
-  category: 'NHS' | 'Private'
+  category: 'NHS' | 'Private',
+  sid?: number
 ): Promise<string[]> {
-  const { data, error } = await supabase
+  let query = supabase
     .from('bookings')
     .select('start_time')
-    .eq('date', dateISO)
-    .eq('cat', category);
+    .eq('date', dateISO);
+
+  if (sid === 14 || sid === 16) {
+    // Flu + COVID block each other
+    query = query.in('service', [
+      sampleServices[14].title.replace(/ treatment$/i, ''),
+      sampleServices[16].title.replace(/ treatment$/i, '')
+    ]);
+  } else {
+    // Normal rule → match same category
+    query = query.eq('cat', category);
+  }
+
+  const { data, error } = await query;
   if (error) {
     console.error('Supabase fetch error:', error.message);
     return [];
   }
-  return (data as { start_time: string }[]).map((r) => r.start_time);
+  return (data as { start_time: string }[]).map(r => r.start_time);
 }
 
 // Generate timeslots between start and end with step in minutes
@@ -627,9 +656,13 @@ const [displayMonth, setDisplayMonth] = useState(initialMonth);
       if (!selectedDate) return setAvailableTimes([]);
       const dow = selectedDate.getDay();
       const all = slotsForDayAndCategory(dow, category, sid, selectedDate);
-      const dateISO = selectedDate.toISOString().split('T')[0];
-      const booked = await fetchExistingBookings(dateISO, category);
-      setAvailableTimes(all.filter((t) => !booked.includes(t)));
+      // const dateISO = selectedDate.toISOString().split('T')[0];
+      const dateISO = toLocalYMD(selectedDate);
+      // const booked = await fetchExistingBookings(dateISO, category);
+      // setAvailableTimes(all.filter((t) => !booked.includes(t)));
+      const booked = await fetchExistingBookings(dateISO, category, sid);
+setAvailableTimes(all.filter((t) => !booked.includes(t)));
+
     }
     loadSlots();
   }, [selectedDate, category]);
@@ -747,6 +780,13 @@ const [displayMonth, setDisplayMonth] = useState(initialMonth);
     status: string;
     customerID?: string;
   }
+
+  function toLocalYMD(d: Date): string {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  }
   
   async function handleBookingSubmit(e: FormEvent) {
     e.preventDefault();
@@ -761,7 +801,8 @@ const [displayMonth, setDisplayMonth] = useState(initialMonth);
     if (Object.keys(errs).length) return;
   
     // 2) Build payload
-    const dateISO       = selectedDate!.toISOString().slice(0,10);
+    // const dateISO       = selectedDate!.toISOString().slice(0,10);
+    const dateISO = toLocalYMD(selectedDate!);
     const e164          = countryCode + patientPhone.replace(/^0+/, "");
     const strippedTitle = service.title.replace(/ treatment$/i, "");
   
