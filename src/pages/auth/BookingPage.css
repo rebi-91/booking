@@ -379,6 +379,13 @@ hr {
 .booking-form .submit-btn:hover {
   background-color: #333;
 }
+.booking-checkbox input[type="checkbox"] {
+  width: 10px !important;   /* increase size */
+  height: 10px !important; 
+  margin: 0 !important; /* remove the default checkbox margin */
+  margin-right: 10px !important; /* space between checkboxes */
+
+}
 
 /* ---------- RESPONSIVE ---------- */
 @media (max-width: 576px) {
@@ -453,4 +460,21 @@ hr {
 /* Hover state */
 .modal-ok-btn:hover {
   background-color: var(--primary-color-dark, #0056b3);
+}
+
+.booking-checkbox {
+  display: flex;
+  align-items: center;
+  color: #2564eb;
+  gap: 4px !important; /* reduce or increase as needed */
+  margin-bottom: 8px; /* space between checkboxes */
+  margin-right: 80px !important; /* space between checkboxes */
+}
+
+.booking-checkbox input[type="checkbox"] {
+  width: 10px !important;   /* increase size */
+  height: 10px !important; 
+  margin: 0 !important; /* remove the default checkbox margin */
+  margin-right: 10px !important; /* space between checkboxes */
+
 }

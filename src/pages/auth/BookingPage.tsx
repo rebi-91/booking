@@ -605,6 +605,7 @@ interface ModalParams {
 const BookingPage: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+  const [bothSelected, setBothSelected] = useState(false);
   const sid = parseInt(id || '1', 10);
   const service = sampleServices[sid] || sampleServices[1];
   const category = serviceCategory(sid);
@@ -779,6 +780,7 @@ setAvailableTimes(all.filter((t) => !booked.includes(t)));
     email: string;
     status: string;
     customerID?: string;
+    both?: boolean;
   }
 
   function toLocalYMD(d: Date): string {
@@ -818,6 +820,7 @@ setAvailableTimes(all.filter((t) => !booked.includes(t)));
       dateBirth:  patientDob,
       patientName,
       telNumber:  e164,
+      both: bothSelected,
       email:      patientEmail,
       status:     'Pending Confirmation',
       ...(session?.user?.id && { customerID: session.user.id }),
@@ -865,24 +868,47 @@ alert(`Booking confirmed! A confirmation email has been sent to your email addre
                 <h2 className="booking-title">{service.title}</h2>
                 {/* <p className="booking-subtitle">Book your Appointment now!</p> */}
                 <p className="booking-subtitle">
-  {sid === 14 && (
-    <>
-      Flu vaccinations are available from 1st October 2025. {" "}
-      <a href="/book/16" className="text-blue-600 underline">
-        COVID
-      </a>{" "}
-      vaccinations are also available.
-    </>
-  )}
-  {sid === 16 && (
-    <>
-      COVID vaccinations are available from 1st October 2025.{" "}
-      <a href="/book/14" className="text-blue-600 underline">
-        Flu
-      </a>{" "}
-      vaccinations are also available.
-    </>
-  )}
+                {sid === 14 && (
+  <>
+    Flu vaccinations are available from 1st October 2025.{" "}
+    <a href="/book/16" className="text-blue-600 underline">
+      COVID
+    </a>{" "}
+    vaccinations are also available.
+    <div className="mt-2">
+    <label className="booking-checkbox">
+        <input
+          type="checkbox"
+          checked={bothSelected}
+          onChange={(e) => setBothSelected(e.target.checked)}
+          
+        />
+        <span>I would also like the COVID booster at the same time</span>
+      </label>
+    </div>
+  </>
+)}
+
+{sid === 16 && (
+  <>
+    COVID vaccinations are available from 1st October 2025.{" "}
+    <a href="/book/14" className="text-blue-600 underline">
+      Flu
+    </a>{" "}
+    vaccinations are also available.
+    <div className="mt-2">
+    <label className="booking-checkbox">
+        <input
+          type="checkbox"
+          checked={bothSelected}
+          onChange={(e) => setBothSelected(e.target.checked)}
+        />
+        <span>I would also like the Flu jab at the same time</span>
+      </label>
+    </div>
+  </>
+)}
+
   {sid !== 14 && sid !== 16 && "Book your Appointment now!"}
 </p>
                 <div className="service-info-row">
