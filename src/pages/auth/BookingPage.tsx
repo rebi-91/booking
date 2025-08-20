@@ -837,7 +837,7 @@ setAvailableTimes(all.filter((t) => !booked.includes(t)));
           to:      patientEmail,
           name:    `${patientTitle} ${patientName}`,
           service: service.title,
-          date:    selectedDate!.toISOString(),
+          date: toLocalYMD(selectedDate!),  // "2025-10-01"
           time:    chosenTime!
         }
       });
