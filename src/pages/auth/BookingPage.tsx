@@ -871,6 +871,85 @@ alert(`Booking confirmed! A confirmation email has been sent to your email addre
                 {sid === 14 && (
   <>
     Flu vaccinations are available from 1st October 2025.{" "}
+    <div className="mt-2 texxt">
+      <div className="mt-2">Flu Eligible Patients:</div>
+      <ul className="list-disc list-inside">
+        <li>Aged 65 and over</li>
+        <li>Clinically at risk (e.g. asthma, COPD, heart failure, etc.)</li>
+        <li>Contacts of patients with a weakened immune system</li>
+        <li>Care home residents</li>
+        <li>Frontline health and social care workers</li>
+        <li>Pregnant women</li>
+      </ul>
+    </div>
+
+    <a href="/book/16" className="text-blue-600 underline">
+      COVID
+    </a>{" "}
+    vaccinations are also available.
+    <div className="mt-2 texxt">
+      <div className="mt-2">COVID Eligible Patients:</div>
+      <ul className="list-disc list-inside">
+        <li>Aged 75 and over</li>
+        <li>Weakened immune system</li>
+      </ul>
+
+      <label className="booking-checkbox">
+        <input
+          type="checkbox"
+          checked={bothSelected}
+          onChange={(e) => setBothSelected(e.target.checked)}
+        />
+        <span>I would also like the COVID booster at the same time</span>
+      </label>
+    </div>
+  </>
+)}
+
+{sid === 16 && (
+  <>
+    COVID vaccinations are available from 1st October 2025.{" "}
+    <div className="mt-2 texxt">
+      <div className="mt-2">COVID Eligible Patients:</div>
+      <ul className="list-disc list-inside">
+        <li>Aged 75 and over</li>
+        <li>Weakened immune system</li>
+      </ul>
+      </div>
+
+
+    <a href="/book/14" className="text-blue-600 underline">
+      Flu jabs
+    </a>{" "}
+   are also available.
+    <div className="mt-2 texxt">
+      <div className="mt-2">Flu Eligible Patients:</div>
+      <ul className="list-disc list-inside">
+        <li>Aged 65 and over</li>
+        <li>Clinically at risk (e.g. asthma, COPD, heart failure, etc.)</li>
+        <li>Contacts of patients with a weakened immune system</li>
+        <li>Care home residents</li>
+        <li>Frontline health and social care workers</li>
+        <li>Pregnant women</li>
+      </ul>
+    </div>
+    
+
+      <label className="booking-checkbox">
+        <input
+          type="checkbox"
+          checked={bothSelected}
+          onChange={(e) => setBothSelected(e.target.checked)}
+        />
+        <span>I would also like the Flu jab at the same time</span>
+      </label>
+  </>
+)}
+
+
+                {/* {sid === 14 && (
+  <>
+    Flu vaccinations are available from 1st October 2025.{" "}
     <a href="/book/16" className="text-blue-600 underline">
       COVID
     </a>{" "}
@@ -907,7 +986,7 @@ alert(`Booking confirmed! A confirmation email has been sent to your email addre
       </label>
     </div>
   </>
-)}
+)} */}
 
   {sid !== 14 && sid !== 16 && "Book your Appointment now!"}
 </p>
