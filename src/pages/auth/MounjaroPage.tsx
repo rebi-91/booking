@@ -161,7 +161,7 @@ const MounjaroPage: React.FC = () => {
         {/* ===============================
             MOUNJARO PRICING SECTION
            =============================== */}
-        <section className="container products-section">
+        {/* <section className="container products-section">
           <h2 className="section-heading">Mounjaro Pricing</h2>
           <div className="pricing-list">
             <div className="pricing-card">
@@ -201,7 +201,7 @@ const MounjaroPage: React.FC = () => {
               </p>
             </div>
           </div>
-        </section>
+        </section> */}
         {/* =============================== */}
 
         {/* ===============================

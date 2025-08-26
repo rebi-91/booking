@@ -147,7 +147,7 @@ const WegovyPage: React.FC = () => {
         {/* ===============================
             WEGOVY PRICING SECTION
            =============================== */}
-        <section className="container products-section">
+        {/* <section className="container products-section">
           <h2 className="section-heading">Wegovy Pricing</h2>
           <div className="pricing-list">
             <div className="pricing-card">
@@ -181,7 +181,7 @@ const WegovyPage: React.FC = () => {
               </p>
             </div>
           </div>
-        </section>
+        </section> */}
         {/* =============================== */}
 
         {/* ===============================

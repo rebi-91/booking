@@ -180,14 +180,14 @@ const sampleServices: Record<number, Service> = {
     title: 'Mounjaro',
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: 'Starts at £140.00 (4 weeks supply)',
+    price: 'Varies depending on Treatment',
   },
   66: {
     id: 66,
     title: 'Wegovy',
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: 'Starts at £118.98 (4 weeks supply)',
+    price: 'Varies depending on Treatment',
   },
   13: {
     id: 13,
