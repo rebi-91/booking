@@ -147,41 +147,41 @@ const WegovyPage: React.FC = () => {
         {/* ===============================
             WEGOVY PRICING SECTION
            =============================== */}
-        {/* <section className="container products-section">
+        <section className="container products-section">
           <h2 className="section-heading">Wegovy Pricing</h2>
           <div className="pricing-list">
             <div className="pricing-card">
               <h3 className="product-title">Wegovy 0.25mg</h3>
               <p className="product-sub">
-                1 Injection (4 weeks supply) — <strong>£118.98</strong>
+                1 Injection (4 weeks supply) — <strong>£99.00</strong>
               </p>
             </div>
             <div className="pricing-card">
               <h3 className="product-title">Wegovy 0.5mg</h3>
               <p className="product-sub">
-                1 Injection (4 weeks supply) — <strong>£138.98</strong>
+                1 Injection (4 weeks supply) — <strong>£119.00</strong>
               </p>
             </div>
             <div className="pricing-card">
               <h3 className="product-title">Wegovy 1mg</h3>
               <p className="product-sub">
-                1 Injection (4 weeks supply) — <strong>£148.98</strong>
+                1 Injection (4 weeks supply) — <strong>£139.00</strong>
               </p>
             </div>
             <div className="pricing-card">
               <h3 className="product-title">Wegovy 1.7mg</h3>
               <p className="product-sub">
-                1 Injection (4 weeks supply) — <strong>£178.98</strong>
+                1 Injection (4 weeks supply) — <strong>£179.00</strong>
               </p>
             </div>
             <div className="pricing-card">
               <h3 className="product-title">Wegovy 2.4mg</h3>
               <p className="product-sub">
-                1 Injection (4 weeks supply) — <strong>£188.98</strong>
+                1 Injection (4 weeks supply) — <strong>£199.00</strong>
               </p>
             </div>
           </div>
-        </section> */}
+        </section>
         {/* =============================== */}
 
         {/* ===============================

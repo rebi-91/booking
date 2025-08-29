@@ -161,47 +161,47 @@ const MounjaroPage: React.FC = () => {
         {/* ===============================
             MOUNJARO PRICING SECTION
            =============================== */}
-        {/* <section className="container products-section">
+        <section className="container products-section">
           <h2 className="section-heading">Mounjaro Pricing</h2>
           <div className="pricing-list">
             <div className="pricing-card">
               <h3 className="product-title">Mounjaro 2.5mg</h3>
               <p className="product-sub">
-                1 Injection (4 weeks supply) — <strong>£140.00</strong>
+                1 Injection (4 weeks supply) — <strong>£160.00</strong>
               </p>
             </div>
             <div className="pricing-card">
               <h3 className="product-title">Mounjaro 5mg</h3>
               <p className="product-sub">
-                1 Injection (4 weeks supply) — <strong>£140.00</strong>
+                1 Injection (4 weeks supply) — <strong>£180.00</strong>
               </p>
             </div>
             <div className="pricing-card">
               <h3 className="product-title">Mounjaro 7.5mg</h3>
               <p className="product-sub">
-                1 Injection (4 weeks supply) — <strong>£155.00</strong>
+                1 Injection (4 weeks supply) — <strong>£240.00</strong>
               </p>
             </div>
             <div className="pricing-card">
               <h3 className="product-title">Mounjaro 10mg</h3>
               <p className="product-sub">
-                1 Injection (4 weeks supply) — <strong>£155.00</strong>
+                1 Injection (4 weeks supply) — <strong>£260.00</strong>
               </p>
             </div>
             <div className="pricing-card">
               <h3 className="product-title">Mounjaro 12.5mg</h3>
               <p className="product-sub">
-                1 Injection (4 weeks supply) — <strong>£170.00</strong>
+                1 Injection (4 weeks supply) — <strong>£280.00</strong>
               </p>
             </div>
             <div className="pricing-card">
               <h3 className="product-title">Mounjaro 15mg</h3>
               <p className="product-sub">
-                1 Injection (4 weeks supply) — <strong>£170.00</strong>
+                1 Injection (4 weeks supply) — <strong>£300.00</strong>
               </p>
             </div>
           </div>
-        </section> */}
+        </section>
         {/* =============================== */}
 
         {/* ===============================
