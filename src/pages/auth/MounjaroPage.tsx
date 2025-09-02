@@ -173,31 +173,31 @@ const MounjaroPage: React.FC = () => {
             <div className="pricing-card">
               <h3 className="product-title">Mounjaro 5mg</h3>
               <p className="product-sub">
-                1 Injection (4 weeks supply) — <strong>£179.99</strong>
+                1 Injection (4 weeks supply) — <strong>£179.97</strong>
               </p>
             </div>
             <div className="pricing-card">
               <h3 className="product-title">Mounjaro 7.5mg</h3>
               <p className="product-sub">
-                1 Injection (4 weeks supply) — <strong>£239.99</strong>
+                1 Injection (4 weeks supply) — <strong>£239.97</strong>
               </p>
             </div>
             <div className="pricing-card">
               <h3 className="product-title">Mounjaro 10mg</h3>
               <p className="product-sub">
-                1 Injection (4 weeks supply) — <strong>£259.99</strong>
+                1 Injection (4 weeks supply) — <strong>£259.97</strong>
               </p>
             </div>
             <div className="pricing-card">
               <h3 className="product-title">Mounjaro 12.5mg</h3>
               <p className="product-sub">
-                1 Injection (4 weeks supply) — <strong>£279.99</strong>
+                1 Injection (4 weeks supply) — <strong>£279.97</strong>
               </p>
             </div>
             <div className="pricing-card">
               <h3 className="product-title">Mounjaro 15mg</h3>
               <p className="product-sub">
-                1 Injection (4 weeks supply) — <strong>£299.99</strong>
+                1 Injection (4 weeks supply) — <strong>£298.97</strong>
               </p>
             </div>
           </div>
