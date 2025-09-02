@@ -167,37 +167,37 @@ const MounjaroPage: React.FC = () => {
             <div className="pricing-card">
               <h3 className="product-title">Mounjaro 2.5mg</h3>
               <p className="product-sub">
-                1 Injection (4 weeks supply) — <strong>£160.00</strong>
+                1 Injection (4 weeks supply) — <strong>£159.99</strong>
               </p>
             </div>
             <div className="pricing-card">
               <h3 className="product-title">Mounjaro 5mg</h3>
               <p className="product-sub">
-                1 Injection (4 weeks supply) — <strong>£180.00</strong>
+                1 Injection (4 weeks supply) — <strong>£179.99</strong>
               </p>
             </div>
             <div className="pricing-card">
               <h3 className="product-title">Mounjaro 7.5mg</h3>
               <p className="product-sub">
-                1 Injection (4 weeks supply) — <strong>£240.00</strong>
+                1 Injection (4 weeks supply) — <strong>£239.99</strong>
               </p>
             </div>
             <div className="pricing-card">
               <h3 className="product-title">Mounjaro 10mg</h3>
               <p className="product-sub">
-                1 Injection (4 weeks supply) — <strong>£260.00</strong>
+                1 Injection (4 weeks supply) — <strong>£259.99</strong>
               </p>
             </div>
             <div className="pricing-card">
               <h3 className="product-title">Mounjaro 12.5mg</h3>
               <p className="product-sub">
-                1 Injection (4 weeks supply) — <strong>£280.00</strong>
+                1 Injection (4 weeks supply) — <strong>£279.99</strong>
               </p>
             </div>
             <div className="pricing-card">
               <h3 className="product-title">Mounjaro 15mg</h3>
               <p className="product-sub">
-                1 Injection (4 weeks supply) — <strong>£300.00</strong>
+                1 Injection (4 weeks supply) — <strong>£299.99</strong>
               </p>
             </div>
           </div>
