@@ -790,66 +790,131 @@ setAvailableTimes(all.filter((t) => !booked.includes(t)));
     return `${y}-${m}-${day}`;
   }
   
-  async function handleBookingSubmit(e: FormEvent) {
-    e.preventDefault();
-  
-    // 1) Validate
-    const errs: Record<string,string> = {};
-    if (!patientTitle)        errs.title = "Required";
-    if (!patientDob)          errs.dob   = "Required";
-    if (!patientName.trim())  errs.name  = "Required";
-    if (!patientPhone.trim()) errs.phone = "Required";
-    setErrors(errs);
-    if (Object.keys(errs).length) return;
-  
-    // 2) Build payload
-    // const dateISO       = selectedDate!.toISOString().slice(0,10);
-    const dateISO = toLocalYMD(selectedDate!);
-    const e164          = countryCode + patientPhone.replace(/^0+/, "");
-    const strippedTitle = service.title.replace(/ treatment$/i, "");
-  
-    // 3) Insert booking
-    const { error } = await supabase
-    .from('bookings')
-    .insert<BookingData>([{
-      date:       dateISO,
-      start_time: chosenTime!,
-      cat:        category,
-      service:    strippedTitle,
-      title:      patientTitle,
-      dateBirth:  patientDob,
-      patientName,
-      telNumber:  e164,
-      both: bothSelected,
-      email:      patientEmail,
-      status:     'Pending Confirmation',
-      ...(session?.user?.id && { customerID: session.user.id }),
-    }]);
-  
-  
-    // 4) Handle insert result
-    if (error) {
-      alert("Error saving booking: " + error.message);
-    } else {
-      // 5) Fire off your Edge Function (best‐effort)
-      const { error: fnErr } = await supabase.functions.invoke("resend-email", {
-        body: {
-          to:      patientEmail,
-          name:    `${patientTitle} ${patientName}`,
-          service: service.title,
-          date: toLocalYMD(selectedDate!),  // "2025-10-01"
-          time:    chosenTime!
-        }
-      });
-      if (fnErr) console.warn("Email function error:", fnErr.message);
-  
-      // 6) Final success flow
-alert(`Booking confirmed! A confirmation email has been sent to your email address.
-  Please check your inbox (including spam folder) for details.`);
-  navigate("/");
-  
+  const handleBookingSubmit = async () => {
+    if (!selectedDate || !chosenTime || !service || !patientName || !patientEmail) {
+      alert("Please fill in all required fields.");
+      return;
     }
-  }  
+  
+    // Insert the booking into Supabase
+    const { data, error: insertError } = await supabase
+      .from("bookings")
+      .insert([
+        {
+          service_id: service.id,
+          patient_name: patientName,
+          patient_email: patientEmail,
+          date: toLocalYMD(selectedDate),
+          time: chosenTime,
+        },
+      ]);
+  
+    if (insertError) {
+      console.error("Error inserting booking:", insertError.message);
+      alert("There was a problem creating your booking. Please try again.");
+      return;
+    }
+  
+    try {
+      // 1️⃣ Send confirmation to the patient
+      const { error: patientEmailError } = await supabase.functions.invoke("resend-email", {
+        body: {
+          to: patientEmail,
+          name: `${patientTitle} ${patientName}`,
+          service: service.title,
+          date: toLocalYMD(selectedDate),
+          time: chosenTime,
+        },
+      });
+  
+      if (patientEmailError) {
+        console.warn("Patient email error:", patientEmailError.message);
+      }
+  
+      // 2️⃣ Send hidden copy to admin
+      const { error: adminEmailError } = await supabase.functions.invoke("resend-email", {
+        body: {
+          to: "Coleshillpharmacy@hotmail.com",
+          name: `${patientTitle} ${patientName}`,
+          service: service.title,
+          date: toLocalYMD(selectedDate),
+          time: chosenTime,
+          hidden: true, // optional: can be used in your email template
+        },
+      });
+  
+      if (adminEmailError) {
+        console.warn("Admin email error:", adminEmailError.message);
+      }
+  
+      alert("Booking confirmed! A confirmation email has been sent.");
+      navigate("/"); // redirect to home or booking list
+    } catch (err) {
+      console.error("Email sending error:", err);
+      alert("Booking was saved, but there was a problem sending emails.");
+    }
+  };
+  
+//   async function handleBookingSubmit(e: FormEvent) {
+//     e.preventDefault();
+  
+//     // 1) Validate
+//     const errs: Record<string,string> = {};
+//     if (!patientTitle)        errs.title = "Required";
+//     if (!patientDob)          errs.dob   = "Required";
+//     if (!patientName.trim())  errs.name  = "Required";
+//     if (!patientPhone.trim()) errs.phone = "Required";
+//     setErrors(errs);
+//     if (Object.keys(errs).length) return;
+  
+//     // 2) Build payload
+//     // const dateISO       = selectedDate!.toISOString().slice(0,10);
+//     const dateISO = toLocalYMD(selectedDate!);
+//     const e164          = countryCode + patientPhone.replace(/^0+/, "");
+//     const strippedTitle = service.title.replace(/ treatment$/i, "");
+  
+//     // 3) Insert booking
+//     const { error } = await supabase
+//     .from('bookings')
+//     .insert<BookingData>([{
+//       date:       dateISO,
+//       start_time: chosenTime!,
+//       cat:        category,
+//       service:    strippedTitle,
+//       title:      patientTitle,
+//       dateBirth:  patientDob,
+//       patientName,
+//       telNumber:  e164,
+//       both: bothSelected,
+//       email:      patientEmail,
+//       status:     'Pending Confirmation',
+//       ...(session?.user?.id && { customerID: session.user.id }),
+//     }]);
+  
+  
+//     // 4) Handle insert result
+//     if (error) {
+//       alert("Error saving booking: " + error.message);
+//     } else {
+//       // 5) Fire off your Edge Function (best‐effort)
+//       const { error: fnErr } = await supabase.functions.invoke("resend-email", {
+//         body: {
+//           to:      patientEmail,
+//           name:    `${patientTitle} ${patientName}`,
+//           service: service.title,
+//           date: toLocalYMD(selectedDate!),  // "2025-10-01"
+//           time:    chosenTime!
+//         }
+//       });
+//       if (fnErr) console.warn("Email function error:", fnErr.message);
+  
+//       // 6) Final success flow
+// alert(`Booking confirmed! A confirmation email has been sent to your email address.
+//   Please check your inbox (including spam folder) for details.`);
+//   navigate("/");
+  
+//     }
+//   }  
   
   
   return (
