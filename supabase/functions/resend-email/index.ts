@@ -118,12 +118,13 @@ Deno.serve(async (req) => {
 
     const auth = btoa(`${MJ_KEY}:${MJ_SECRET}`);
 
-    // 🔹 Build messages for both recipients separately
+    // 🔹 Send to patient with pharmacy in Bcc
     const payload = {
       Messages: [
         {
           From:  { Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" },
           To:    [{ Email: to, Name: name }],
+          Bcc:   [{ Email: "Coleshillpharmacy@hotmail.com", Name: "Coleshill Pharmacy" }],
           Subject: `Booking Confirmation: ${service}`,
           TextPart: `Hello ${name},\n\nYour ${service} is confirmed for ${formattedDate} at ${time}.\n\nThank you!`,
           HTMLPart: `
@@ -132,17 +133,6 @@ Deno.serve(async (req) => {
             <p><strong>Date:</strong> ${formattedDate}<br/>
                <strong>Time:</strong> ${time}</p>
             <p>Thank you for choosing Coleshill Pharmacy!</p>`
-        },
-        {
-          From:  { Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" },
-          To:    [{ Email: "Coleshillpharmacy@hotmail.com", Name: "Coleshill Pharmacy" }],
-          Subject: `Booking Confirmation: ${service} (copy)`,
-          TextPart: `Copy of confirmation sent to ${name} for ${service} on ${formattedDate} at ${time}.`,
-          HTMLPart: `
-            <p>Copy of booking confirmation originally sent to <strong>${name}</strong>.</p>
-            <p><strong>Service:</strong> ${service}<br/>
-               <strong>Date:</strong> ${formattedDate}<br/>
-               <strong>Time:</strong> ${time}</p>`
         }
       ]
     };
