@@ -90,7 +90,6 @@ Deno.serve(async (req) => {
     "Content-Type":                     "application/json",
   };
 
-  // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -119,41 +118,40 @@ Deno.serve(async (req) => {
 
     const auth = btoa(`${MJ_KEY}:${MJ_SECRET}`);
 
-    // Build payload with both emails
-    const payload = {
+    const buildEmailPayload = (recipientEmail: string, recipientName: string) => ({
       Messages: [{
         From:  { Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" },
-        To:    [{ Email: to, Name: name }],
-        Cc:    [{ Email: "Coleshillpharmacy@hotmail.com", Name: "Coleshill Pharmacy" }],
+        To:    [{ Email: recipientEmail, Name: recipientName }],
         Subject: `Booking Confirmation: ${service}`,
-        TextPart: `Hello ${name},\n\nYour ${service} is confirmed for ${formattedDate} at ${time}.\n\nThank you!`,
+        TextPart: `Hello ${recipientName},\n\nYour ${service} is confirmed for ${formattedDate} at ${time}.\n\nThank you!`,
         HTMLPart: `
-          <p>Hello ${name},</p>
+          <p>Hello ${recipientName},</p>
           <p>Your <strong>${service}</strong> appointment is confirmed for:</p>
           <p><strong>Date:</strong> ${formattedDate}<br/>
              <strong>Time:</strong> ${time}</p>
           <p>Thank you for choosing Coleshill Pharmacy!</p>`
       }]
-    };
+    });
 
-    const controller = new AbortController();
-    const timeoutId  = setTimeout(() => controller.abort(), 10_000);
-
-    const resp = await fetch("https://api.mailjet.com/v3.1/send", {
-      method:  "POST",
+    // Send to patient
+    await fetch("https://api.mailjet.com/v3.1/send", {
+      method: "POST",
       headers: {
         "Content-Type":  "application/json",
         "Authorization": `Basic ${auth}`
       },
-      body:    JSON.stringify(payload),
-      signal:  controller.signal
+      body: JSON.stringify(buildEmailPayload(to, name))
     });
-    clearTimeout(timeoutId);
 
-    if (!resp.ok) {
-      const errJson = await resp.json().catch(() => ({}));
-      throw new Error(errJson.ErrorMessage || "Mailjet error");
-    }
+    // Send to pharmacy
+    await fetch("https://api.mailjet.com/v3.1/send", {
+      method: "POST",
+      headers: {
+        "Content-Type":  "application/json",
+        "Authorization": `Basic ${auth}`
+      },
+      body: JSON.stringify(buildEmailPayload("Coleshillpharmacy@hotmail.com", "Coleshill Pharmacy"))
+    });
 
     return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
 
