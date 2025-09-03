@@ -90,20 +90,17 @@ Deno.serve(async (req) => {
     "Content-Type":                     "application/json",
   };
 
-  // 1) Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    // 2) Pull your Mailjet creds
     const MJ_KEY    = Deno.env.get("MAILJET_API_KEY");
     const MJ_SECRET = Deno.env.get("MAILJET_SECRET_KEY");
     if (!MJ_KEY || !MJ_SECRET) {
       throw new Error("Mailjet credentials not set");
     }
 
-    // 3) Parse the JSON payload
     const body = await req.json();
     console.log("📨 resend-email payload:", body);
 
@@ -115,31 +112,41 @@ Deno.serve(async (req) => {
       );
     }
 
-    // 4) Build your email
     const formattedDate = new Date(date).toLocaleDateString("en-GB", {
       weekday: "long", day: "numeric", month: "long", year: "numeric"
     });
 
     const auth = btoa(`${MJ_KEY}:${MJ_SECRET}`);
+
+    // 🔹 Build messages for both recipients separately
     const payload = {
-      Messages: [{
-        From:  { Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" },
-        To: [
-          { Email: to, Name: name },
-          { Email: "Coleshillpharmacy@hotmail.com", Name: "Coleshill Pharmacy" }
-        ],
-        Subject: `Booking Confirmation: ${service}`,
-        TextPart: `Hello ${name},\n\nYour ${service} is confirmed for ${formattedDate} at ${time}.\n\nThank you!`,
-        HTMLPart: `
-          <p>Hello ${name},</p>
-          <p>Your <strong>${service}</strong> appointment is confirmed for:</p>
-          <p><strong>Date:</strong> ${formattedDate}<br/>
-             <strong>Time:</strong> ${time}</p>
-          <p>Thank you for choosing Coleshill Pharmacy!</p>`
-      }]
+      Messages: [
+        {
+          From:  { Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" },
+          To:    [{ Email: to, Name: name }],
+          Subject: `Booking Confirmation: ${service}`,
+          TextPart: `Hello ${name},\n\nYour ${service} is confirmed for ${formattedDate} at ${time}.\n\nThank you!`,
+          HTMLPart: `
+            <p>Hello ${name},</p>
+            <p>Your <strong>${service}</strong> appointment is confirmed for:</p>
+            <p><strong>Date:</strong> ${formattedDate}<br/>
+               <strong>Time:</strong> ${time}</p>
+            <p>Thank you for choosing Coleshill Pharmacy!</p>`
+        },
+        {
+          From:  { Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" },
+          To:    [{ Email: "Coleshillpharmacy@hotmail.com", Name: "Coleshill Pharmacy" }],
+          Subject: `Booking Confirmation: ${service} (copy)`,
+          TextPart: `Copy of confirmation sent to ${name} for ${service} on ${formattedDate} at ${time}.`,
+          HTMLPart: `
+            <p>Copy of booking confirmation originally sent to <strong>${name}</strong>.</p>
+            <p><strong>Service:</strong> ${service}<br/>
+               <strong>Date:</strong> ${formattedDate}<br/>
+               <strong>Time:</strong> ${time}</p>`
+        }
+      ]
     };
 
-    // 5) Send it
     const controller = new AbortController();
     const timeoutId  = setTimeout(() => controller.abort(), 10_000);
 
