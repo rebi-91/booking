@@ -83,13 +83,14 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 Deno.serve(async (req) => {
   const corsHeaders = {
-    "Access-Control-Allow-Origin":  "*",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Authorization, Content-Type, apikey, x-client-info",
-    "Access-Control-Max-Age":       "86400",
-    "Content-Type":                 "application/json",
+    "Access-Control-Allow-Origin":      "*",
+    "Access-Control-Allow-Methods":     "POST, OPTIONS",
+    "Access-Control-Allow-Headers":     "Authorization, Content-Type, apikey, x-client-info",
+    "Access-Control-Max-Age":           "86400",
+    "Content-Type":                     "application/json",
   };
 
+  // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -97,103 +98,70 @@ Deno.serve(async (req) => {
   try {
     const MJ_KEY    = Deno.env.get("MAILJET_API_KEY");
     const MJ_SECRET = Deno.env.get("MAILJET_SECRET_KEY");
-    if (!MJ_KEY || !MJ_SECRET) throw new Error("Mailjet credentials not set");
+    if (!MJ_KEY || !MJ_SECRET) {
+      throw new Error("Mailjet credentials not set");
+    }
 
     const body = await req.json();
-    const { to, name, service, date, time } = body ?? {};
+    console.log("📨 resend-email payload:", body);
+
+    const { to, name, service, date, time } = body;
     if (!to || !name || !service || !date || !time) {
-      return new Response(JSON.stringify({ error: "Missing required fields" }), {
-        status: 400, headers: corsHeaders
-      });
+      return new Response(
+        JSON.stringify({ error: "Missing required fields" }),
+        { status: 400, headers: corsHeaders }
+      );
     }
 
     const formattedDate = new Date(date).toLocaleDateString("en-GB", {
-      weekday: "long", day: "numeric", month: "long", year: "numeric",
+      weekday: "long", day: "numeric", month: "long", year: "numeric"
     });
 
     const auth = btoa(`${MJ_KEY}:${MJ_SECRET}`);
-    const controller = new AbortController();
-    const timeoutId  = setTimeout(() => controller.abort(), 15000);
 
-    // 1) Try sending with BCC
-    const bccEmail = "Coleshillpharmacy@hotmail.com";
+    // Build payload with both emails
     const payload = {
       Messages: [{
-        From:   { Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" },
-        To:     [{ Email: to, Name: name }],
-        Bcc:    [{ Email: bccEmail, Name: "Coleshill Pharmacy" }],
+        From:  { Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" },
+        To:    [{ Email: to, Name: name }],
+        Cc:    [{ Email: "Coleshillpharmacy@hotmail.com", Name: "Coleshill Pharmacy" }],
         Subject: `Booking Confirmation: ${service}`,
         TextPart: `Hello ${name},\n\nYour ${service} is confirmed for ${formattedDate} at ${time}.\n\nThank you!`,
         HTMLPart: `
           <p>Hello ${name},</p>
           <p>Your <strong>${service}</strong> appointment is confirmed for:</p>
-          <p><strong>Date:</strong> ${formattedDate}<br/><strong>Time:</strong> ${time}</p>
-          <p>Thank you for choosing Coleshill Pharmacy!</p>`,
-        "CustomID": `booking-confirmation-${Date.now()}`
+          <p><strong>Date:</strong> ${formattedDate}<br/>
+             <strong>Time:</strong> ${time}</p>
+          <p>Thank you for choosing Coleshill Pharmacy!</p>`
       }]
     };
 
+    const controller = new AbortController();
+    const timeoutId  = setTimeout(() => controller.abort(), 10_000);
+
     const resp = await fetch("https://api.mailjet.com/v3.1/send", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Authorization": `Basic ${auth}` },
-      body: JSON.stringify(payload),
-      signal: controller.signal,
-    }).catch((e) => {
-      throw new Error("Network/timeout sending Mailjet request: " + (e?.message ?? e));
+      method:  "POST",
+      headers: {
+        "Content-Type":  "application/json",
+        "Authorization": `Basic ${auth}`
+      },
+      body:    JSON.stringify(payload),
+      signal:  controller.signal
     });
     clearTimeout(timeoutId);
 
-    const respJson = await resp.json().catch(() => ({}));
-
-    // Log everything to help debug in Supabase function logs
-    console.log("📩 Mailjet status:", resp.status);
-    console.log("📩 Mailjet response:", JSON.stringify(respJson));
-
     if (!resp.ok) {
-      const msg = respJson?.ErrorMessage || respJson?.message || "Mailjet error";
-      throw new Error(msg);
-    }
-
-    // 2) Verify BCC existence in Mailjet response; if missing, fallback send directly to pharmacy
-    const msg0 = Array.isArray(respJson?.Messages) ? respJson.Messages[0] : undefined;
-    const bccAccepted = !!(msg0 && Array.isArray(msg0.Bcc) && msg0.Bcc.length > 0);
-
-    if (!bccAccepted) {
-      console.warn("⚠️ BCC not echoed by Mailjet, sending a separate copy to pharmacy.");
-
-      const copyPayload = {
-        Messages: [{
-          From:   { Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" },
-          To:     [{ Email: bccEmail, Name: "Coleshill Pharmacy" }],
-          Subject: `Booking Confirmation (copy): ${service}`,
-          TextPart: `Copy of confirmation for ${name} on ${formattedDate} at ${time}.`,
-          HTMLPart: `
-            <p>Copy of booking confirmation originally sent to <strong>${name}</strong>.</p>
-            <p><strong>Service:</strong> ${service}<br/><strong>Date:</strong> ${formattedDate}<br/><strong>Time:</strong> ${time}</p>`,
-          "CustomID": `booking-confirmation-copy-${Date.now()}`
-        }]
-      };
-
-      const resp2 = await fetch("https://api.mailjet.com/v3.1/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": `Basic ${auth}` },
-        body: JSON.stringify(copyPayload),
-      });
-
-      const resp2Json = await resp2.json().catch(() => ({}));
-      console.log("📩 Mailjet fallback status:", resp2.status);
-      console.log("📩 Mailjet fallback response:", JSON.stringify(resp2Json));
-
-      if (!resp2.ok) {
-        throw new Error(resp2Json?.ErrorMessage || "Fallback send to pharmacy failed");
-      }
+      const errJson = await resp.json().catch(() => ({}));
+      throw new Error(errJson.ErrorMessage || "Mailjet error");
     }
 
     return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+
   } catch (e) {
     console.error("❌ resend-email error:", e);
     return new Response(JSON.stringify({ error: (e as Error).message }), {
-      status: 500, headers: corsHeaders
+      status: 500,
+      headers: corsHeaders
     });
   }
 });
