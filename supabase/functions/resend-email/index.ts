@@ -122,20 +122,22 @@ Deno.serve(async (req) => {
 
     const auth = btoa(`${MJ_KEY}:${MJ_SECRET}`);
     const payload = {
-      Messages: [{
-        From:  { Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" },
-        // Always send to pharmacy
-        To:    [{ Email: "coleshillpharmacy@gmail.com", Name: "Coleshill Pharmacy" }],
-        Subject: `Booking Confirmation: ${service}`,
-        TextPart: `Booking for ${service} confirmed for ${formattedDate} at ${time}.`,
-        HTMLPart: `
-          <p>Booking for <strong>${service}</strong> confirmed:</p>
-          <p><strong>Date:</strong> ${formattedDate}<br/>
-             <strong>Time:</strong> ${time}</p>`
-      }]
+      Messages: [
+        {
+          From: { Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" },
+          // Always send to the pharmacy
+          To: [{ Email: "coleshillpharmacy@hotmail.com", Name: "Coleshill Pharmacy" }],
+          Subject: `Booking Confirmation: ${service}`,
+          TextPart: `Booking for ${service} confirmed for ${formattedDate} at ${time}.`,
+          HTMLPart: `
+            <p>Booking for <strong>${service}</strong> confirmed:</p>
+            <p><strong>Date:</strong> ${formattedDate}<br/>
+               <strong>Time:</strong> ${time}</p>`
+        }
+      ]
     };
 
-    // 5) Send it
+    // 5) Send the email
     const controller = new AbortController();
     const timeoutId  = setTimeout(() => controller.abort(), 10_000);
 
