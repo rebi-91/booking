@@ -90,34 +90,31 @@ Deno.serve(async (req) => {
     "Content-Type":                     "application/json",
   };
 
-  // 1) Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    // 2) Pull your Mailjet creds
-    const MJ_KEY    = Deno.env.get("MAILJET_API_KEY");
+    const MJ_KEY = Deno.env.get("MAILJET_API_KEY");
     const MJ_SECRET = Deno.env.get("MAILJET_SECRET_KEY");
-    if (!MJ_KEY || !MJ_SECRET) {
-      throw new Error("Mailjet credentials not set");
-    }
+    if (!MJ_KEY || !MJ_SECRET) throw new Error("Mailjet credentials not set");
 
-    // 3) Parse the JSON payload
     const body = await req.json();
     console.log("📨 resend-email payload:", body);
 
     const { name, service, date, time } = body;
     if (!name || !service || !date || !time) {
-      return new Response(
-        JSON.stringify({ error: "Missing required fields" }),
-        { status: 400, headers: corsHeaders }
-      );
+      return new Response(JSON.stringify({ error: "Missing required fields" }), {
+        status: 400,
+        headers: corsHeaders,
+      });
     }
 
-    // 4) Build your email
     const formattedDate = new Date(date).toLocaleDateString("en-GB", {
-      weekday: "long", day: "numeric", month: "long", year: "numeric"
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
     });
 
     const auth = btoa(`${MJ_KEY}:${MJ_SECRET}`);
@@ -125,31 +122,30 @@ Deno.serve(async (req) => {
       Messages: [
         {
           From: { Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" },
-          // Always send to the pharmacy
-          To: [{ Email: "coleshillpharmacy@hotmail.com", Name: "Coleshill Pharmacy" }],
+          To: [{ Email: "coleshillpharmacy@gmail.com", Name: "Coleshill Pharmacy" }],
           Subject: `Booking Confirmation: ${service}`,
           TextPart: `Booking for ${service} confirmed for ${formattedDate} at ${time}.`,
           HTMLPart: `
             <p>Booking for <strong>${service}</strong> confirmed:</p>
             <p><strong>Date:</strong> ${formattedDate}<br/>
-               <strong>Time:</strong> ${time}</p>`
-        }
-      ]
+               <strong>Time:</strong> ${time}</p>`,
+        },
+      ],
     };
 
-    // 5) Send the email
     const controller = new AbortController();
-    const timeoutId  = setTimeout(() => controller.abort(), 10_000);
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
     const resp = await fetch("https://api.mailjet.com/v3.1/send", {
-      method:  "POST",
+      method: "POST",
       headers: {
-        "Content-Type":  "application/json",
-        "Authorization": `Basic ${auth}`
+        "Content-Type": "application/json",
+        Authorization: `Basic ${auth}`,
       },
-      body:    JSON.stringify(payload),
-      signal:  controller.signal
+      body: JSON.stringify(payload),
+      signal: controller.signal,
     });
+
     clearTimeout(timeoutId);
 
     if (!resp.ok) {
@@ -162,7 +158,7 @@ Deno.serve(async (req) => {
     console.error("❌ resend-email error:", e);
     return new Response(JSON.stringify({ error: (e as Error).message }), {
       status: 500,
-      headers: corsHeaders
+      headers: corsHeaders,
     });
   }
 });
