@@ -124,7 +124,7 @@ Deno.serve(async (req) => {
           From: { Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" },
           To: [
             { Email: to, Name: name },
-            { Email: "Coleshillpharmacy@hotmail.com", Name: "Coleshill Pharmacy" }
+            { Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" }
           ],
           Subject: `Booking Confirmation: ${service}`,
           TextPart: `Hello ${name},\n\nYour ${service} is confirmed for ${formattedDate} at ${time}.\n\nThank you!`,
