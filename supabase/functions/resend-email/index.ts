@@ -79,7 +79,7 @@
 //   }
 // });
 // supabase/functions/resend-email/index.ts
-import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+// import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 Deno.serve(async (req) => {
   const corsHeaders = {
@@ -90,54 +90,53 @@ Deno.serve(async (req) => {
     "Content-Type":                     "application/json",
   };
 
-  // Handle CORS preflight
+  // 1) Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    // 2) Pull your Mailjet creds
     const MJ_KEY    = Deno.env.get("MAILJET_API_KEY");
     const MJ_SECRET = Deno.env.get("MAILJET_SECRET_KEY");
-    if (!MJ_KEY || !MJ_SECRET) throw new Error("Mailjet credentials not set");
+    if (!MJ_KEY || !MJ_SECRET) {
+      throw new Error("Mailjet credentials not set");
+    }
 
+    // 3) Parse the JSON payload
     const body = await req.json();
     console.log("📨 resend-email payload:", body);
 
-    const { to, name, service, date, time } = body;
-    if (!to || !name || !service || !date || !time) {
+    const { name, service, date, time } = body;
+    if (!name || !service || !date || !time) {
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),
         { status: 400, headers: corsHeaders }
       );
     }
 
+    // 4) Build your email
     const formattedDate = new Date(date).toLocaleDateString("en-GB", {
       weekday: "long", day: "numeric", month: "long", year: "numeric"
     });
 
     const auth = btoa(`${MJ_KEY}:${MJ_SECRET}`);
-
-    // Build email payload with TWO separate recipients (independent emails)
     const payload = {
       Messages: [
         {
           From: { Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" },
-          To: [
-            { Email: to, Name: name },
-            { Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" }
-          ],
+          To: [{ Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" }],
           Subject: `Booking Confirmation: ${service}`,
-          TextPart: `Hello ${name},\n\nYour ${service} is confirmed for ${formattedDate} at ${time}.\n\nThank you!`,
+          TextPart: `Booking for ${service} confirmed for ${formattedDate} at ${time}.`,
           HTMLPart: `
-            <p>Hello ${name},</p>
-            <p>Your <strong>${service}</strong> appointment is confirmed for:</p>
+            <p>Booking for <strong>${service}</strong> confirmed:</p>
             <p><strong>Date:</strong> ${formattedDate}<br/>
-               <strong>Time:</strong> ${time}</p>
-            <p>Thank you for choosing Coleshill Pharmacy!</p>`
+               <strong>Time:</strong> ${time}</p>`
         }
       ]
     };
 
+    // 5) Send the email
     const controller = new AbortController();
     const timeoutId  = setTimeout(() => controller.abort(), 10_000);
 
@@ -158,7 +157,6 @@ Deno.serve(async (req) => {
     }
 
     return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
-
   } catch (e) {
     console.error("❌ resend-email error:", e);
     return new Response(JSON.stringify({ error: (e as Error).message }), {
