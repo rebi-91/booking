@@ -80,6 +80,7 @@ interface Service {
   duration: string;
   address: string;
   price: string;
+  description?: string;
 }
 
 // Sample services data
@@ -227,9 +228,10 @@ const sampleServices: Record<number, Service> = {
   18: {
     id: 18,
     title: 'Ear wax removal',
-    duration: '20m',
+    duration: '15m', // ⬅️ changed from 20m
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
     price: '£35 one ear / £55 both ears',
+    description: '<b>Please ensure you have been using olive oil twice a day for at least 14 days prior to appointment.</b>' // ⬅️ added
   },
   19: {
     id: 19,
@@ -517,6 +519,14 @@ function slotsForDayAndCategory(
     return [];
   }
 
+  // ✅ Ear wax removal custom rule
+  if (sid === 18) {
+    if (dow === 1 || dow === 3 || dow === 5) {
+      return generateTimeSlots(11, 0, 12, 0, 15);
+    }
+    return [];
+  }
+  
   // --- Non-Flu/COVID rules ---
   const startHour = 9, startMin = 30, endHour = 18, endMin = 0;
   if (dow >= 1 && dow <= 4) {
