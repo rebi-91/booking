@@ -230,9 +230,9 @@ const sampleServices: Record<number, Service> = {
     title: 'Ear wax removal',
     duration: '15m', // ⬅️ changed from 20m
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: '£35 one ear / £55 both ears',
-    description: '<b>Please ensure you have been using olive oil twice a day for at least 14 days prior to appointment.</b>' // ⬅️ added
+    price: '£35 one ear / £55 both ears <br/><b>Please ensure you have been using olive oil twice a day for at least 14 days prior to appointment.</b>'
   },
+  
   19: {
     id: 19,
     title: 'Earache (Ages 1–17)',
@@ -1012,7 +1012,8 @@ alert(`Booking confirmed! A confirmation email has been sent to your email addre
                   </div>
                   <div className="info-item">
                     <i className="bi bi-wallet2"></i>
-                    <span>{service.price}</span>
+                    <span dangerouslySetInnerHTML={{ __html: service.price }} />
+
                   </div>
                 </div>
                 <hr />
