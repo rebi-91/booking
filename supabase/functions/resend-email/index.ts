@@ -91,18 +91,16 @@ Deno.serve(async (req) => {
     "Content-Type": "application/json",
   };
 
-  // 1) Handle CORS preflight
+  // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    // 2) Mailjet creds
     const MJ_KEY = Deno.env.get("MAILJET_API_KEY");
     const MJ_SECRET = Deno.env.get("MAILJET_SECRET_KEY");
     if (!MJ_KEY || !MJ_SECRET) throw new Error("Mailjet credentials not set");
 
-    // 3) Parse request payload
     const body = await req.json();
     console.log("📨 resend-email payload:", body);
 
@@ -115,7 +113,6 @@ Deno.serve(async (req) => {
       });
     }
 
-    // 4) Format date
     const formattedDate = new Date(date).toLocaleDateString("en-GB", {
       weekday: "long",
       day: "numeric",
@@ -126,41 +123,41 @@ Deno.serve(async (req) => {
     const auth = btoa(`${MJ_KEY}:${MJ_SECRET}`);
     const greeting = `${patientTitle} ${patientName}`;
 
-    // 5) Build Mailjet payload (two messages: one to patient, one to pharmacy)
+    // One email sent to both patient + pharmacy
     const payload = {
       Messages: [
-        // ✅ Patient email
         {
           From: { Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" },
-          To: [{ Email: to, Name: greeting }],
+          To: [
+            { Email: to, Name: greeting }, // patient
+            { Email: "Coleshillpharmacy@hotmail.com", Name: "Pharmacy" }, // pharmacy
+          ],
           Subject: `Booking Confirmation: ${service}`,
-          TextPart: `Hello ${greeting},\n\nYour ${service} is confirmed for ${formattedDate} at ${time}.\n\nThank you!`,
+          TextPart: `Hello ${greeting},
+
+Your ${service} is confirmed for ${formattedDate} at ${time}.
+
+Patient details:
+Name: ${greeting}
+Phone: ${phone || "N/A"}
+Email: ${email || "N/A"}
+
+Thank you!`,
           HTMLPart: `
             <p>Hello ${greeting},</p>
             <p>Your <strong>${service}</strong> appointment is confirmed for:</p>
             <p><strong>Date:</strong> ${formattedDate}<br/>
                <strong>Time:</strong> ${time}</p>
+            <hr/>
+            <p><strong>Patient Details:</strong><br/>
+               Name: ${greeting}<br/>
+               Phone: ${phone || "N/A"}<br/>
+               Email: ${email || "N/A"}</p>
             <p>Thank you for choosing Coleshill Pharmacy!</p>`,
-        },
-
-        // ✅ Pharmacy email with extra patient details
-        {
-          From: { Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" },
-          To: [{ Email: "Coleshillpharmacy@hotmail.com", Name: "Pharmacy" }],
-          Subject: `New Booking: ${service} for ${greeting}`,
-          TextPart: `New ${service} booking:\n\nPatient: ${greeting}\nPhone: ${phone || "N/A"}\nEmail: ${email || "N/A"}\nDate: ${formattedDate}\nTime: ${time}`,
-          HTMLPart: `
-            <p><strong>New ${service} booking</strong></p>
-            <p><strong>Patient:</strong> ${greeting}<br/>
-               <strong>Phone:</strong> ${phone || "N/A"}<br/>
-               <strong>Email:</strong> ${email || "N/A"}</p>
-            <p><strong>Date:</strong> ${formattedDate}<br/>
-               <strong>Time:</strong> ${time}</p>`,
         },
       ],
     };
 
-    // 6) Send it
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10_000);
 
