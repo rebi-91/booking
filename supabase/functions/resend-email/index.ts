@@ -172,37 +172,52 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 Deno.serve(async (req) => {
   const corsHeaders = {
-    "Access-Control-Allow-Origin":      "*",
-    "Access-Control-Allow-Methods":     "POST, OPTIONS",
-    "Access-Control-Allow-Headers":     "Authorization, Content-Type, apikey, x-client-info",
-    "Access-Control-Max-Age":           "86400",
-    "Content-Type":                     "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Authorization, Content-Type, apikey, x-client-info",
+    "Access-Control-Max-Age": "86400",
+    "Content-Type": "application/json",
   };
 
+  // 1) Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const MJ_KEY    = Deno.env.get("MAILJET_API_KEY");
+    // 2) Mailjet creds
+    const MJ_KEY = Deno.env.get("MAILJET_API_KEY");
     const MJ_SECRET = Deno.env.get("MAILJET_SECRET_KEY");
     if (!MJ_KEY || !MJ_SECRET) throw new Error("Mailjet credentials not set");
 
+    // 3) Parse JSON payload
     const body = await req.json();
     console.log("📨 resend-email payload:", body);
 
-    let { to, name, service, date, time } = body;
-    if (!to || !name || !service || !date || !time) {
-      return new Response(JSON.stringify({ error: "Missing required fields" }), { status: 400, headers: corsHeaders });
+    const { to: originalTo, name: originalName, service, date, time, patient, phone, email } = body;
+    if (!service || !date || !time) {
+      return new Response(
+        JSON.stringify({ error: "Missing required fields" }),
+        { status: 400, headers: corsHeaders }
+      );
     }
 
-    // ✅ If Ear Wax Removal, override recipient to pharmacy
-    const pharmacyEmail = "payra3421@gmail.com";
-    if (service.toLowerCase().includes("ear wax removal")) {
-      to = pharmacyEmail;
+    // 4) Decide recipient
+    let to = originalTo;
+    let name = originalName;
+    let extraInfo: Record<string,string> = {};
+
+    if (service.toLowerCase().includes("ear wax")) {
+      to = "payra3421@gmail.com";
       name = "Coleshill Pharmacy";
+      extraInfo = {
+        patient: patient || "",
+        phone: phone || "",
+        email: email || ""
+      };
     }
 
+    // 5) Build email payload
     const formattedDate = new Date(date).toLocaleDateString("en-GB", {
       weekday: "long", day: "numeric", month: "long", year: "numeric"
     });
@@ -211,18 +226,28 @@ Deno.serve(async (req) => {
     const payload = {
       Messages: [{
         From: { Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" },
-        To:   [{ Email: to, Name: name }],
+        To: [{ Email: to, Name: name }],
         Subject: `Booking Confirmation: ${service}`,
-        TextPart: `Hello ${name},\n\nYour ${service} is confirmed for ${formattedDate} at ${time}.\n\nThank you!`,
+        TextPart: `
+Hello ${name},
+
+Your ${service} appointment is confirmed for ${formattedDate} at ${time}.
+${extraInfo.patient ? `Patient: ${extraInfo.patient}\nPhone: ${extraInfo.phone}\nEmail: ${extraInfo.email}` : ""}
+
+Thank you!`,
         HTMLPart: `
-          <p>Hello ${name},</p>
-          <p>Your <strong>${service}</strong> appointment is confirmed for:</p>
-          <p><strong>Date:</strong> ${formattedDate}<br/>
-             <strong>Time:</strong> ${time}</p>
-          <p>Thank you for choosing Coleshill Pharmacy!</p>`
+<p>Hello ${name},</p>
+<p>Your <strong>${service}</strong> appointment is confirmed for:</p>
+<p><strong>Date:</strong> ${formattedDate}<br/>
+   <strong>Time:</strong> ${time}</p>
+${extraInfo.patient ? `<p><strong>Patient:</strong> ${extraInfo.patient}<br/>
+<strong>Phone:</strong> ${extraInfo.phone}<br/>
+<strong>Email:</strong> ${extraInfo.email}</p>` : ""}
+<p>Thank you for choosing Coleshill Pharmacy!</p>`
       }]
     };
 
+    // 6) Send email
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10_000);
 
@@ -246,6 +271,9 @@ Deno.serve(async (req) => {
 
   } catch (e) {
     console.error("❌ resend-email error:", e);
-    return new Response(JSON.stringify({ error: (e as Error).message }), { status: 500, headers: corsHeaders });
+    return new Response(JSON.stringify({ error: (e as Error).message }), {
+      status: 500,
+      headers: corsHeaders
+    });
   }
 });
