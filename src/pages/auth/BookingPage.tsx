@@ -867,7 +867,7 @@ async function handleBookingSubmit(e: FormEvent) {
   e.preventDefault();
 
   // 1) Validate
-  const errs: Record<string,string> = {};
+  const errs: Record<string, string> = {};
   if (!patientTitle)        errs.title = "Required";
   if (!patientDob)          errs.dob   = "Required";
   if (!patientName.trim())  errs.name  = "Required";
@@ -879,8 +879,7 @@ async function handleBookingSubmit(e: FormEvent) {
   const dateISO = toLocalYMD(selectedDate!);
   const e164 = countryCode + patientPhone.replace(/^0+/, "");
   const strippedTitle = service.title.replace(/ treatment$/i, "");
-
-  const isEarWax = sid === 18; // ✅ ear wax check
+  const isEarWax = sid === 18; // ✅ Ear Wax Removal check
 
   // 3) Insert booking
   const { error } = await supabase
@@ -895,7 +894,7 @@ async function handleBookingSubmit(e: FormEvent) {
       patientName,
       telNumber:  e164,
       both:       bothSelected,
-      email:      isEarWax ? pharmacyEmail : patientEmail, // ✅ choose recipient
+      email:      patientEmail, // Keep the patient email in the database
       status:     "Pending Confirmation",
       ...(session?.user?.id && { customerID: session.user.id }),
     }]);
@@ -905,26 +904,41 @@ async function handleBookingSubmit(e: FormEvent) {
     return;
   }
 
-  // 4) Send confirmation email
-  const { error: fnErr } = await supabase.functions.invoke("resend-email", {
-    body: {
-      to: isEarWax ? pharmacyEmail : patientEmail, // ✅ only send to pharmacy for ear wax
-      name: isEarWax ? "Coleshill Pharmacy" : `${patientTitle} ${patientName}`,
-      service: service.title,
-      date:    dateISO,
-      time:    chosenTime!,
-      ...(isEarWax && {
+  // 4) Send email(s)
+  // 4a) Patient confirmation (unless Ear Wax you may still want to send to patient as well)
+  if (!isEarWax) {
+    const { error: patientErr } = await supabase.functions.invoke("resend-email", {
+      body: {
+        to: patientEmail,
+        name: `${patientTitle} ${patientName}`,
+        service: service.title,
+        date: dateISO,
+        time: chosenTime!,
+      },
+    });
+    if (patientErr) console.warn("Email function error (patient):", patientErr.message);
+  }
+
+  // 4b) Pharmacy notification if Ear Wax Removal
+  if (isEarWax) {
+    const { error: pharmacyErr } = await supabase.functions.invoke("resend-email", {
+      body: {
+        to: pharmacyEmail, // ✅ Send to pharmacy only
+        name: "Coleshill Pharmacy",
+        service: service.title,
+        date: dateISO,
+        time: chosenTime!,
         patient: `${patientTitle} ${patientName}`,
         phone: e164,
-        email: patientEmail,
-      }),
-    },
-  });
-  if (fnErr) console.warn("Email function error:", fnErr.message);
+        email: patientEmail, // optional extra info for pharmacy
+      },
+    });
+    if (pharmacyErr) console.warn("Email function error (pharmacy):", pharmacyErr.message);
+  }
 
   // 5) Final success flow
   alert(`Booking confirmed! A confirmation email has been sent.
-  Please check your inbox (including spam folder).`);
+Please check your inbox (including spam folder).`);
   navigate("/");
 }
 
