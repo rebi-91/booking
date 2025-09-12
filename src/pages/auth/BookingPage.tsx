@@ -801,27 +801,86 @@ setAvailableTimes(all.filter((t) => !booked.includes(t)));
   }
  
   
-  async function handleBookingSubmit(e: FormEvent) {
-    e.preventDefault();
+//   async function handleBookingSubmit(e: FormEvent) {
+//     e.preventDefault();
   
-    // 1) Validate
-    const errs: Record<string,string> = {};
-    if (!patientTitle)        errs.title = "Required";
-    if (!patientDob)          errs.dob   = "Required";
-    if (!patientName.trim())  errs.name  = "Required";
-    if (!patientPhone.trim()) errs.phone = "Required";
-    setErrors(errs);
-    if (Object.keys(errs).length) return;
+//     // 1) Validate
+//     const errs: Record<string,string> = {};
+//     if (!patientTitle)        errs.title = "Required";
+//     if (!patientDob)          errs.dob   = "Required";
+//     if (!patientName.trim())  errs.name  = "Required";
+//     if (!patientPhone.trim()) errs.phone = "Required";
+//     setErrors(errs);
+//     if (Object.keys(errs).length) return;
   
-    // 2) Build payload
-    // const dateISO       = selectedDate!.toISOString().slice(0,10);
-    const dateISO = toLocalYMD(selectedDate!);
-    const e164          = countryCode + patientPhone.replace(/^0+/, "");
-    const strippedTitle = service.title.replace(/ treatment$/i, "");
+//     // 2) Build payload
+//     // const dateISO       = selectedDate!.toISOString().slice(0,10);
+//     const dateISO = toLocalYMD(selectedDate!);
+//     const e164          = countryCode + patientPhone.replace(/^0+/, "");
+//     const strippedTitle = service.title.replace(/ treatment$/i, "");
   
-    // 3) Insert booking
-    const { error } = await supabase
-    .from('bookings')
+//     // 3) Insert booking
+//     const { error } = await supabase
+//     .from('bookings')
+//     .insert<BookingData>([{
+//       date:       dateISO,
+//       start_time: chosenTime!,
+//       cat:        category,
+//       service:    strippedTitle,
+//       title:      patientTitle,
+//       dateBirth:  patientDob,
+//       patientName,
+//       telNumber:  e164,
+//       both: bothSelected,
+//       email:      patientEmail,
+//       status:     'Pending Confirmation',
+//       ...(session?.user?.id && { customerID: session.user.id }),
+//     }]);
+  
+  
+//     // 4) Handle insert result
+//     if (error) {
+//       alert("Error saving booking: " + error.message);
+//     } else {
+//       // 5) Fire off your Edge Function (best‐effort)
+//       const { error: fnErr } = await supabase.functions.invoke("resend-email", {
+//         body: {
+//           to:      patientEmail,
+//           name:    `${patientTitle} ${patientName}`,
+//           service: service.title,
+//           date: toLocalYMD(selectedDate!),  // "2025-10-01"
+//           time:    chosenTime!
+//         }
+//       });
+//       if (fnErr) console.warn("Email function error:", fnErr.message);
+  
+//       // 6) Final success flow
+// alert(`Booking confirmed! A confirmation email has been sent to your email address.
+//   Please check your inbox (including spam folder) for details.`);
+//   navigate("/");
+  
+//     }
+//   }  
+async function handleBookingSubmit(e: FormEvent) {
+  e.preventDefault();
+
+  // 1) Validate
+  const errs: Record<string,string> = {};
+  if (!patientTitle)        errs.title = "Required";
+  if (!patientDob)          errs.dob   = "Required";
+  if (!patientName.trim())  errs.name  = "Required";
+  if (!patientPhone.trim()) errs.phone = "Required";
+  setErrors(errs);
+  if (Object.keys(errs).length) return;
+
+  // 2) Build payload
+  const dateISO = toLocalYMD(selectedDate!);
+  const e164 = countryCode + patientPhone.replace(/^0+/, "");
+  const strippedTitle = service.title.replace(/ treatment$/i, "");
+
+  // 3) Insert booking
+  const { error } = await supabase
+    .from("bookings")
     .insert<BookingData>([{
       date:       dateISO,
       start_time: chosenTime!,
@@ -833,35 +892,51 @@ setAvailableTimes(all.filter((t) => !booked.includes(t)));
       telNumber:  e164,
       both: bothSelected,
       email:      patientEmail,
-      status:     'Pending Confirmation',
+      status:     "Pending Confirmation",
       ...(session?.user?.id && { customerID: session.user.id }),
     }]);
-  
-  
-    // 4) Handle insert result
-    if (error) {
-      alert("Error saving booking: " + error.message);
-    } else {
-      // 5) Fire off your Edge Function (best‐effort)
-      const { error: fnErr } = await supabase.functions.invoke("resend-email", {
-        body: {
-          to:      patientEmail,
-          name:    `${patientTitle} ${patientName}`,
-          service: service.title,
-          date: toLocalYMD(selectedDate!),  // "2025-10-01"
-          time:    chosenTime!
-        }
-      });
-      if (fnErr) console.warn("Email function error:", fnErr.message);
-  
-      // 6) Final success flow
-alert(`Booking confirmed! A confirmation email has been sent to your email address.
-  Please check your inbox (including spam folder) for details.`);
+
+  // 4) Handle insert result
+  if (error) {
+    alert("Error saving booking: " + error.message);
+    return;
+  }
+
+  // 5) Send email to patient
+  const { error: fnErr } = await supabase.functions.invoke("resend-email", {
+    body: {
+      to:      patientEmail,
+      name:    `${patientTitle} ${patientName}`,
+      service: service.title,
+      date:    dateISO,
+      time:    chosenTime!,
+    },
+  });
+  if (fnErr) console.warn("Email function error (patient):", fnErr.message);
+
+  // 6) If Ear Wax Removal, also notify pharmacy
+  if (sid === 18) {
+    const { error: notifyErr } = await supabase.functions.invoke("resend-email", {
+      body: {
+        to: "coleshillpharmacy@hotma.com",
+        name: "Coleshill Pharmacy",
+        service: service.title,
+        date: dateISO,
+        time: chosenTime!,
+        patient: `${patientTitle} ${patientName}`,
+        phone: e164,
+        email: patientEmail,
+      },
+    });
+    if (notifyErr) console.warn("Email function error (pharmacy):", notifyErr.message);
+  }
+
+  // 7) Final success flow
+  alert(`Booking confirmed! A confirmation email has been sent.
+  Please check your inbox (including spam folder).`);
   navigate("/");
-  
-    }
-  }  
-  
+}
+
   
   return (
     <>
