@@ -879,9 +879,9 @@ async function handleBookingSubmit(e: FormEvent) {
   const dateISO = toLocalYMD(selectedDate!);
   const e164 = countryCode + patientPhone.replace(/^0+/, "");
   const strippedTitle = service.title.replace(/ treatment$/i, "");
-  const isEarWax = sid === 18; // ✅ Ear Wax Removal check
+  const isEarWax = sid === 18; // Ear Wax Removal check
 
-  // 3) Insert booking
+  // 3) Insert booking (always store patientEmail)
   const { error } = await supabase
     .from("bookings")
     .insert<BookingData>([{
@@ -894,7 +894,7 @@ async function handleBookingSubmit(e: FormEvent) {
       patientName,
       telNumber:  e164,
       both:       bothSelected,
-      email:      patientEmail, // Keep the patient email in the database
+      email:      patientEmail, // keep patient email in DB
       status:     "Pending Confirmation",
       ...(session?.user?.id && { customerID: session.user.id }),
     }]);
@@ -904,39 +904,29 @@ async function handleBookingSubmit(e: FormEvent) {
     return;
   }
 
-  // 4) Send email(s)
-  // 4a) Patient confirmation (unless Ear Wax you may still want to send to patient as well)
-  if (!isEarWax) {
-    const { error: patientErr } = await supabase.functions.invoke("resend-email", {
-      body: {
-        to: patientEmail,
-        name: `${patientTitle} ${patientName}`,
-        service: service.title,
-        date: dateISO,
-        time: chosenTime!,
-      },
-    });
-    if (patientErr) console.warn("Email function error (patient):", patientErr.message);
-  }
+  // 4) Prepare email payload
+  const emailToSend = isEarWax ? pharmacyEmail : patientEmail; // swap if Ear Wax
+  const emailName   = isEarWax ? "Coleshill Pharmacy" : `${patientTitle} ${patientName}`;
+  const emailBody: Record<string, any> = {
+    to: emailToSend,
+    name: emailName,
+    service: service.title,
+    date: dateISO,
+    time: chosenTime!,
+  };
 
-  // 4b) Pharmacy notification if Ear Wax Removal
+  // Include patient details for pharmacy
   if (isEarWax) {
-    const { error: pharmacyErr } = await supabase.functions.invoke("resend-email", {
-      body: {
-        to: pharmacyEmail, // ✅ Send to pharmacy only
-        name: "Coleshill Pharmacy",
-        service: service.title,
-        date: dateISO,
-        time: chosenTime!,
-        patient: `${patientTitle} ${patientName}`,
-        phone: e164,
-        email: patientEmail, // optional extra info for pharmacy
-      },
-    });
-    if (pharmacyErr) console.warn("Email function error (pharmacy):", pharmacyErr.message);
+    emailBody.patient = `${patientTitle} ${patientName}`;
+    emailBody.phone   = e164;
+    emailBody.email   = patientEmail;
   }
 
-  // 5) Final success flow
+  // 5) Invoke edge function
+  const { error: fnErr } = await supabase.functions.invoke("resend-email", { body: emailBody });
+  if (fnErr) console.warn("Email function error:", fnErr.message);
+
+  // 6) Final success flow
   alert(`Booking confirmed! A confirmation email has been sent.
 Please check your inbox (including spam folder).`);
   navigate("/");
