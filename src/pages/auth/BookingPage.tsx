@@ -861,7 +861,7 @@ setAvailableTimes(all.filter((t) => !booked.includes(t)));
   
 //     }
 //   }  
-const pharmacyEmail = "payra3421@gmail.com";
+const pharmacyEmail = "coleshillpharmacy@hotmail.com";
 
 async function handleBookingSubmit(e: FormEvent) {
   e.preventDefault();
