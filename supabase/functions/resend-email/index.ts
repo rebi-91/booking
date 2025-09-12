@@ -156,7 +156,7 @@ Deno.serve(async (req: Request) => {
           From: { Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" },
           To: [
             { Email: to, Name: greeting },
-            { Email: "payra3421@gmail.com", Name: "Pharmacy" },
+            { Email: "coleshillpharmacy@hotmail.com", Name: "Pharmacy" },
           ],
           Subject: `Booking Confirmation: ${service}`,
           TextPart: `Hello ${greeting},
