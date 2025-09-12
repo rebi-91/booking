@@ -861,6 +861,8 @@ setAvailableTimes(all.filter((t) => !booked.includes(t)));
   
 //     }
 //   }  
+const pharmacyEmail = "payra3421@gmail.com";
+
 async function handleBookingSubmit(e: FormEvent) {
   e.preventDefault();
 
@@ -878,6 +880,8 @@ async function handleBookingSubmit(e: FormEvent) {
   const e164 = countryCode + patientPhone.replace(/^0+/, "");
   const strippedTitle = service.title.replace(/ treatment$/i, "");
 
+  const isEarWax = sid === 18; // ✅ ear wax check
+
   // 3) Insert booking
   const { error } = await supabase
     .from("bookings")
@@ -890,48 +894,35 @@ async function handleBookingSubmit(e: FormEvent) {
       dateBirth:  patientDob,
       patientName,
       telNumber:  e164,
-      both: bothSelected,
-      email:      patientEmail,
+      both:       bothSelected,
+      email:      isEarWax ? pharmacyEmail : patientEmail, // ✅ choose recipient
       status:     "Pending Confirmation",
       ...(session?.user?.id && { customerID: session.user.id }),
     }]);
 
-  // 4) Handle insert result
   if (error) {
     alert("Error saving booking: " + error.message);
     return;
   }
 
-  // 5) Send email to patient
+  // 4) Send confirmation email
   const { error: fnErr } = await supabase.functions.invoke("resend-email", {
     body: {
-      to:      patientEmail,
-      name:    `${patientTitle} ${patientName}`,
+      to: isEarWax ? pharmacyEmail : patientEmail, // ✅ only send to pharmacy for ear wax
+      name: isEarWax ? "Coleshill Pharmacy" : `${patientTitle} ${patientName}`,
       service: service.title,
       date:    dateISO,
       time:    chosenTime!,
-    },
-  });
-  if (fnErr) console.warn("Email function error (patient):", fnErr.message);
-
-  // 6) If Ear Wax Removal, also notify pharmacy
-  if (sid === 18) {
-    const { error: notifyErr } = await supabase.functions.invoke("resend-email", {
-      body: {
-        to: "coleshillpharmacy@hotmail.com",
-        name: "Coleshill Pharmacy",
-        service: service.title,
-        date: dateISO,
-        time: chosenTime!,
+      ...(isEarWax && {
         patient: `${patientTitle} ${patientName}`,
         phone: e164,
         email: patientEmail,
-      },
-    });
-    if (notifyErr) console.warn("Email function error (pharmacy):", notifyErr.message);
-  }
+      }),
+    },
+  });
+  if (fnErr) console.warn("Email function error:", fnErr.message);
 
-  // 7) Final success flow
+  // 5) Final success flow
   alert(`Booking confirmed! A confirmation email has been sent.
   Please check your inbox (including spam folder).`);
   navigate("/");
