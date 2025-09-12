@@ -918,7 +918,7 @@ async function handleBookingSubmit(e: FormEvent) {
   if (sid === 18) {
     const { error: notifyErr } = await supabase.functions.invoke("resend-email", {
       body: {
-        to: "coleshillpharmacy@hotma.com",
+        to: "coleshillpharmacy@hotmail.com",
         name: "Coleshill Pharmacy",
         service: service.title,
         date: dateISO,
