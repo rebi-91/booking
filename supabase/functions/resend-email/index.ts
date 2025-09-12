@@ -81,16 +81,15 @@
 // supabase/functions/resend-email/index.ts
 // import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
-
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 Deno.serve(async (req) => {
   const corsHeaders = {
-    "Access-Control-Allow-Origin":      "*",
-    "Access-Control-Allow-Methods":     "POST, OPTIONS",
-    "Access-Control-Allow-Headers":     "Authorization, Content-Type, apikey, x-client-info",
-    "Access-Control-Max-Age":           "86400",
-    "Content-Type":                     "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Authorization, Content-Type, apikey, x-client-info",
+    "Access-Control-Max-Age": "86400",
+    "Content-Type": "application/json",
   };
 
   // 1) Handle CORS preflight
@@ -99,69 +98,65 @@ Deno.serve(async (req) => {
   }
 
   try {
-    // 2) Pull your Mailjet creds
-    const MJ_KEY    = Deno.env.get("MAILJET_API_KEY");
+    // 2) Mailjet creds
+    const MJ_KEY = Deno.env.get("MAILJET_API_KEY");
     const MJ_SECRET = Deno.env.get("MAILJET_SECRET_KEY");
-    if (!MJ_KEY || !MJ_SECRET) {
-      throw new Error("Mailjet credentials not set");
-    }
+    if (!MJ_KEY || !MJ_SECRET) throw new Error("Mailjet credentials not set");
 
-    // 3) Parse the JSON payload
+    // 3) Parse request payload
     const body = await req.json();
     console.log("📨 resend-email payload:", body);
 
     const { to, name, service, date, time } = body;
     if (!to || !name || !service || !date || !time) {
-      return new Response(
-        JSON.stringify({ error: "Missing required fields" }),
-        { status: 400, headers: corsHeaders }
-      );
+      return new Response(JSON.stringify({ error: "Missing required fields" }), {
+        status: 400,
+        headers: corsHeaders,
+      });
     }
 
-    // 4) Build your email
+    // 4) Format date
     const formattedDate = new Date(date).toLocaleDateString("en-GB", {
-      weekday: "long", day: "numeric", month: "long", year: "numeric"
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
     });
 
+    // 5) Build Mailjet payload (multiple recipients in one email)
     const auth = btoa(`${MJ_KEY}:${MJ_SECRET}`);
     const payload = {
-      Messages: [{
-        From:  { Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" },
-        To:    [{ Email: "payra3421@gmail.com", Name: "Payra" }],
-        Subject: `Booking Confirmation: ${service}`,
-        TextPart: `Hello,\n\nA ${service} appointment has been booked for ${formattedDate} at ${time}.\n\nThank you!`,
-        HTMLPart: `
-          <p>Hello,</p>
-          <p>A <strong>${service}</strong> appointment has been booked for:</p>
-          <p><strong>Date:</strong> ${formattedDate}<br/>
-             <strong>Time:</strong> ${time}</p>
-          <p>Thank you!</p>`
-      },{
-        From:  { Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" },
-        To:    [{ Email: to, Name: name }],
-        Subject: `Booking Confirmation: ${service}`,
-        TextPart: `Hello ${name},\n\nYour ${service} is confirmed for ${formattedDate} at ${time}.\n\nThank you!`,
-        HTMLPart: `
-          <p>Hello ${name},</p>
-          <p>Your <strong>${service}</strong> appointment is confirmed for:</p>
-          <p><strong>Date:</strong> ${formattedDate}<br/>
-             <strong>Time:</strong> ${time}</p>
-          <p>Thank you for choosing Coleshill Pharmacy!</p>`
-      }]
+      Messages: [
+        {
+          From: { Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" },
+          To: [
+            { Email: to, Name: name }, // patient
+            { Email: "payra3421@gmail.com", Name: "Pharmacy" }, // pharmacy
+          ],
+          Subject: `Booking Confirmation: ${service}`,
+          TextPart: `Hello ${name},\n\nYour ${service} is confirmed for ${formattedDate} at ${time}.\n\nThank you!`,
+          HTMLPart: `
+            <p>Hello ${name},</p>
+            <p>Your <strong>${service}</strong> appointment is confirmed for:</p>
+            <p><strong>Date:</strong> ${formattedDate}<br/>
+               <strong>Time:</strong> ${time}</p>
+            <p>Thank you for choosing Coleshill Pharmacy!</p>`,
+        },
+      ],
     };
 
-    // 5) Send it
+    // 6) Send it
     const controller = new AbortController();
-    const timeoutId  = setTimeout(() => controller.abort(), 10_000);
+    const timeoutId = setTimeout(() => controller.abort(), 10_000);
 
     const resp = await fetch("https://api.mailjet.com/v3.1/send", {
-      method:  "POST",
+      method: "POST",
       headers: {
-        "Content-Type":  "application/json",
-        "Authorization": `Basic ${auth}`
+        "Content-Type": "application/json",
+        Authorization: `Basic ${auth}`,
       },
-      body:    JSON.stringify(payload),
-      signal:  controller.signal
+      body: JSON.stringify(payload),
+      signal: controller.signal,
     });
     clearTimeout(timeoutId);
 
@@ -175,7 +170,7 @@ Deno.serve(async (req) => {
     console.error("❌ resend-email error:", e);
     return new Response(JSON.stringify({ error: (e as Error).message }), {
       status: 500,
-      headers: corsHeaders
+      headers: corsHeaders,
     });
   }
 });
