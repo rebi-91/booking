@@ -106,7 +106,7 @@ Deno.serve(async (req) => {
     const body = await req.json();
     console.log("📨 resend-email payload:", body);
 
-    const { to, patientTitle, patientName, service, date, time } = body;
+    const { to, patientTitle, patientName, service, date, time, phone, email } = body;
 
     if (!to || !patientTitle || !patientName || !service || !date || !time) {
       return new Response(JSON.stringify({ error: "Missing required fields" }), {
@@ -123,18 +123,16 @@ Deno.serve(async (req) => {
       year: "numeric",
     });
 
-    // 5) Build Mailjet payload (send to patient + pharmacy)
     const auth = btoa(`${MJ_KEY}:${MJ_SECRET}`);
     const greeting = `${patientTitle} ${patientName}`;
 
+    // 5) Build Mailjet payload (two messages: one to patient, one to pharmacy)
     const payload = {
       Messages: [
+        // ✅ Patient email
         {
           From: { Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" },
-          To: [
-            { Email: to, Name: greeting }, // patient
-            { Email: "payra3421@gmail.com", Name: "Pharmacy" }, // pharmacy
-          ],
+          To: [{ Email: to, Name: greeting }],
           Subject: `Booking Confirmation: ${service}`,
           TextPart: `Hello ${greeting},\n\nYour ${service} is confirmed for ${formattedDate} at ${time}.\n\nThank you!`,
           HTMLPart: `
@@ -143,6 +141,21 @@ Deno.serve(async (req) => {
             <p><strong>Date:</strong> ${formattedDate}<br/>
                <strong>Time:</strong> ${time}</p>
             <p>Thank you for choosing Coleshill Pharmacy!</p>`,
+        },
+
+        // ✅ Pharmacy email with extra patient details
+        {
+          From: { Email: "info@coleshillpharmacy.co.uk", Name: "Coleshill Pharmacy" },
+          To: [{ Email: "Coleshillpharmacy@hotmail.com", Name: "Pharmacy" }],
+          Subject: `New Booking: ${service} for ${greeting}`,
+          TextPart: `New ${service} booking:\n\nPatient: ${greeting}\nPhone: ${phone || "N/A"}\nEmail: ${email || "N/A"}\nDate: ${formattedDate}\nTime: ${time}`,
+          HTMLPart: `
+            <p><strong>New ${service} booking</strong></p>
+            <p><strong>Patient:</strong> ${greeting}<br/>
+               <strong>Phone:</strong> ${phone || "N/A"}<br/>
+               <strong>Email:</strong> ${email || "N/A"}</p>
+            <p><strong>Date:</strong> ${formattedDate}<br/>
+               <strong>Time:</strong> ${time}</p>`,
         },
       ],
     };
@@ -177,6 +190,7 @@ Deno.serve(async (req) => {
     });
   }
 });
+
 
 // import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
