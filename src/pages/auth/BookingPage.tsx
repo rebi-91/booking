@@ -519,6 +519,18 @@ function slotsForDayAndCategory(
     return [];
   }
 
+   // ✅ Block Ear wax removal on 29 Sept 2025
+   if (sid === 18 && date) {
+    const blockDate = new Date(2025, 8, 29); // 29 Sept 2025 (month is 0-indexed)
+    if (
+      date.getFullYear() === blockDate.getFullYear() &&
+      date.getMonth() === blockDate.getMonth() &&
+      date.getDate() === blockDate.getDate()
+    ) {
+      return []; // no slots that day
+    }
+  }
+  
   // ✅ Ear wax removal custom rule
   if (sid === 18) {
     if (dow === 1 || dow === 3 || dow === 5) {
