@@ -19,7 +19,7 @@ const NAV_LINKS: Record<string,string> = {
 };
 
 const HERO_CARD_LINKS: Record<string,string> = {
-  'Weight loss service': '/book/12',
+  'Weight loss clinic': '/book/12',
   'Travel Clinic': '/book/3',
   'Ear Wax Removal': '/book/18',
 };
@@ -28,7 +28,7 @@ const browseOptions = Object.keys(NAV_LINKS);
 
 const popularServices = [
   {
-    title: 'Weight loss management',
+    title: 'Weight loss clinic',
     link: '/weight-loss-management',
     sub: 'Achieve your weight goals.',
     img:
@@ -217,13 +217,13 @@ export default function HomePageDesktop() {
   >
     <div className="card-image">
       <img
-        src="https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/904592/c10d6P2jks.webp"
-        alt="Weight loss service"
+        src="https://gpcdcgwgkciyogknekwp.supabase.co/storage/v1/object/public/pharmacy/weightclinic.jpg"
+        alt="Weight loss clinic"
       />
       <div className="card-overlay"></div>
     </div>
     <div className="card-footer">
-      <h4>Weight loss service</h4>
+      <h4>Weight loss clinic</h4>
       <FontAwesomeIcon icon={faChevronRight} />
     </div>
   </div>

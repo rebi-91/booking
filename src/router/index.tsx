@@ -179,6 +179,7 @@ import MyBooking from "../pages/teacher/MyBooking.tsx";
 import EmergencySupply from "../pages/auth/EmergencySupply.tsx";
 import OrderingPatientPage from "../pages/teacher/OrderPatientPage.tsx";
 import OrderPage from "../pages/teacher/OrderPage.tsx";
+import TravelPage from "../pages/auth/TravelPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -246,6 +247,10 @@ const router = createBrowserRouter([
       {
         path: "/setup-profile",
         element: <SetupProfilePage />,
+      },
+      {
+        path: "/travel-clinic",
+        element: <TravelPage />,
       },
      
       //ADMIN

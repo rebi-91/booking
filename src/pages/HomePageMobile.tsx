@@ -429,7 +429,7 @@ const NAV_LINKS: Record<string, string> = {
 };
 
 const HERO_CARD_LINKS: Record<string, string> = {
-  'Weight loss service': '/book/13',
+  'Weight loss clinic': '/book/13',
   'Travel Clinic': '/book/3',
   'Ear wax removal': '/book/19',
 };
@@ -454,11 +454,11 @@ const covidvaccine = [
 
 const POPULAR_SERVICES = [
   {
-    title: 'Weight loss management',
-    link: '/weight-loss-management',
+    title: 'Weight loss clinic',
+    link: '/weight-loss-clinic',
     sub: 'Achieve your weight goals.',
     img:
-      'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fweight-loss-4.webp&w=640&q=75',
+      'https://gpcdcgwgkciyogknekwp.supabase.co/storage/v1/object/public/pharmacy/weightclinic.jpg',
   },
   {
     title: 'Ear Wax Removal',
@@ -663,25 +663,25 @@ const HomePage: React.FC = () => {
                 className="card stacked-card"
                 style={{ width: 260, cursor: 'pointer' }}
                 onClick={() =>
-                  navigate(HERO_CARD_LINKS['Weight loss service'])
+                  navigate(HERO_CARD_LINKS['Weight loss clinic'])
                 }
               >
                 <div className="overflow-hidden" style={{ height: 220 }}>
                   <img
-                    src="https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fweight-loss%2F1.webp&w=3840&q=90"
-                    alt="Weight loss service"
+                    src="https://gpcdcgwgkciyogknekwp.supabase.co/storage/v1/object/public/pharmacy/weightclinic.jpg"
+                    alt="Weight loss clinic"
                     className="card-img"
                   />
                 </div>
                 <div className="card-body d-flex justify-content-between align-items-center px-3">
-                  <small>Weight loss service</small>
+                  <small>Weight loss clinic</small>
                   <img src={chevronDown} className="chevron-90" alt="" />
                 </div>
                 <div className="card-footer text-center">
                   <button
                     className="btn weight-select-btn"
                     onClick={() =>
-                      navigate(HERO_CARD_LINKS['Weight loss service'])
+                      navigate(HERO_CARD_LINKS['Weight loss clinic'])
                     }
                   >
                     Select

@@ -171,7 +171,7 @@ const sampleServices: Record<number, Service> = {
   },
   12: {
     id: 12,
-    title: 'Weight Loss Management',
+    title: 'Weight Loss Clinic',
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
     price: 'Varies depending on Treatment',

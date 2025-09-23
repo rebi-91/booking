@@ -58,7 +58,7 @@ const ICON_BACK =
  const browseSubMenuData: Record<string, string[]> = {
   'Private Treatments': [
     'Microsuction Earwax Removal',
-    'Weight Loss Management',
+    'Weight Loss Clinic',
     'Private Flu Jab',
     'Period Delay',
     'Period Pain',

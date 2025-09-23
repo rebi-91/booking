@@ -316,7 +316,7 @@ const dropdownData: Record<string, string[]> = {
 const browseSubMenuData: Record<string, string[]> = {
   'Private Treatments': [
     'Microsuction Earwax Removal',
-    'Weight Loss Management',
+    'Weight Loss Clinic',
     'Private Flu Jab',
     'Period Delay',
     'Period Pain',
@@ -356,7 +356,7 @@ const ROUTE_MAP: Record<string, string> = {
   'Private Treatments': '/private-treatments',
   'NHS Treatments': '/nhs-treatments',
   'Pharmacy First': '/pharmacy-first',
-  'Weight loss management': '/weight-loss-management',
+  'Weight loss clinic': '/weight-loss-clinic',
   // weight loss
   Wegovy: '/wegovy',
   Mounjaro: '/mounjaro',

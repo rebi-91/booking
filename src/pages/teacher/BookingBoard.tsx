@@ -561,7 +561,7 @@ const sampleServices: Record<number, Service> = {
   8:  { id: 8,  title: 'Infected insect bite (Ages 1+)', duration: '10m', address: '114–116 High St, Coleshill, Birmingham B46 3BJ', price: 'Free NHS' },
   9:  { id: 9,  title: 'Traveller’s Diarrhoea', duration: '20m', address: '114–116 High St, Coleshill, Birmingham B46 3BJ', price: 'Azithromycin for £20' },
   10: { id: 10, title: 'Private flu jab', duration: '20m', address: '114–116 High St, Coleshill, Birmingham B46 3BJ', price: '£20.00' },
-  12: { id: 12, title: 'Weight Loss Management', duration: '20m', address: '114–116 High St, Coleshill, Birmingham B46 3BJ', price: 'Varies depending on Treatment' },
+  12: { id: 12, title: 'Weight Loss Clinic', duration: '20m', address: '114–116 High St, Coleshill, Birmingham B46 3BJ', price: 'Varies depending on Treatment' },
   13: { id: 13, title: 'Oral Contraception', duration: '10m', address: '114–116 High St, Coleshill, Birmingham B46 3BJ', price: 'Free NHS' },
   14: { id: 14, title: 'Flu Vaccination', duration: '10m', address: '114–116 High St, Coleshill, Birmingham B46 3BJ', price: 'Free NHS' },
   15: { id: 15, title: 'Blood Pressure Check', duration: '10m', address: '114–116 High St, Coleshill, Birmingham B46 3BJ', price: 'Free NHS' },

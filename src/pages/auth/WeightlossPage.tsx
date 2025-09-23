@@ -217,7 +217,7 @@ const WeightlossPage: React.FC = () => {
         {/* Weight Loss Products */}
         <section className="container products-grid">
           <h2>
-            Weight loss management in <span className="accent">Coleshill</span>
+            Weight loss clinic in <span className="accent">Coleshill</span>
           </h2>
           <div className="cards-grid">
             {weightLossProducts.map((prod, idx) => (
