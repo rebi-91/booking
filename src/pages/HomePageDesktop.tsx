@@ -29,17 +29,17 @@ const browseOptions = Object.keys(NAV_LINKS);
 const popularServices = [
   {
     title: 'Weight loss clinic',
-    link: '/weight-loss-management',
+    link: '/weight-loss-clinic',
     sub: 'Achieve your weight goals.',
     img:
-      'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fweight-loss-4.webp&w=640&q=75',
+      'https://gpcdcgwgkciyogknekwp.supabase.co/storage/v1/object/public/pharmacy/weightclinic.jpg',
   },
   {
     title: 'Ear Wax Removal',
     link: '/microsuction-earwax-removal',
     sub: 'Safe microsuction for clear, comfortable ears.',
     img:
-    'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/123156/AHHct1yZUR.webp',
+    'https://clearclinics.co.uk/wp-content/uploads/2023/10/earwax-removal-1024x561.jpg',
   },
   {
     title: 'Travel Vaccinations',
@@ -213,7 +213,7 @@ export default function HomePageDesktop() {
   {/* Big featured card on the left */}
   <div
     className="card featured-card"
-    onClick={() => navigate(HERO_CARD_LINKS['Weight loss service'])}
+    onClick={() => navigate(HERO_CARD_LINKS['Weight loss clinic'])}
   >
     <div className="card-image">
       <img
@@ -232,7 +232,7 @@ export default function HomePageDesktop() {
   <div className="side-cards">
     {['Travel Clinic', 'Ear Wax Removal'].map((key) => {
       const imgUrl = key === 'Ear Wax Removal'
-        ? 'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/123156/AHHct1yZUR.webp'
+        ? 'https://clearclinics.co.uk/wp-content/uploads/2023/10/earwax-removal-1024x561.jpg'
         : 'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Ftravel-clinic.webp&w=1200&q=75';
       return (
         <div

@@ -200,7 +200,7 @@ const router = createBrowserRouter([
         element: <EmergencySupply />,
       },
       {
-        path: "/weight-loss-management",
+        path: "/weight-loss-clinic",
         element: <WeightlossPage />,
       },
       {

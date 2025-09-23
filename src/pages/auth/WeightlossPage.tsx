@@ -94,6 +94,17 @@ const weightLossProducts = [
       'Supported by our expert pharmacy team',
     ],
   },
+  {
+    title: 'Orlistat',
+    // TODO: replace with your actual product image
+    img: 'https://yourmedicals.co.uk/cdn/shop/files/Untitleddesign_24.png?v=1722501684',
+    bullets: [
+      'Helps weight loss by reducing dietary fat absorption',
+      'Best results alongside a reduced-fat, calorie-controlled diet',
+      'Pharmacist advice to check suitability and minimise side-effects',
+      'Ongoing support and guidance from our pharmacy team',
+    ],
+  },
 ];
 
 const benefits = [
@@ -169,7 +180,7 @@ const WeightlossPage: React.FC = () => {
           </div>
           <div className="hero-image">
             <img
-              src="https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fweight-loss%2F1.webp&w=3840&q=90"
+              src="https://gpcdcgwgkciyogknekwp.supabase.co/storage/v1/object/public/pharmacy/weightclinic.jpg"
               alt="Patient example"
             />
           </div>

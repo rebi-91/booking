@@ -465,7 +465,7 @@ const POPULAR_SERVICES = [
     link: '/microsuction-earwax-removal',
     sub: 'Safe microsuction for clear, comfortable ears.',
     img:
-    'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/123156/AHHct1yZUR.webp',
+    'https://clearclinics.co.uk/wp-content/uploads/2023/10/earwax-removal-1024x561.jpg',
   },
   {
     title: 'Travel Vaccinations',
@@ -705,9 +705,7 @@ const HomePage: React.FC = () => {
                     >
                       <div className="overflow-hidden" style={{ height: 140 }}>
                         <img
-                          src={`https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2F${key
-                            .toLowerCase()
-                            .replace(/ /g, '-')} .webp&w=1200&q=75`}
+                          src={`https://clearclinics.co.uk/wp-content/uploads/2023/10/earwax-removal-1024x561.jpg`}
                           alt={key}
                           className="card-img"
                         />
