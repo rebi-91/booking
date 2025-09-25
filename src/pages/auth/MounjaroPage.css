@@ -396,3 +396,42 @@
      }
    }
    
+   /* === Pull content higher (tighten vertical spacing) === */
+:root{
+  --y-hero-top: clamp(16px, 4vw, 32px);
+  --y-hero-bottom: clamp(14px, 3vw, 26px);
+  --y-section-gap: clamp(18px, 3.5vw, 32px);
+}
+
+/* 1) Hero: reduce top/bottom padding */
+.hero-section{
+  padding-top: var(--y-hero-top) !important;
+  padding-bottom: var(--y-hero-bottom) !important;
+}
+
+/* Make main title a bit larger but keep it tight */
+.page-title{
+  margin-top: 0;
+  margin-bottom: .5rem;
+  font-size: clamp(44px, 6vw, 64px); /* up from ~2.5rem */
+}
+
+/* 2) Sections: smaller gaps between blocks */
+.about-section,
+.products-section{
+  padding-top: 0 !important;
+  margin-top: var(--y-section-gap) !important;
+}
+
+/* Tighten text + image spacing inside sections */
+.hero-bullets{ margin-top: .25rem; margin-bottom: .75rem; }
+.section-subtext{ margin-top: .25rem; margin-bottom: .9rem; }
+.hero-image-wrap{ margin-top: 1rem; }
+.pricing-list{ gap: 12px; }
+.timeline-cards{ gap: 12px; }
+
+/* 3) Optional: nudge entire page up slightly */
+main{ margin-top: -8px; } /* try -6px to -12px to taste */
+
+/* If your <Header/> adds extra bottom margin/padding, trim it */
+.site-header, header{ margin-bottom: 6px; padding-bottom: 0; }

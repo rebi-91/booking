@@ -30,7 +30,7 @@ const MounjaroPage: React.FC = () => {
         {/* ===============================
             BREADCRUMB / PAGE PATH
            =============================== */}
-        <div className="breadcrumb-wrapper">
+        {/* <div className="breadcrumb-wrapper">
           <div className="container">
             <nav className="page-path">
               <Link to="/">Home</Link>
@@ -42,7 +42,7 @@ const MounjaroPage: React.FC = () => {
               <span className="current">Mounjaro</span>
             </nav>
           </div>
-        </div>
+        </div> */}
         {/* =============================== */}
 
         {/* ===============================

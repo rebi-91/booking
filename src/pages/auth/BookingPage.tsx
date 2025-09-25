@@ -190,6 +190,13 @@ const sampleServices: Record<number, Service> = {
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
     price: 'Varies depending on Treatment',
   },
+  67: {
+    id: 67,
+    title: 'Orlistat',
+    duration: '20m',
+    address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
+    price: 'Varies depending on Treatment',
+  },
   13: {
     id: 13,
     title: 'Oral Contraception',

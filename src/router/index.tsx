@@ -143,6 +143,7 @@ import ServicePage from "../pages/auth/ServicePage.tsx";
 import WeightlossPage from "../pages/auth/WeightlossPage.tsx";
 import WeGovyPage from "../pages/auth/WeGovyPage.tsx";
 import MounjaroPage from "../pages/auth/MounjaroPage.tsx";
+import OrlistatPage from "../pages/auth/OrlistatPage.tsx";
 import MicrosuctionPage from '../pages/auth/MicrosuctionPage.tsx';
 import ContraPage from '../pages/auth/ContraPage.tsx';
 
@@ -210,6 +211,10 @@ const router = createBrowserRouter([
       {
         path: "/mounjaro",
         element: <MounjaroPage />,
+      },
+      {
+        path: "/orlistat",
+        element: <OrlistatPage />,
       },
       {
         path: "/microsuction-earwax-removal",

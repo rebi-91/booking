@@ -144,7 +144,7 @@ const WeightlossPage: React.FC = () => {
       {/* ===============================
           BREADCRUMB / PAGE PATH
          =============================== */}
-      <div className="breadcrumbwrapper">
+      {/* <div className="breadcrumbwrapper">
         <div className="container">
           <nav className="page-path">
             <Link to="/">Home</Link>
@@ -155,14 +155,16 @@ const WeightlossPage: React.FC = () => {
           </nav>
          
         </div>
-      </div>
+      </div> */}
       {/* =============================== */}
 
-      <main className="pt-header">
-      <h1 className="page-title">
-            Breakthrough weight-loss injections for<br />
-            long-term results
+      <main className="pt-header weightloss-page">
+      <div className="container titlebar">
+      <h1 className="page-title page-title--top-left">
+            Breakthrough weight-loss medication<br />
+            for long-term results
           </h1>
+          </div>
         {/* Hero / Intro */}
         <section className="container hero-section">
           <div className="hero-content">

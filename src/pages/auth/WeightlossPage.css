@@ -24,13 +24,7 @@ html, body {
 /* -----------------------------
    Breadcrumb / Page Path
    ----------------------------- */
-   .breadcrumb-wrapper {
-    background-color: #f2ecec !important;
-    padding: 0.35rem 1.2rem !important;
-    position: sticky;
-    top: 3.5rem !important; /* header height */
-    z-index: 100;
-  }
+  
 
 .page-path {
   display: flex;
@@ -61,13 +55,39 @@ html, body {
 .page-title {
   padding-left: 25px !important;
   padding-top: 0px !important;
-  margin: 0px !important;
+  margin-top: -50px !important;
   font-size: 1.75rem;
   font-weight: 700;
   line-height: 1.2;
   color: rgb(9, 133, 250) !important;
   
 }
+/* ===== Title bar just under Header ===== */
+.weightloss-page .titlebar{
+  margin-top: clamp(6px, 1.2vw, 14px);
+  margin-bottom: clamp(8px, 1.6vw, 16px);
+}
+
+/* Left-align & tighten the main title */
+.weightloss-page .page-title.page-title--top-left{
+  margin: 0;
+  text-align: left;
+  line-height: 1.1;
+  font-size: clamp(44px, 6vw, 64px);
+}
+
+/* Pull the hero a bit closer to the title (buttons untouched) */
+.weightloss-page .hero-section{
+  padding-top: clamp(10px, 2.5vw, 20px);
+  margin-top: 0;            /* sits right below the titlebar */
+}
+
+/* Keep existing button layout intact */
+.weightloss-page .btn-accent,
+.weightloss-page .product-card .btn-outline-primary{
+  position: static; /* ensure no unintended shifts */
+}
+
 
 /* ================================
    HERO / INTRO SECTION
@@ -419,12 +439,12 @@ html, body {
 @media (max-width: 767px) {
   .hero-section {
     flex-direction: column;
+    margin-top: -20px !important;
   }
-  .breadcrumb-wrapper {
-    top: 3.5rem;
-  }
+  
   .page-title {
     font-size: 1.5rem;
+    margin-top: -20px !important;
   }
   .btn-accent {
     width: 100%;
@@ -437,5 +457,40 @@ html, body {
   }
   .science-backed {
     padding: 1rem;
+  }
+}
+
+/* ===== WeightlossPage: title pinned left under Header ===== */
+.weightloss-page .titlebar{
+  margin-top: clamp(6px, 1.2vw, 14px);
+  margin-bottom: clamp(8px, 1.6vw, 16px);
+}
+
+/* Override old global .page-title that had negative margin/padding */
+.weightloss-page .page-title{
+  padding-left: 0 !important;
+  margin-top: 20px !important;
+  line-height: 1.1;
+  color: rgb(9, 133, 250) !important;
+  font-size: clamp(40px, 6.2vw, 64px);
+  text-align: left;
+}
+
+
+/* Pull the hero a bit closer to the title (buttons remain centered/unchanged) */
+.weightloss-page .hero-section{
+  padding-top: clamp(10px, 2.5vw, 20px);
+  margin-top: 0;
+}
+
+/* Keep button layout intact (explicit no-shift) */
+.weightloss-page .btn-accent,
+.weightloss-page .product-card .btn-outline-primary{
+  position: static;
+}
+
+@media (max-width: 767px){
+  .weightloss-page .page-title{
+    font-size: clamp(28px, 8vw, 44px);
   }
 }
