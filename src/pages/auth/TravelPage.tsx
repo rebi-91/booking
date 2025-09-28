@@ -628,8 +628,9 @@ const FAQSection: React.FC = () => {
     },
     {
       q: "Is Yellow Fever vaccination available at Coleshill Pharmacy?",
-      a: "Yes. We are a registered Yellow Fever vaccination centre, so we can provide this essential protection for travellers visiting areas where Yellow Fever is a risk. During your consultation, our trained pharmacist will assess your itinerary and advise if this vaccine is necessary. We’ll also explain any potential side effects and how to manage them. Once administered, you’ll receive an International Certificate of Vaccination, which is sometimes required for entry into certain countries."
+      a: "No. We are not currently offering Yellow Fever vaccinations or certificates at Coleshill Pharmacy. If you require this service, you will need to visit an alternative Yellow Fever vaccination centre."
     },
+    
     {
       q: "What about malaria prevention for high-risk areas?",
       a: "Malaria is a serious concern in many tropical and subtropical regions. If you’re travelling to a high-risk area, we’ll discuss the different antimalarial medications available and recommend the most suitable option based on your medical history and travel plans. We’ll also talk about bite prevention, such as using mosquito nets, repellents, and covering up in the evenings. Remember to start taking antimalarials before you leave, continue throughout your stay, and finish the course upon your return."
@@ -648,7 +649,7 @@ const FAQSection: React.FC = () => {
     },
     {
       q: "Can you provide certificates if required?",
-      a: "Yes. For certain destinations or specific vaccines, you may need official proof of immunisation. Our Coleshill Pharmacy travel clinic can issue International Certificates of Vaccination, such as for Yellow Fever, if you require one. We’ll explain when these certificates are necessary, how long they’re valid for, and any rules you should be aware of."
+      a: "We currently do not issue International Certificates of Vaccination, such as for Yellow Fever. For destinations that require these certificates, you will need to attend a registered Yellow Fever vaccination centre."
     },
     {
       q: "How can I stay healthy while travelling abroad?",
