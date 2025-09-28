@@ -481,6 +481,7 @@ html, body {
 .weightloss-page .hero-section{
   padding-top: clamp(10px, 2.5vw, 20px);
   margin-top: 0;
+  
 }
 
 /* Keep button layout intact (explicit no-shift) */

@@ -429,8 +429,8 @@ const NAV_LINKS: Record<string, string> = {
 };
 
 const HERO_CARD_LINKS: Record<string, string> = {
-  'Weight loss clinic': '/book/13',
-  'Travel Clinic': '/book/3',
+  'Weight loss clinic': '/weight-loss-clinic',
+  'Travel Clinic': '/travel-clinic',
   'Ear wax removal': '/book/19',
 };
 
@@ -469,7 +469,7 @@ const POPULAR_SERVICES = [
   },
   {
     title: 'Travel Vaccinations',
-    link: '/book/3',
+    link: '/travel-clinic',
     sub: 'Comprehensive vaccine service for your trip.',
     img:
     'https://clinic-digital.lon1.cdn.digitaloceanspaces.com/100/530057/yyrgMObVYh.webp',

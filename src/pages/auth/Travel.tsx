@@ -4,13 +4,6 @@ import { Link } from "react-router-dom";
 import Header from "../Header";
 import "./TravelPage.css";
 
-const MAIN_TEXT_COLOR = 'rgb(119, 128, 159)';
-const MAI_TEXT_COLOR = 'rgb(14, 75, 141)';
-const MAINS_TEXT_COLOR = 'rgb(14, 75, 141)';
-const MAIS_TEXT_COLOR = 'rgb(14, 75, 141)';
-const ACCENT_COLOR = '#00D364';
-const ACC_COLOR = 'rgb(42, 157, 239)';
-
 /** ------------------ Vaccination product list ------------------ */
 type Category = "Vaccines" | "Anti-malarials" | "Consultation";
 interface TravelItem {
@@ -201,35 +194,35 @@ const COUNTRIES: Country[] = [
     required: ["No mandatory vaccinations required"],
     recommended: ["Hepatitis A", "Typhoid", "Rabies"],
     info: "Some areas have malaria risk, use mosquito repellents and prophylaxis if recommended.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FBZ.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1534293232045-791f2f2e9b6d?q=80&w=1600&auto=format&fit=crop",
   },
   {
     name: "Bolivia", code: "BO", flag: "🇧🇴", risk: "High",
     required: ["No mandatory vaccinations required"],
     recommended: ["Hepatitis A", "Typhoid", "Yellow Fever"],
     info: "Altitude sickness is a concern in La Paz and other high-elevation regions.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FBO.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1502989642968-94fbdc9eace4?q=80&w=1600&auto=format&fit=crop",
   },
   {
     name: "Brazil", code: "BR", flag: "🇧🇷", risk: "Medium",
     required: ["Yellow Fever"],
     recommended: ["Hepatitis A", "Typhoid", "Rabies", "Anti Malarial", "Hepatitis B"],
     info: "Yellow fever vaccination required for certain regions. Zika virus precautions recommended.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FBR.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1600&auto=format&fit=crop",
   },
   {
     name: "Cambodia", code: "KH", flag: "🇰🇭", risk: "Medium",
     required: ["No mandatory vaccinations required"],
     recommended: ["Hepatitis A", "Typhoid", "Japanese Encephalitis"],
     info: "Malaria prophylaxis may be considered outside major cities. Safe food and water practices advised.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FKH.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1505733044-bf2cc7b7f9d5?q=80&w=1600&auto=format&fit=crop",
   },
   {
     name: "Canada", code: "CA", flag: "🇨🇦", risk: "Low",
     required: ["No mandatory vaccinations required"],
     recommended: [],
     info: "Healthcare standards are high. Winter travelers should consider influenza shots.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FCA.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1600&auto=format&fit=crop",
   },
   {
     name: "China", code: "CN", flag: "🇨🇳", risk: "Medium",
@@ -257,21 +250,21 @@ const COUNTRIES: Country[] = [
     required: ["No mandatory vaccinations required"],
     recommended: ["Hepatitis A", "Typhoid", "Anti Malarial"],
     info: "Be cautious of mosquito-borne illnesses; use insect repellent and protective clothing.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FDO.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1529694157871-0cdb2314d8b9?q=80&w=1600&auto=format&fit=crop",
   },
   {
     name: "Egypt", code: "EG", flag: "🇪🇬", risk: "Medium",
     required: ["Yellow Fever"],
     recommended: ["Hepatitis A", "Typhoid","Hepatitis B", "Rabies", ],
     info: "Risk of schistosomiasis in freshwater. Rabies vaccination recommended for rural areas.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FEG.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1524499982521-1ffd58dd89ea?q=80&w=1600&auto=format&fit=crop",
   },
   {
     name: "Fiji", code: "FJ", flag: "🇫🇯", risk: "Medium",
     required: ["Meningitis ACWY"],
     recommended: ["Hepatitis A", "Typhoid"],
     info: "Mosquito-borne illnesses can be a concern in tropical regions.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FFJ.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1544989164-31dc3c645987?q=80&w=1600&auto=format&fit=crop",
   },
 
   { name: "Finland", code: "FI", flag: "🇫🇮", risk: "Low",
@@ -283,7 +276,7 @@ const COUNTRIES: Country[] = [
   { name: "France", code: "FR", flag: "🇫🇷", risk: "Low",
     required: ["No mandatory vaccinations required"], 
     recommended: [""],
-    info: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FFR.webp&w=3840&q=75",
+    info: "Good medical facilities throughout the country. Obtain travel insurance if visiting overseas territories.",
     image: "https://images.unsplash.com/photo-1528291151373-2a2d4b4f7b86?q=80&w=1600&auto=format&fit=crop" },
 
 
@@ -291,7 +284,7 @@ const COUNTRIES: Country[] = [
     required: ["No mandatory vaccinations required"], 
     recommended: [""],
     info: "Excellent healthcare system. Keep routine vaccinations up to date.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FDE.webp&w=3840&q=75" },
+    image: "https://images.unsplash.com/photo-1509395284057-84f63f9a5c44?q=80&w=1600&auto=format&fit=crop" },
   {
     name: "Guatemala", code: "GT", flag: "🇬🇹", risk: "Medium",
     required: ["No mandatory vaccinations required"],
@@ -311,14 +304,14 @@ const COUNTRIES: Country[] = [
     required: ["Hepatitis A", "Typhoid", "Yellow Fever"],
     recommended: ["Hepatitis B", "Anti Malarial", "Japanese Encephalitis", "Rabies"],
     info: "Malaria risk is present throughout the country. Consider additional precautions during monsoon season.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FIN.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1548013146-72479768bada?q=80&w=1600&auto=format&fit=crop",
   },
   {
     name: "Indonesia", code: "ID", flag: "🇮🇩", risk: "Medium",
     required: ["No mandatory vaccinations required"],
     recommended: ["Hepatitis A", "Hepatitis B", "Typhoid", "Rabies", "Japanese Encephalitis", "Anti-malarials"],
     info: "Risk varies by island. Malaria prevention recommended for rural areas and eastern islands.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FID.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1600&auto=format&fit=crop",
   },
   { name: "Japan", code: "JP", flag: "🇯🇵", risk: "Low",
     required: ["No mandatory vaccinations required"], 
@@ -330,14 +323,14 @@ const COUNTRIES: Country[] = [
     required: ["No mandatory vaccinations required"],
     recommended: ["Hepatitis A", "Typhoid"],
     info: "Desert climate, stay hydrated and avoid heat exhaustion.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FJO.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1476610182048-b716b8518aae?q=80&w=1600&auto=format&fit=crop",
   },
   {
     name: "Kenya", code: "KE", flag: "🇰🇪", risk: "High",
     required: ["Yellow Fever"],
     recommended: ["Hepatitis A", "Hepatitis B", "Meningitis ACWY", "Typhoid", "Rabies", "Anti Malarial"],
     info: "Malaria prevention essential. Consider meningitis vaccine if traveling to affected areas.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FKE.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1600&auto=format&fit=crop",
   },
   { name: "Lebanon", code: "LB", flag: "🇱🇧", risk: "Medium",
     required: ["No mandatory vaccinations required"], 
@@ -356,14 +349,14 @@ const COUNTRIES: Country[] = [
     required: ["No mandatory vaccinations required"],
     recommended: ["Typhoid", "Hepatitis A"],
     info: "Resort islands have medical facilities, but remote islands may have limited resources. Dengue fever can occur.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FMV.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=1600&auto=format&fit=crop",
   },
   {
     name: "Mexico", code: "MX", flag: "🇲🇽", risk: "Medium",
     required: ["No mandatory vaccinations required"],
     recommended: ["Hepatitis A","Hepatitis B", "Typhoid", "Anti Malarial",],
     info: "Malaria risk in certain rural areas. Food and water precautions recommended.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FMX.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1526401485004-2fda9f4b0f87?q=80&w=1600&auto=format&fit=crop",
   },
   {
     name: "Morocco", code: "MA", flag: "🇲🇦", risk: "Medium",
@@ -377,14 +370,14 @@ const COUNTRIES: Country[] = [
     required: ["Yellow Fever"],
     recommended: ["Hepatitis A", "Typhoid", "Rabies"],
     info: "Altitude sickness is a serious concern for high-altitude treks.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FNP.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1533587851505-d119e13fa0d5?q=80&w=1600&auto=format&fit=crop",
   },
 
   { name: "New Zealand", code: "NZ", flag: "🇳🇿", risk: "Low",
     required: ["No mandatory vaccinations required"], 
     recommended: [""],
     info: "Excellent healthcare. Protect against strong UV rays with sunscreen.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FNZ.webp&w=3840&q=75" },
+    image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=1600&auto=format&fit=crop" },
 
 
   { name: "Norway", code: "NO", flag: "🇳🇴", risk: "Low",
@@ -397,14 +390,14 @@ const COUNTRIES: Country[] = [
     required: ["No mandatory vaccinations required"],
     recommended: ["Hepatitis A"],
     info: "Healthcare system is good. Desert climate, be mindful of heat and stay well hydrated.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FOM.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1548786811-ff3ad45f0b4b?q=80&w=1600&auto=format&fit=crop",
   },
   {
     name: "Pakistan", code: "PK", flag: "🇵🇰", risk: "High",
     required: ["Diphtheria, Tetanus, and Polio"],
     recommended: ["Hepatitis A", "Typhoid", "Rabies"],
     info: "Polio vaccination certificate often required for exit. Healthcare quality varies by region.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FPK.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1523731407965-2430cd12f5e4?q=80&w=1600&auto=format&fit=crop",
   },
   {
     name: "Panama", code: "PA", flag: "🇵🇦", risk: "Medium",
@@ -418,20 +411,20 @@ const COUNTRIES: Country[] = [
     required: ["Yellow Fever"],
     recommended: ["Hepatitis A", "Hepatitis B", "Typhoid", "Rabies", "Anti Malarial"],
     info: "Altitude sickness prevention recommended for Cusco and Machu Picchu visitors.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FPE.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1503435980610-a51f3ddfee50?q=80&w=1600&auto=format&fit=crop",
   },
   {
     name: "Philippines", code: "PH", flag: "🇵🇭", risk: "Medium",
     required: ["Yellow Fever"],
     recommended: ["Hepatitis A", "Typhoid", "Rabies"],
     info: "Mosquito-borne illnesses (dengue, malaria in certain areas) require precautions.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FPH.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=1600&auto=format&fit=crop",
   },
   { name: "Portugal", code: "PT", flag: "🇵🇹", risk: "Low",
     required: ["No mandatory vaccinations required"], 
     recommended: [""],
     info: "Public healthcare facilities are generally excellent. Pay attention to heatwaves in summer.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FPT.webp&w=3840&q=75" },
+    image: "https://images.unsplash.com/photo-1565106430482-8f7c0f3d6c2b?q=80&w=1600&auto=format&fit=crop" },
 
   { name: "Qatar", code: "QA", flag: "🇶🇦", risk: "Low",
     required: ["No mandatory vaccinations required"], 
@@ -443,14 +436,14 @@ const COUNTRIES: Country[] = [
     required: ["No mandatory vaccinations required"],
     recommended: ["Hepatitis A"],
     info: "Consider a rabies vaccine if traveling to remote areas or engaging in outdoor activities.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FRU.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1600&auto=format&fit=crop",
   },
   {
     name: "Rwanda", code: "RW", flag: "🇷🇼", risk: "Medium",
     required: ["Yellow Fever"],
     recommended: ["Hepatitis A", "Typhoid", "Anti Malarial"],
     info: "Health services have improved greatly. Mountain gorilla trekking requires a permit and some health checks.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FRW.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1558981359-219d6364c9f0?q=80&w=1600&auto=format&fit=crop",
   },
   {
     name: "Saudi Arabia", code: "SA", flag: "🇸🇦", risk: "Medium",
@@ -464,21 +457,21 @@ const COUNTRIES: Country[] = [
     required: ["Yellow Fever"],
     recommended: ["Hepatitis A", "Typhoid", "Anti Malarial"],
     info: "A Yellow Fever certificate is often required. Mosquito protection is essential.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FSN.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1551281044-8d8a8b9d4b66?q=80&w=1600&auto=format&fit=crop",
   },
   {
     name: "South Africa", code: "ZA", flag: "🇿🇦", risk: "Medium",
     required: ["Yellow Fever"],
     recommended: ["Hepatitis A", "Hepatitis B", "Typhoid", "Anti Malarial", "Rabies"],
     info: "Malaria precautions needed for Kruger National Park and northeastern regions.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FZA.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1469796466635-455ede028aca?q=80&w=1600&auto=format&fit=crop",
   },
 
   { name: "Sri Lanka", code: "LK", flag: "🇱🇰", risk: "Medium",
     required: ["Yellow Fever"], 
     recommended: ["Hepatitis A", "Typhoid", "Japanese Encephalitis"],
     info: "Mosquito-borne illnesses like dengue can be common; use repellent and cover exposed skin.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FLK.webp&w=3840&q=75" },
+    image: "https://images.unsplash.com/photo-1518684079-3c830dcef090?q=80&w=1600&auto=format&fit=crop" },
 
 
   { name: "Sweden", code: "SE", flag: "🇸🇪", risk: "Medium",
@@ -492,7 +485,7 @@ const COUNTRIES: Country[] = [
     required: ["Yellow Fever"],
     recommended: ["Hepatitis A", "Typhoid", "Anti Malarial"],
     info: "Yellow Fever certificate may be required depending on departure point. Malaria is prevalent in many regions.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FTZ.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1523805009345-7448845a9e53?q=80&w=1600&auto=format&fit=crop",
   },
   {
     name: "Thailand", code: "TH", flag: "🇹🇭", risk: "Medium",
@@ -506,20 +499,20 @@ const COUNTRIES: Country[] = [
     required: ["No mandatory vaccinations required"],
     recommended: ["Hepatitis A", "Typhoid"],
     info: "Medical care is decent in urban areas. Be prepared for hot, dry weather in desert regions.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FTN.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1528650371593-47b6a49cfdc9?q=80&w=1600&auto=format&fit=crop",
   },
   {
     name: "Türkiye (Turkey)", code: "TR", flag: "🇹🇷", risk: "Low",
     required: ["No mandatory vaccinations required"],
     recommended: ["Hepatitis A", "Typhoid"],
     info: "Water quality varies by region. Carry bottled water and practice food safety.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FTR.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1473953871802-2cf4f1b4d24f?q=80&w=1600&auto=format&fit=crop",
   },
   {
     name: "Uganda", code: "UG", flag: "🇺🇬", risk: "High",
     required: ["Yellow Fever"],
     recommended: ["Hepatitis A", "Typhoid", "Anti Malarial"],
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FUG.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1558981359-219d6364c9f0?q=80&w=1600&auto=format&fit=crop",
   },
   {
     name: "United States of America", code: "US", flag: "🇺🇸", risk: "Low",
@@ -533,30 +526,113 @@ const COUNTRIES: Country[] = [
     required: ["Yellow Fever"],
     recommended: ["Hepatitis A"],
     info: "Well-developed healthcare in urban areas. Mosquito-borne illness risk is generally low.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FUY.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=1600&auto=format&fit=crop",
   },
   {
     name: "Vietnam", code: "VN", flag: "🇻🇳", risk: "Medium",
     required: ["Hepatitis A"],
     recommended: ["Hepatitis B", "Typhoid", "Rabies", "Japanese Encephalitis", "Anti Malarial"],
     info: "Malaria risk higher in rural areas. Japanese Encephalitis recommended for long-term stays.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FVN.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1482192505345-5655af888cc4?q=80&w=1600&auto=format&fit=crop",
   },
   {
     name: "Zambia", code: "ZM", flag: "🇿🇲", risk: "High",
     required: ["Yellow Fever (if arriving from/through risk areas)"],
     recommended: ["Hepatitis A", "Typhoid", "Anti Malarials", "Yellow Fever"],
     info: "Malaria risk is significant. Proof of Yellow Fever vaccination may be needed, depending on travel route.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FZM.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1558981033-0f7e1229f66f?q=80&w=1600&auto=format&fit=crop",
   },
   {
     name: "Zimbabwe", code: "ZW", flag: "🇿🇼", risk: "Medium",
     required: ["No mandatory vaccinations required"],
     recommended: ["Hepatitis A", "Typhoid", "Anti Malarial"],
     info: "Yellow Fever vaccine may be required if arriving from certain countries. Victoria Falls region is a mosquito-prone area.",
-    image: "https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2Ftravel-destinations%2FZW.webp&w=3840&q=75",
+    image: "https://images.unsplash.com/photo-1505245208761-ba872912fac0?q=80&w=1600&auto=format&fit=crop",
   },
 
+  // (already in your demo — kept intact / slightly aligned)
+  {
+    name: "Portugal", code: "PT", flag: "🇵🇹", risk: "Low",
+    required: [],
+    recommended: ["Routine boosters (MMR, Tetanus)"],
+    info: "Generally high standards of healthcare. Stay updated on routine vaccinations.",
+    image: "https://images.unsplash.com/photo-1565106430482-8f7c0f3d6c2b?q=80&w=1600&auto=format&fit=crop",
+  },
+  {
+    name: "Morocco", code: "MA", flag: "🇲🇦", risk: "Medium",
+    required: [],
+    recommended: ["Hepatitis A", "Typhoid", "Tetanus booster"],
+    info: "Food and water hygiene advised, especially when eating street food.",
+    image: "https://images.unsplash.com/photo-1548013146-72479768bada?q=80&w=1600&auto=format&fit=crop",
+  },
+  {
+    name: "Kenya", code: "KE", flag: "🇰🇪", risk: "High",
+    required: ["Yellow Fever (if arriving from/through risk areas)"],
+    recommended: ["Hepatitis A", "Typhoid", "Rabies (long stays)", "Anti-malarials"],
+    info: "Malaria risk in many regions—chemo-prophylaxis recommended.",
+    image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1600&auto=format&fit=crop",
+  },
+  {
+    name: "India", code: "IN", flag: "🇮🇳", risk: "Medium",
+    required: [],
+    recommended: ["Hepatitis A", "Typhoid", "Tetanus booster", "Rabies (long stays)"],
+    info: "Consider Japanese Encephalitis for extended rural travel.",
+    image: "https://images.unsplash.com/photo-1548013146-72479768bada?q=80&w=1600&auto=format&fit=crop",
+  },
+  {
+    name: "Thailand", code: "TH", flag: "🇹🇭", risk: "Medium",
+    required: [],
+    recommended: ["Hepatitis A", "Typhoid", "Rabies (activities with animals)"],
+    info: "JE vaccine for long rural trips during transmission seasons.",
+    image: "https://images.unsplash.com/photo-1518684079-3c830dcef090?q=80&w=1600&auto=format&fit=crop",
+  },
+  {
+    name: "Brazil", code: "BR", flag: "🇧🇷", risk: "Medium",
+    required: [],
+    recommended: ["Hepatitis A", "Yellow Fever (recommended)", "Typhoid"],
+    info: "Yellow Fever recommended for many states; check itinerary.",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1600&auto=format&fit=crop",
+  },
+  {
+    name: "Japan", code: "JP", flag: "🇯🇵", risk: "Low",
+    required: [],
+    recommended: ["Routine boosters (MMR, Tetanus)"],
+    info: "JE considered for long rural stays.",
+    image: "https://images.unsplash.com/photo-1505060893248-7cc27c2b3d90?q=80&w=1600&auto=format&fit=crop",
+  },
+  {
+    name: "Malaysia", code: "MY", flag: "🇲🇾", risk: "Medium",
+    required: [],
+    recommended: ["Hepatitis A", "Typhoid", "Rabies (exposure risk)"],
+    info: "Dengue present—mosquito bite avoidance essential.",
+    image: "https://images.unsplash.com/photo-1529123050123-4e35c0cdb5b7?q=80&w=1600&auto=format&fit=crop",
+  },
+  {
+    name: "Mexico", code: "MX", flag: "🇲🇽", risk: "Medium",
+    required: [],
+    recommended: ["Hepatitis A", "Typhoid"],
+    info: "Food & water precautions advised.",
+    image: "https://images.unsplash.com/photo-1526401485004-2fda9f4b0f87?q=80&w=1600&auto=format&fit=crop",
+  },
+  {
+    name: "Nepal", code: "NP", flag: "🇳🇵", risk: "Medium",
+    required: [],
+    recommended: ["Hepatitis A", "Typhoid", "Rabies (trekking)"],
+    info: "Altitude sickness medication may be appropriate for trekking.",
+    image: "https://images.unsplash.com/photo-1533587851505-d119e13fa0d5?q=80&w=1600&auto=format&fit=crop",
+  },
+  {
+    name: "Australia", code: "AU", flag: "🇦🇺", risk: "Low",
+    required: [],
+    recommended: ["Routine boosters (MMR, Tetanus)"],
+    image: "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?q=80&w=1600&auto=format&fit=crop",
+  },
+  {
+    name: "Vietnam", code: "VN", flag: "🇻🇳", risk: "Medium",
+    required: [],
+    recommended: ["Hepatitis A", "Typhoid", "Rabies (exposure risk)"],
+    image: "https://images.unsplash.com/photo-1482192505345-5655af888cc4?q=80&w=1600&auto=format&fit=crop",
+  },
 ];
 
 /** ------------------ Helpers ------------------ */
@@ -727,10 +803,9 @@ const TravelPage: React.FC = () => {
 
 
   return (
-    <div>
     <div className="bg-light">
       <Header />
-  
+
       {/* HERO */}
       <section className="hero">
         <div className="container">
@@ -738,95 +813,92 @@ const TravelPage: React.FC = () => {
           <p className="hero__subtitle">
             Discover recommended vaccinations for safe travel.
           </p>
-  
-          {/* Search */}
-          <div ref={wrapperRef} className="position-relative">
-            <div className="hero-search d-flex align-items-center">
-              <i className="bi bi-search hero-search__icon" />
-              <input
-                className="hero-search__input form-control border-0 bg-transparent text-white"
-                placeholder="Enter your destination..."
-                value={countryQuery}
-                onChange={(e) => {
-                  setCountryQuery(e.target.value);
-                  setShowSuggestions(true); // ✅ show while typing
-                }}
-                onFocus={() => {
-                  if (countryQuery.trim().length > 0) setShowSuggestions(true);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && filteredCountries[0]) {
-                    chooseCountry(filteredCountries[0]);
-                  }
-                }}
-              />
-  
-              <button
-                className="btn hero-search__btn"
-                onClick={() => {
-                  if (filteredCountries[0]) chooseCountry(filteredCountries[0]);
-                }}
-              >
-                Search
-              </button>
-            </div>
-  
-            {/* Suggestions dropdown */}
-            {showSuggestions && filteredCountries.length > 0 && (
-              <div className="suggestions list-group shadow mt-2 w-100">
-                {filteredCountries.map((c) => (
-                  <button
-                    key={c.code}
-                    type="button"
-                    className="list-group-item list-group-item-action d-flex align-items-center"
-                    onClick={() => chooseCountry(c)}
-                  >
-                    <span className="me-2" style={{ fontSize: "20px" }}>
-                      {c.flag}
-                    </span>
-                    {c.name}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-    </div>
-  );
-  
-     {/* Popular Destinations Ticker */}
-<section className="popular-destinations py-4">
-  <div className="container">
-    <h2 className="text-center mb-3">Popular Destinations</h2>
 
-    <div className="ticker-wrap">
-      <div className="country-ticker">
-        <div className="country-ticker__track">
-          {COUNTRIES.map((c) => (
+          {/* Search */}
+          <div ref={wrapperRef} className="hero-search">
+            <i className="bi bi-search hero-search__icon" />
+            <input
+  className="hero-search__input"
+  placeholder="Enter your destination..."
+  value={countryQuery}
+  onChange={(e) => {
+    setCountryQuery(e.target.value);
+    setShowSuggestions(true); // ✅ show while typing
+  }}
+  onFocus={() => {
+    if (countryQuery.trim().length > 0) setShowSuggestions(true);
+  }}
+  onKeyDown={(e) => {
+    if (e.key === "Enter" && filteredCountries[0]) {
+      chooseCountry(filteredCountries[0]);
+    }
+  }}
+/>
+
             <button
-              key={c.code}
-              className="country-chip"
-              onClick={() => chooseCountry(c)}
+              className="btn hero-search__btn"
+              onClick={() => {
+                if (filteredCountries[0]) chooseCountry(filteredCountries[0]);
+              }}
             >
-              {c.flag} {c.name}
+              Search
             </button>
-          ))}
-          {/* duplicate for infinite loop */}
-          {COUNTRIES.map((c) => (
-            <button
-              key={c.code + "-dup"}
-              className="country-chip"
-              onClick={() => chooseCountry(c)}
-            >
-              {c.flag} {c.name}
-            </button>
-          ))}
-        </div>
-      </div>
+
+            {showSuggestions && filteredCountries.length > 0 && (
+  <div
+    className="suggestions"
+    style={{
+      left: 0,
+      right: "auto",
+      width: "max-content",
+      minWidth: "856px",
+      textAlign: "left"
+    }}
+  >
+    {filteredCountries.map((c) => (
+      <button
+        key={c.code}
+        className="suggestions__item"
+        onClick={() => chooseCountry(c)}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          justifyContent: "flex-start"
+        }}
+      >
+        <span style={{ fontSize: "20px" }}>{c.flag}</span>
+        <span>{c.name}</span>
+      </button>
+    ))}
+  </div>
+)}
+
+
+
+          </div>
+         
+          <div className="ticker-wrap">
+  <div className="country-ticker">
+    <div className="country-ticker__track">
+      {COUNTRIES.map((c) => (
+        <span key={c.code} className="country-chip">
+          {c.flag} {c.name}
+        </span>
+      ))}
+      {/* duplicate for infinite scroll */}
+      {COUNTRIES.map((c) => (
+        <span key={c.code + "-dup"} className="country-chip">
+          {c.flag} {c.name}
+        </span>
+      ))}
     </div>
   </div>
-</section>
+</div>
+
+
+        </div>
+      </section>
 
       {/* COUNTRY CARD */}
       {selectedCountry && (
@@ -936,48 +1008,6 @@ const TravelPage: React.FC = () => {
 
       {/* FAQ SECTION */}
       <FAQSection />
-       {/* Find Us */}
-       <section id="find-us" className="container py-5 find-us">
-          <h2 style={{ color: MAI_TEXT_COLOR, fontWeight: 700 }}>Find us</h2>
-          <div className="row align-items-center mt-4">
-            <div className="col-md-6">
-              <p>
-                Contact us for travel vaccination, ear wax removal and a wide
-                range of NHS or private services we offer.
-              </p>
-              <p>
-                <strong>Phone:</strong> 01675 466014
-              </p>
-              <p>
-                <strong>Email:</strong> coleshillpharmacy@gmail.com
-              </p>
-              <p>
-                <strong>Address:</strong> 114–116 High St, Coleshill, Birmingham
-                B46 3BJ
-              </p>
-              <p>
-                <strong>Hours:</strong>
-                <br />
-                Monday–Friday 8:30 am–6 pm
-                <br />
-                Saturday 9 am–5:30 pm
-                <br />
-                Sunday Closed
-              </p>
-            </div>
-            <div className="col-md-6">
-              <iframe
-                title="Coleshill Pharmacy Location"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2483.123456789!2d-1.7890123!3d52.5654321!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48776789abcdef12:0x3456789abcdef!2s114-116%20High%20St,%20Coleshill%20B46%203BJ,%20UK!5e0!3m2!1sen!2suk!4v1623456789012"
-                width="100%"
-                height="300"
-                style={{ border: 0, borderRadius: '0.5rem', marginBottom: '30px' }}
-                allowFullScreen
-                loading="lazy"
-              />
-            </div>
-          </div>
-        </section>
     </div>
   );
 };

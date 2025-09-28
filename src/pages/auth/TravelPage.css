@@ -12,11 +12,12 @@
     letter-spacing: 0.5px;
     color: #21e0c0; /* bright aqua like screenshot */
     margin-bottom: 8px;
+    margin-top: 28px;
   }
   
   .hero__subtitle {
     opacity: 0.95;
-    font-size: clamp(16px, 2.2vw, 22px);
+    font-size: clamp(14px, 2.2vw, 22px);
     margin-bottom: 28px;
   }
   
@@ -30,7 +31,6 @@
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.18);
     border: 2px solid rgba(255, 255, 255, 0.28);
-    overflow: hidden;
     backdrop-filter: blur(6px);
   }
   
@@ -47,44 +47,55 @@
     outline: 0;
     background: transparent;
     color: #fff;
-    font-size: 18px;
+    font-size: clamp(16px, 2vw, 18px);
   }
   
   .hero-search__input::placeholder {
     color: rgba(255, 255, 255, 0.8);
+    
   }
   
   .hero-search__btn {
-    margin: 6px;
-    padding: 10px 22px;
-    border-radius: 999px;
-    background: #0b1f4f;
-    color: #fff;
+    width: 100px !important;
+    margin: 6px !important;
+    padding: 5px 2px !important;
+    border-radius: 999px !important;
+    background: hsl(222, 68%, 19%) !important;
+    color: #fff !important;
     border: 0;
+  }
+  .hero-search__btn:hover {
+    background: hsl(222, 68%, 19%);   /* keep same background */
+    color: #ffffff !important; /* keep navy text */
+    text-decoration: underline; /* underline only */
   }
   
   /* Autocomplete dropdown (only when typing) */
   .suggestions {
     position: absolute;
+    top: 100%; /* sit right under the search bar */
     left: 0;
     right: 0;
-    top: calc(100% + 10px);
-    background: #fff;
-    color: #111;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    overflow: hidden;
-    z-index: 5;
+    border-radius: 0.5rem; /* Bootstrap rounded */
+    max-height: 300px; /* optional scroll if long */
+    overflow-y: auto;
+    z-index: 1050; /* above most content */
+   
   }
   
-  .suggestions__item {
-    width: 100%;
-    text-align: left;
-    background: #fff;
-    padding: 12px 16px;
-    border: 0;
-    outline: 0;
-  }
+  
+  .suggestions__item,
+.list-group-item {
+  padding-left: 1.5rem !important;  /* tighten left side */
+  padding-top: 1.5rem !important;  /* tighten left side */
+  padding-bottom: 1.2rem !important;  /* tighten left side */
+  padding-right: 0.5rem !important;
+  text-align: left !important;
+  justify-content: flex-start !important;
+  font-size: 14px;
+  line-height: 2.3 !important;
+}
+
   
   .suggestions__item + .suggestions__item {
     border-top: 1px solid #f1f1f1;
@@ -95,45 +106,87 @@
   }
   
   /* ========= COUNTRY TICKER ========= */
-  .ticker-wrap {
-    background: #fff;
-    padding: 18px 0 6px;
-    border-bottom: 1px solid #eef0f3;
-  }
+  /* ========= COUNTRY TICKER ========= */
+.ticker-wrap {
+  position: relative;
+  overflow: hidden;
+  background: none;
+  padding: 12px 0; /* smaller padding */
+  border-bottom: none;
+  background-color: none !important;
+}
+
+.country-ticker {
+  overflow: hidden;
+  width: 100%;
   
-  .country-ticker {
-    overflow: hidden;
-    width: 100%;
-    position: relative;
-  }
-  
-  .country-ticker__track {
-    display: flex;
-    gap: 10px;
-    width: max-content;
-    padding: 8px 0 14px;
-    animation: tickerScroll 180s linear infinite;
-  }
-  .country-ticker:hover .country-ticker__track {
-    animation-play-state: paused; /* pause on hover */
-  }
-  
-  @keyframes tickerScroll {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); } /* we duplicated the list, so -50% loops perfectly */
-  }
-  
-  .country-chip {
-    --chip-bg: #f3f6fb;
-    background: var(--chip-bg);
-    border: 1px solid #e5ebf5;
-    color: #1b2b4b;
-    padding: 8px 12px;
-    border-radius: 999px;
-    white-space: nowrap;
-    font-size: 14px;
-  }
-  
+  background-color: none !important;
+}
+
+.country-ticker__track {
+  white-space: nowrap;                /* keep everything on one line */
+  display: inline-block; 
+  gap: 7px !important;  
+  padding: 0;
+  animation: tickerScroll 350s linear infinite; /* faster loop */
+  background-color: none !important;
+  z-index: 1000 !important;
+}
+.country-ticker:hover .country-ticker__track {
+  animation-play-state: paused; /* pause on hover */
+}
+
+@keyframes tickerScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* Country chips (minimal by default) */
+.country-chip {
+  display: inline-flex;      /* shrink to content size */
+  align-items: center;
+  background: transparent; /* no bg normally */
+  border: none;           /* no border normally */
+  color: #091a33;
+  background-color: #7eaef2;
+  padding: 0 0px !important;       /* smaller size */
+  border-radius: 999px;
+  margin: 2px;
+  white-space: nowrap;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Hover state = styled pill */
+.country-chip:hover {
+  background: #182b4c;
+  border: 2px solid #182b4c;
+  color: #cdd9f0;
+  padding: 2px 6px; 
+}
+
+/* Fading blurry edges */
+.ticker-wrap::before,
+.ticker-wrap::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 80px;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  filter: blur(70px); /* 👈 blur edges */
+}
+.ticker-wrap::before {
+  left: 0;
+  background: linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0));
+}
+.ticker-wrap::after {
+  right: 0;
+  background: linear-gradient(to left, rgba(255,255,255,1), rgba(255,255,255,0));
+}
+
   /* ========= VACCINATION CARDS ========= */
   .vacc-card {
     display: flex;
@@ -147,6 +200,7 @@
   
   .vacc-card__text {
     max-width: 72%;
+    font-size: 14px;
   }
   
   .vacc-card__title {
@@ -172,17 +226,29 @@
   }
   
   .vacc-card__cta .btn-cta {
-    background: #1ee6cf; /* neon teal like screenshot */
-    color: #05344a;
+    background: #15f1fd;   /* neon teal */
+    color: #05344a;        /* dark navy */
     font-weight: 700;
     border: 0;
-    padding: 9px 16px;
+    padding: 9px 45px;
+    align-items: center !important;
     border-radius: 12px;
+    text-decoration: none; /* no underline by default */
+    cursor: pointer;
+  }
+  .vacc-card__cta {
+    display: flex;
+    justify-content: center;  /* ⬅️ centers horizontally */
+    align-items: center;      /* ⬅️ centers vertically if taller */
+    width: 100%;              /* ⬅️ make it take full width of card */
   }
   
   .vacc-card__cta .btn-cta:hover {
-    filter: brightness(0.95);
+    background: #15f1fd;   /* keep same background */
+    color: #05344a !important; /* keep navy text */
+    text-decoration: underline; /* underline only */
   }
+  
   
   @media (max-width: 575.98px) {
     .vacc-card {
@@ -197,4 +263,80 @@
   .object-fit-cover {
     object-fit: cover;
   }
+  .faq-question {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    font-weight: 500;
+   
+    text-align: left;
+    padding: 0;
+    cursor: pointer;
+    color: #0d2f7a; /* dark navy */
+  }
   
+  .faq-answer {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: #404b5b ; /* medium grey */
+  }
+  
+  .faq-item span:last-child {
+    font-size: 1.7rem;
+    font-weight: 400;
+    color: #0d2f7a; /* dark navy for the + and × */
+  }
+  .freq {
+    font-family: 'Inter', sans-serif;
+    font-weight: 200;  /* normal weight */
+    font-size: 2rem;
+    color: #0d2f7a;    /* dark navy */
+    text-align: center;
+  }
+  
+  .questions {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;  /* bold */
+    color: #0d2f7a;    /* same navy as screenshot */
+  }
+  .consult-banner {
+    background: linear-gradient(135deg, #081f5c 10%, #6e7482 90%) !important;
+    /* or any color/image you want */
+  }
+  .btn-consult {
+    background: #15f1fd !important;   /* bright aqua (matches hero title) */
+    color: #05344a;        /* dark navy text */
+    border: none;
+    border-radius: 12px;
+    padding: 18px 24px !important;
+    transition: all 0.25s ease;
+  }
+  
+  .btn-consult:hover {
+    color: #05344a !important; 
+    text-decoration: underline; /* underline only on hover */
+  }
+
+ /* Full width FAQ section */
+.faq-section {
+  width: 100%;      /* take full screen width */
+}
+
+.faq-inner {
+  max-width: 1000px; /* wider than default Bootstrap */
+  margin: 0 auto;    /* keep content centered */
+  padding: 0 24px;   /* some breathing room on sides */
+}
+
+.vacc-card--yellow {
+  border: 2px solid #f0ad4e;
+  background: #fff8e1;
+}
+.vacc-card--yellow .price-pill {
+  background: #f0ad4e;
+  color: #000;
+}
+.card{
+  background: #e8e4e43c !important;
+  color: #000;
+}
