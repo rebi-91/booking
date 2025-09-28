@@ -60,7 +60,7 @@ const popularServices = [
     link: '/oral-contraceptives',
     sub: 'Fast, confidential help when you need it.',
     img:
-    'https://gpcdcgwgkciyogknekwp.supabase.co/storage/v1/object/public/pharmacy/contraceptive.png',
+    'https://gpcdcgwgkciyogknekwp.supabase.co/storage/v1/object/public/pharmacy/ccontra.png',
   },
   {
     title: 'Erectile dysfunction',

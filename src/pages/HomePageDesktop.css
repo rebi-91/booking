@@ -379,3 +379,9 @@
   transform: translateX(3px);
 }
 
+.svc-img img.oral-img {
+  object-fit: contain !important;  /* don’t crop */
+  transform: scale(0.8);           /* zoom out slightly */
+}
+
+

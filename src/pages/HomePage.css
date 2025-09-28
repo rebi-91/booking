@@ -257,3 +257,12 @@
     0 4px 6px rgba(236, 234, 234, 0.952) !important;
 }
 
+
+.svc-img img.oral-img {
+  object-fit: contain !important;  /* don’t crop */
+  transform: scale(0.1) !important;           /* zoom out slightly */
+}
+
+
+
+
