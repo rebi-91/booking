@@ -19,9 +19,9 @@ const NAV_LINKS: Record<string,string> = {
 };
 
 const HERO_CARD_LINKS: Record<string,string> = {
-  'Weight loss clinic': '/book/12',
-  'Travel Clinic': '/book/3',
-  'Ear Wax Removal': '/book/18',
+  'Weight loss clinic': '/weight-loss-clinic',
+  'Travel Clinic': '/travel-clinic',
+  'Ear Wax Removal': '/microsuction-earwax-removal',
 };
 
 const browseOptions = Object.keys(NAV_LINKS);
@@ -43,7 +43,7 @@ const popularServices = [
   },
   {
     title: 'Travel Vaccinations',
-    link: '/book/3',
+    link: '/travel-clinic',
     sub: 'Comprehensive vaccine service for your trip.',
     img:
     'https://clinic-digital.lon1.cdn.digitaloceanspaces.com/100/530057/yyrgMObVYh.webp',

@@ -991,6 +991,7 @@ const HomePage: React.FC = () => {
                   height: 390,
                   border: 'none',
                   borderRadius: '0.75rem',
+                  backgroundColor: '#fff',
                   boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
                 }}
               >
