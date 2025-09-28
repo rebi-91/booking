@@ -541,6 +541,8 @@ interface Booking {
   title?: string | null;
   address?: string | null;
   postcode?: string | null;
+  medication?: string | null; // ✅ new
+  amount?: string | null; 
 }
 
 interface Service {
@@ -909,6 +911,8 @@ export default function BookingBoard() {
                     <th style={styles.th}>Email</th>
                     <th style={styles.th}>Category</th>
                     <th style={styles.th}>Service</th>
+                    <th style={styles.th}>Medication</th>
+                    <th style={styles.th}>Amount</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -959,6 +963,8 @@ export default function BookingBoard() {
                         </td>
                         <td style={styles.td}>{b.cat}</td>
                         <td style={styles.td}>{b.service}</td>
+                        <td style={styles.td}>{b.medication || "—"}</td>
+                        <td style={styles.td}>{b.amount || "—"}</td>
                       </tr>
                     );
                   })}

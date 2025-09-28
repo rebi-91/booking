@@ -544,6 +544,8 @@ interface Booking {
   service: string;
   date: string;           // YYYY-MM-DD
   pending: string | null; // null, "Attending" or "Cancelled"
+  medication?: string | null;   // ✅ new
+  amount?: string | null; 
 }
 
 export default function MyBooking() {
@@ -848,6 +850,8 @@ const filtered = useMemo(() => {
                     <th style={styles.th}>Status</th>
                     <th style={styles.th}>Category</th>
                     <th style={styles.th}>Service</th>
+                    <th style={styles.th}>Medication</th> {/* ✅ new */}
+                    <th style={styles.th}>Amount</th>  
                     <th style={styles.th}>Patient</th>
                     <th style={styles.th}>Phone</th>
                     <th style={styles.th}>Email</th>
@@ -871,6 +875,8 @@ const filtered = useMemo(() => {
                         </td>
                         <td style={styles.td}>{b.cat}</td>
                         <td style={styles.td}>{b.service}</td>
+                        <td style={styles.td}>{b.medication || "—"}</td>
+                        <td style={styles.td}>{b.amount || "—"}</td>
                         <td style={styles.td}>{b.patientName}</td>
                         <td style={styles.td}>{b.telNumber}</td>
                         <td style={styles.td}>{b.email || "—"}</td>

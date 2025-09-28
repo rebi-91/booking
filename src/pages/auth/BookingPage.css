@@ -78,6 +78,18 @@ body {
 .service-info-row .info-item i {
   font-size: 1rem;
 }
+.info-item {
+  display: flex;
+  align-items: center;   /* vertically align icon + text */
+  gap: 6px;              /* space between icon and text */
+  font-size: 0.9rem;
+  white-space: nowrap;   /* prevent wrapping */
+}
+
+.info-item span {
+  display: inline-block;
+}
+
 
 hr {
   border: none;
@@ -481,3 +493,137 @@ hr {
 .texxt{
   color: #31456f;
 }
+/* ---------- ED DROPDOWNS UNDER PRICE ---------- */
+.service-info-row .info-item--price {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+}
+
+.service-info-row .info-item--price .ed-inline-selects {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important; /* side by side */
+  gap: 12px !important;
+  width: 100% !important;
+  margin-top: 10px !important;
+}
+
+.service-info-row .info-item--price .ed-field {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+#ed-medication,
+#ed-amount {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background: #fff
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='%2305344a' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5'/></svg>")
+    no-repeat right 12px center / 16px 16px !important;
+  border: 2px solid #15f1fd !important;
+  border-radius: 10px !important;
+  padding: 10px 40px 10px 14px !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  color: #05344a !important;
+  width: 100% !important;
+  min-height: 44px !important;
+  cursor: pointer !important;
+  transition: box-shadow .2s, border-color .2s !important;
+}
+
+#ed-medication:hover,
+#ed-medication:focus,
+#ed-amount:hover,
+#ed-amount:focus {
+  border-color: #0cc7d4 !important;
+  box-shadow: 0 0 6px rgba(21,241,253,.5) !important;
+  outline: none !important;
+}
+
+@media (max-width: 480px) {
+  .service-info-row .info-item--price .ed-inline-selects {
+    grid-template-columns: 1fr !important; /* stack vertically */
+    gap: 8px !important;
+  }
+}
+
+/* Put Medication + Amount side by side under price */
+.info-item--price .ed-inline-selects {
+  display: flex !important;
+  gap: 16px !important;
+  margin-top: 10px !important;
+}
+
+.info-item--price .ed-field {
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+@media (max-width: 576px) {
+  .info-item--price .ed-inline-selects {
+    flex-direction: column !important; /* stack on small screens */
+    gap: 8px !important;
+  }
+}
+/* Ensure the info row can wrap and let our block drop beneath price */
+.service-info-row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+}
+
+/* Make the ED dropdown block take a full line below the price */
+.service-info-row .medication-amount-row {
+  order: 99 !important;                 /* push after the existing info items */
+  flex: 0 0 100% !important;            /* new line, full width */
+  width: 100% !important;
+  display: flex !important;
+  gap: 12px !important;
+  margin-top: 20px !important;
+  align-items: flex-end !important;
+}
+
+/* Two equal columns for the selects */
+.medication-amount-row .ma-col {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+}
+
+/* Pretty + strong select styling */
+#medication,
+#amount {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background: #cae2fa
+    url("data:image/svg+xml;utf8,<svg fill='%2305344a' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5'/></svg>")
+    no-repeat right 12px center / 16px 16px !important;
+  border: 0.8px solid #8296b1 !important;
+  border-radius: 10px !important;
+  padding: 10px 40px 10px 14px !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  color: #05344a !important;
+  transition: box-shadow .2s, border-color .2s !important;
+  width: 96% !important;
+  min-height: 44px !important;
+  margin-bottom: 6px !important;
+  cursor: pointer !important;
+}
+
+#medication:hover, #amount:hover,
+#medication:focus, #amount:focus {
+  border-color: #0c55d4 !important;
+  box-shadow: 0 0 6px rgba(21,241,253,.5) !important;
+  outline: none !important;
+}
+
+/* Optional: stack on very narrow screens */
+@media (max-width: 480px) {
+  .service-info-row .medication-amount-row {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+}
+

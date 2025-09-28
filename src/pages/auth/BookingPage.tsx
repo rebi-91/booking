@@ -638,6 +638,8 @@ const BookingPage: React.FC = () => {
   const sid = parseInt(id || '1', 10);
   const service = sampleServices[sid] || sampleServices[1];
   const category = serviceCategory(sid);
+  const [medication, setMedication] = useState("");
+const [amount, setAmount] = useState("");
   const [modalParams, setModalParams] = useState<ModalParams | null>(null);
   function showModal(params: ModalParams) {
     setModalParams(params);
@@ -810,6 +812,8 @@ setAvailableTimes(all.filter((t) => !booked.includes(t)));
     status: string;
     customerID?: string;
     both?: boolean;
+    medication?: string;
+amount?: string;
   }
 
   function toLocalYMD(d: Date): string {
@@ -913,6 +917,7 @@ async function handleBookingSubmit(e: FormEvent) {
       both:       bothSelected,
       email:      patientEmail,
       status:     "Pending Confirmation",
+      ...(sid === 20 && { medication, amount }),
       ...(session?.user?.id && { customerID: session.user.id }),
     }]);
 
@@ -1098,21 +1103,58 @@ Please check your inbox (including spam folder).`);
   {sid !== 14 && sid !== 16 && "Book your Appointment now!"}
 </p>
                 <div className="service-info-row">
-                  <div className="info-item">
-                    <i className="bi bi-clock"></i>
-                    <span>{service.duration}</span>
-                  </div>
-                  <div className="info-item">
-                    <i className="bi bi-geo-alt"></i>
-                    <span>{service.address}</span>
-                  </div>
-                  <div className="info-item">
-                    <i className="bi bi-wallet2"></i>
-                    <span dangerouslySetInnerHTML={{ __html: service.price }} />
+  <div className="info-item">
+    <i className="bi bi-clock"></i>
+    <span>{service.duration}</span>
+  </div>
+  <div className="info-item">
+    <i className="bi bi-geo-alt"></i>
+    <span>{service.address}</span>
+  </div>
+  <div className="info-item">
+  <i className="bi bi-wallet2"></i>
+  <span dangerouslySetInnerHTML={{ __html: service.price }} />
 
-                  </div>
-                </div>
-                <hr />
+
+
+    
+  </div>
+  
+</div>
+{sid === 20 && (
+      <div className="ed-inline-selects">
+        <div className="ed-field">
+          <select
+            id="medication"
+            className="form-control"
+            value={medication}
+            onChange={(e) => setMedication(e.target.value)}
+            required
+          >
+            <option value="" disabled>Select medication</option>
+            <option value="Sildenafil">Sildenafil</option>
+            <option value="Tadalafil">Tadalafil</option>
+          </select>
+        </div>
+
+        <div className="ed-field">
+          <select
+            id="amount"
+            className="form-control"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            required
+          >
+            <option value="" disabled>Select amount</option>
+            <option value="2 tablets">2 tablets</option>
+            <option value="4 tablets">4 tablets</option>
+            <option value="8 tablets">8 tablets</option>
+          </select>
+        </div>
+      </div>
+    )}
+<hr />
+
               </div>
 
               <div className="calendar-container">
@@ -1234,6 +1276,25 @@ if (sid === 14 || sid === 16) {
                 <div className="detail-row"><strong>Time:</strong> {chosenTime}</div>
               </div>
 
+             {sid === 20 && (
+  <div className="medication-amount-row">
+    <select id="medication" value={medication} onChange={(e) => setMedication(e.target.value)}>
+      <option value="">Select medication</option>
+      <option value="Sildenafil">Sildenafil</option>
+      <option value="Tadalafil">Tadalafil</option>
+    </select>
+
+    <select id="amount" value={amount} onChange={(e) => setAmount(e.target.value)}>
+      <option value="">Select amount</option>
+      <option value="2 tabs">2 tabs</option>
+      <option value="4 tabs">4 tabs</option>
+      <option value="8 tabs">8 tabs</option>
+    </select>
+  </div>
+)}
+
+
+
               <form className="booking-form" onSubmit={handleBookingSubmit} noValidate>
                 <label htmlFor="patientTitle" className="form-label">
                   Title <span className="required">*</span>
@@ -1244,7 +1305,7 @@ if (sid === 14 || sid === 16) {
                   value={patientTitle}
                   onChange={(e) => setPatientTitle(e.target.value)}
                 >
-                  <option value="" disabled>Select title</option>
+                  <option value="" disabled></option>
                   {TITLE_OPTIONS.map((t) => (
                     <option key={t} value={t}>{t}</option>
                   ))}
