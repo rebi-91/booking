@@ -60,14 +60,14 @@ const popularServices = [
     link: '/oral-contraceptives',
     sub: 'Fast, confidential help when you need it.',
     img:
-    'https://gpcdcgwgkciyogknekwp.supabase.co/storage/v1/object/public/pharmacy/ccontra.png',
+    'https://gpcdcgwgkciyogknekwp.supabase.co/storage/v1/object/public/pharmacy/pic.png',
   },
   {
     title: 'Erectile dysfunction',
     link: '/book/20',
     sub: 'Effective solutions tailored to your needs.',
     img:
-      'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fed-3.webp&w=640&q=75',
+      'https://gpcdcgwgkciyogknekwp.supabase.co/storage/v1/object/public/pharmacy/ed.jpeg',
   },
 ];
 const covidvaccine = [
