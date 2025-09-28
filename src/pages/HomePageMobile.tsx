@@ -486,7 +486,7 @@ const POPULAR_SERVICES = [
     link: '/oral-contraceptives',
     sub: 'Fast, confidential help when you need it.',
     img:
-    'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Fmorning-after-pill.webp&w=640&q=75',
+    'https://gpcdcgwgkciyogknekwp.supabase.co/storage/v1/object/public/pharmacy/contraceptive.png',
   },
   {
     title: 'Erectile dysfunction',
