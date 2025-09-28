@@ -1294,9 +1294,6 @@ if (sid === 14 || sid === 16) {
               {sid === 20 && (
   <div className="medication-amount-row">
     <div>
-      <label htmlFor="medication" className="form-label">
-        Medication
-      </label>
       <select
         id="medication"
         className={`form-control ${errors.medication ? "input-error" : ""}`}
@@ -1317,9 +1314,6 @@ if (sid === 14 || sid === 16) {
     </div>
 
     <div>
-      <label htmlFor="amount" className="form-label">
-        Amount
-      </label>
       <select
         id="amount"
         className={`form-control ${errors.amount ? "input-error" : ""}`}
