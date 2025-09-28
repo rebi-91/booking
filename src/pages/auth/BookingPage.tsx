@@ -678,6 +678,8 @@ const [displayMonth, setDisplayMonth] = useState(initialMonth);
     dob?: string;
     name?: string;
     phone?: string;
+    medication?: string;
+  amount?: string;
   }>({});
 
   const { session } = useSession();
@@ -895,6 +897,11 @@ async function handleBookingSubmit(e: FormEvent) {
   if (!patientDob)          errs.dob   = "Required";
   if (!patientName.trim())  errs.name  = "Required";
   if (!patientPhone.trim()) errs.phone = "Required";
+  // ✅ New validation only if service is Erectile Dysfunction (id 20)
+  if (sid === 20) {
+    if (!medication) errs.medication = "Please select a medication";
+    if (!amount) errs.amount = "Please select an amount";
+  }
   setErrors(errs);
   if (Object.keys(errs).length) return;
 
@@ -957,10 +964,18 @@ async function handleBookingSubmit(e: FormEvent) {
   });
   if (pharmacyFnErr) console.warn("Pharmacy email error:", pharmacyFnErr.message);
 
+
   // 6) Final success flow
-  alert(`Booking confirmed! A confirmation email has been sent.
+if (sid === 20) {
+  alert(`Booking confirmed for Erectile Dysfunction.
+Medication: ${medication}
+Amount: ${amount}
 Please check your inbox (including spam folder).`);
-  navigate("/");
+} else {
+  alert(`Booking confirmed! Please check your inbox (including spam folder).`);
+}
+navigate("/");
+
 }
 
   
@@ -1131,7 +1146,7 @@ Please check your inbox (including spam folder).`);
             onChange={(e) => setMedication(e.target.value)}
             required
           >
-            <option value="" disabled>Select medication</option>
+            <option value="" disabled>Select medication </option>
             <option value="Sildenafil">Sildenafil</option>
             <option value="Tadalafil">Tadalafil</option>
           </select>
@@ -1145,7 +1160,7 @@ Please check your inbox (including spam folder).`);
             onChange={(e) => setAmount(e.target.value)}
             required
           >
-            <option value="" disabled>Select amount</option>
+            <option value="" disabled>Select amount </option>
             <option value="2 tablets">2 tablets</option>
             <option value="4 tablets">4 tablets</option>
             <option value="8 tablets">8 tablets</option>
@@ -1276,22 +1291,55 @@ if (sid === 14 || sid === 16) {
                 <div className="detail-row"><strong>Time:</strong> {chosenTime}</div>
               </div>
 
-             {sid === 20 && (
+              {sid === 20 && (
   <div className="medication-amount-row">
-    <select id="medication" value={medication} onChange={(e) => setMedication(e.target.value)}>
-      <option value="">Select medication</option>
-      <option value="Sildenafil">Sildenafil</option>
-      <option value="Tadalafil">Tadalafil</option>
-    </select>
+    <div>
+      <label htmlFor="medication" className="form-label">
+        Medication
+      </label>
+      <select
+        id="medication"
+        className={`form-control ${errors.medication ? "input-error" : ""}`}
+        value={medication}
+        onChange={(e) => setMedication(e.target.value)}
+        required
+      >
+        <option value="" disabled>
+          Select medication{" "}
+          <span style={{ color: "red" }}>*</span>
+        </option>
+        <option value="Sildenafil">Sildenafil</option>
+        <option value="Tadalafil">Tadalafil</option>
+      </select>
+      {errors.medication && (
+        <div className="error-message">{errors.medication}</div>
+      )}
+    </div>
 
-    <select id="amount" value={amount} onChange={(e) => setAmount(e.target.value)}>
-      <option value="">Select amount</option>
-      <option value="2 tabs">2 tabs</option>
-      <option value="4 tabs">4 tabs</option>
-      <option value="8 tabs">8 tabs</option>
-    </select>
+    <div>
+      <label htmlFor="amount" className="form-label">
+        Amount
+      </label>
+      <select
+        id="amount"
+        className={`form-control ${errors.amount ? "input-error" : ""}`}
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+        required
+      >
+        <option value="" disabled>
+          Select amount{" "}
+          <span style={{ color: "red" }}>*</span>
+        </option>
+        <option value="2 tablets">2 tablets</option>
+        <option value="4 tablets">4 tablets</option>
+        <option value="8 tablets">8 tablets</option>
+      </select>
+      {errors.amount && <div className="error-message">{errors.amount}</div>}
+    </div>
   </div>
 )}
+
 
 
 
