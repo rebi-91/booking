@@ -154,6 +154,7 @@ import SignUpPage from "../pages/auth/SignUpPage.tsx";
 import PickSchoolPage from "../pages/auth/PickSchoolPage.tsx";
 import SetupProfilePage from "../pages/auth/SetupProfilePage.tsx";
 import ContactPage from "../pages/auth/ContactPage.tsx";
+import PrivacyPolicy from "../pages/auth/PrivacyPolicy.tsx";
 
 import ProtectedPage from "../pages/ProtectedPage.tsx";
 import NotFoundPage from "../pages/404Page.tsx";
@@ -267,6 +268,10 @@ const router = createBrowserRouter([
       {
         path: "/bookings",
         element: <BookingBoard />,
+      },
+      {
+        path: "/privacy-policy",
+        element: <PrivacyPolicy />,
       },
       {
         path: "/my-orders",
