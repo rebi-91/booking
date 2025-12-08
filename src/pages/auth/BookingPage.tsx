@@ -516,6 +516,16 @@ function slotsForDayAndCategory(
 ): string[] {
   const step = cat === 'Private' ? 20 : 10;
 
+   // ❗ BLOCK EAR WAX REMOVAL for Dec 2025 & 1st week Jan 2026
+   if (sid === 18 && date) {
+    const startBlock = new Date(2025, 11, 1); // 1 Dec 2025
+    const endBlock = new Date(2026, 0, 7, 23, 59); // 7 Jan 2026
+
+    if (date >= startBlock && date <= endBlock) {
+      return []; // ⬅️ no slots = fully blocked off
+    }
+  }
+
   // Flu & COVID special rules
   const cutoff = new Date(2025, 9, 1); // 1st Oct 2025
   const useNewRules = date && date >= cutoff;

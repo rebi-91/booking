@@ -146,6 +146,8 @@ import MounjaroPage from "../pages/auth/MounjaroPage.tsx";
 import OrlistatPage from "../pages/auth/OrlistatPage.tsx";
 import MicrosuctionPage from '../pages/auth/MicrosuctionPage.tsx';
 import ContraPage from '../pages/auth/ContraPage.tsx';
+import BarcodePage from '../pages/auth/BarcodePage.tsx';
+
 
 import BookingPage from "../pages/auth/BookingPage.tsx"; 
 import BookAppointment from "../pages/auth/BookAppointment.tsx"; 
@@ -157,6 +159,7 @@ import ContactPage from "../pages/auth/ContactPage.tsx";
 import PrivacyPolicy from "../pages/auth/PrivacyPolicy.tsx";
 
 import ProtectedPage from "../pages/ProtectedPage.tsx";
+import App from "../pages/student/app.tsx";
 import NotFoundPage from "../pages/404Page.tsx";
 import AuthProtectedRoute from "./AuthProtectedRoute.tsx";
 import Providers from "../Providers.tsx";
@@ -201,6 +204,10 @@ const router = createBrowserRouter([
       {
         path: "/emergency-supply",
         element: <EmergencySupply />,
+      },
+      {
+        path: "/app",
+        element: <App />,
       },
       {
         path: "/weight-loss-clinic",
@@ -321,6 +328,10 @@ const router = createBrowserRouter([
       {
         path: "/student-fee",
         element: <StudentFeeGraph />,
+      },
+      {
+        path: "/barcode",
+        element: <BarcodePage/>,
       },
       //TEACHER
       {
