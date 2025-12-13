@@ -160,7 +160,7 @@ const sampleServices: Record<number, Service> = {
     title: 'Private flu jab',
     duration: '20m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: '£20.00',
+    price: '£30.00',
   },
   44: {
     id: 44,
