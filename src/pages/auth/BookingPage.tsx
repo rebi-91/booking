@@ -237,7 +237,7 @@ const sampleServices: Record<number, Service> = {
     title: 'Ear wax removal',
     duration: '15m', // ⬅️ changed from 20m
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: '£35 one ear / £55 both ears <br/><b>Please ensure you have been using olive oil twice a day for at least 14 days prior to appointment.</b>'
+    price: '£55 for one ear £75 for both. (£25 if no wax is found) <br/><b>Please ensure you have been using olive oil twice a day for at least 14 days prior to appointment.</b>'
   },
   
   19: {
