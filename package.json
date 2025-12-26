@@ -12,6 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
@@ -24,10 +25,12 @@
     "dom-to-image": "^2.6.0",
     "dom-to-image-more": "^3.5.0",
     "html2canvas": "^1.4.1",
+    "html5-qrcode": "^2.3.8",
     "jspdf": "^2.5.2",
     "jspdf-autotable": "^5.0.2",
     "lucide-react": "^0.545.0",
     "node-mailjet": "^6.0.8",
+    "nodemailer": "^7.0.12",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.7",
     "react-bootstrap-icons": "^1.11.5",
@@ -46,6 +49,7 @@
   },
   "devDependencies": {
     "@types/deno": "^2.3.0",
+    "@types/next": "^8.0.7",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@types/styled-components": "^5.1.34",

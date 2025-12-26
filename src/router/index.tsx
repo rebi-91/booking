@@ -147,6 +147,7 @@ import OrlistatPage from "../pages/auth/OrlistatPage.tsx";
 import MicrosuctionPage from '../pages/auth/MicrosuctionPage.tsx';
 import ContraPage from '../pages/auth/ContraPage.tsx';
 import BarcodePage from '../pages/auth/BarcodePage.tsx';
+import CheckinsPage from '../pages/auth/CheckinsPage.tsx';
 
 
 import BookingPage from "../pages/auth/BookingPage.tsx"; 
@@ -332,6 +333,10 @@ const router = createBrowserRouter([
       {
         path: "/barcode",
         element: <BarcodePage/>,
+      },
+      {
+        path: "/checkins",
+        element: <CheckinsPage/>,
       },
       //TEACHER
       {
