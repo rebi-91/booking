@@ -166,6 +166,8 @@ import AuthProtectedRoute from "./AuthProtectedRoute.tsx";
 import Providers from "../Providers.tsx";
 //ADMIN
 import StudentForm from "../pages/admin/StudentForm.tsx";
+import Animation from "../pages/admin/Animation.tsx";
+import SplineAnimation from "../pages/admin/SplineAnimation.tsx";
 import StudentFee from "../pages/admin/StudentFee.tsx";
 import DashBoard from "../pages/admin/DashBoard.tsx";
 import GradeDashboard from "../pages/admin/GradeDashboard.tsx";
@@ -262,6 +264,14 @@ const router = createBrowserRouter([
       {
         path: "/setup-profile",
         element: <SetupProfilePage />,
+      },
+      {
+        path: "/animation",
+        element: <Animation />,
+      },
+      {
+        path: "/animation2",
+        element: <SplineAnimation />,
       },
       {
         path: "/travel-clinic",
