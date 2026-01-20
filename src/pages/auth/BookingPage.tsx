@@ -536,26 +536,15 @@ function slotsForDayAndCategory(
     return [];
   }
 
-   // ✅ Block Ear wax removal on 29 Sept 2025
-   if (sid === 18 && date) {
-    const blockDate = new Date(2025, 8, 29); // 29 Sept 2025 (month is 0-indexed)
-    if (
-      date.getFullYear() === blockDate.getFullYear() &&
-      date.getMonth() === blockDate.getMonth() &&
-      date.getDate() === blockDate.getDate()
-    ) {
-      return []; // no slots that day
-    }
-  }
   
-  // ✅ Ear wax removal custom rule
- // ✅ Ear wax removal custom rule (Tue–Thu only)
+  
+// ✅ Ear wax removal custom rule (block Mon + Fri, allow Tue–Thu)
 if (sid === 18) {
-  // JS: 2=Tue, 3=Wed, 4=Thu
+  // JS getDay(): 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri
   if (dow === 2 || dow === 3 || dow === 4) {
     return generateTimeSlots(11, 0, 12, 0, 15);
   }
-  return [];
+  return []; // blocks Mon + Fri (+ Sat/Sun)
 }
 
   
@@ -1226,12 +1215,14 @@ if (sid === 14 || sid === 16) {
   inPast = inPast || dObj < cutoff;
 }
 
-// ✅ ADD IT RIGHT HERE ✅
+// ✅ Only disable Mondays and Fridays for Ear wax removal
 if (sid === 18) {
   const dow = dObj.getDay(); // 0=Sun ... 6=Sat
-  const allowed = dow === 2 || dow === 3 || dow === 4; // Tue–Thu only
-  if (!allowed) inPast = true;
+  if (dow === 1 || dow === 5) {
+    inPast = true; // disables Mon & Fri
+  }
 }
+
 
                     let cls = '';
                     if (isSelected) cls = 'selected-day';
