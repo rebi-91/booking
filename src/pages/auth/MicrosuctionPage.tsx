@@ -172,7 +172,7 @@ const MicrosuctionPage: React.FC = () => {
         <section className="container py-5">
           <h2 className="section-title">Pricing & How it works</h2>
           <p className="section-text">
-            Our service is £35 for one ear and £55 for two ears.
+          £55 for one ear £75 for both. (£25 for consulation if no wax is found)
           </p>
           <div className="steps-row">
             <div className="step">
