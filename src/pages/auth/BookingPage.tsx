@@ -549,12 +549,15 @@ function slotsForDayAndCategory(
   }
   
   // ✅ Ear wax removal custom rule
-  if (sid === 18) {
-    if (dow === 1 || dow === 3 || dow === 5) {
-      return generateTimeSlots(11, 0, 12, 0, 15);
-    }
-    return [];
+ // ✅ Ear wax removal custom rule (Tue–Thu only)
+if (sid === 18) {
+  // JS: 2=Tue, 3=Wed, 4=Thu
+  if (dow === 2 || dow === 3 || dow === 4) {
+    return generateTimeSlots(11, 0, 12, 0, 15);
   }
+  return [];
+}
+
   
   // --- Non-Flu/COVID rules ---
   const startHour = 9, startMin = 30, endHour = 18, endMin = 0;
@@ -1221,6 +1224,13 @@ let inPast = dObj < new Date(today.getFullYear(), today.getMonth(), today.getDat
 // Apply Flu/COVID restriction
 if (sid === 14 || sid === 16) {
   inPast = inPast || dObj < cutoff;
+}
+
+// ✅ ADD IT RIGHT HERE ✅
+if (sid === 18) {
+  const dow = dObj.getDay(); // 0=Sun ... 6=Sat
+  const allowed = dow === 2 || dow === 3 || dow === 4; // Tue–Thu only
+  if (!allowed) inPast = true;
 }
 
                     let cls = '';

@@ -189,7 +189,16 @@ import EmergencySupply from "../pages/auth/EmergencySupply.tsx";
 import OrderingPatientPage from "../pages/teacher/OrderPatientPage.tsx";
 import OrderPage from "../pages/teacher/OrderPage.tsx";
 import TravelPage from "../pages/auth/TravelPage.tsx";
-
+import PaymentPage from "../pages/admin/PaymentPage.tsx"
+import PaymentCancel from "../pages/admin/PaymentCancel.tsx";
+import PaymentSuccess from "../pages/admin/PaymentSuccess.tsx";
+import PharmacyPage from "../pages/admin/PharmacyPage.tsx";
+import Dashboardstore from "../pages/admin/DashboardStore.tsx";
+import Dashboardstore2 from "../pages/admin/DashboardStore2.tsx";
+import Dashboardstore3 from "../pages/admin/DashboardStore3.tsx";
+import ShopPage from "../pages/shop/ShopPage.tsx";
+import BrandsAZ from "../pages/shop/BrandsAZ.tsx";
+import SpeechToText from "../pages/shop/SpeechToTex.tsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -199,6 +208,14 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <HomePage />,
+      },
+      {
+        path: "/shop",
+        element: <ShopPage/>,
+      },
+      {
+        path: "/shop/brands",
+        element: <BrandsAZ/>,
       },
       {
         path: "/services",
@@ -211,6 +228,22 @@ const router = createBrowserRouter([
       {
         path: "/app",
         element: <App />,
+      },
+      {
+        path: "/payment",
+        element: <PaymentPage />,
+      },
+      {
+        path: "/store",
+        element: <PharmacyPage />,
+      },
+      {
+        path: "/payment-success",
+        element: <PaymentSuccess />,
+      },
+      {
+        path: "/payment-cancel",
+        element: <PaymentCancel />,
       },
       {
         path: "/weight-loss-clinic",
@@ -284,6 +317,18 @@ const router = createBrowserRouter([
         element: <DashBoard />,
       },
       {
+        path: "/dashboardstore",
+        element: <Dashboardstore />,
+      },
+      {
+        path: "/dashboardstore2",
+        element: <Dashboardstore2 />,
+      },
+      {
+        path: "/dashboardstore3",
+        element: <Dashboardstore3 />,
+      },
+      {
         path: "/bookings",
         element: <BookingBoard />,
       },
@@ -347,6 +392,10 @@ const router = createBrowserRouter([
       {
         path: "/checkins",
         element: <CheckinsPage/>,
+      },
+      {
+        path: "/speech",
+        element: <SpeechToText/>,
       },
       //TEACHER
       {

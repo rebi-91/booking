@@ -274,6 +274,9 @@ const HomePage: React.FC = () => {
                 <Link to="/orders" className={styles.roleLink}>
                   Orders
                 </Link>
+                <Link to="/store" className={styles.roleLink}>
+                  Store
+                </Link>
               </>
             ) : (
               // role === "Staff"
