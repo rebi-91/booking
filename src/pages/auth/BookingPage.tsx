@@ -538,13 +538,13 @@ function slotsForDayAndCategory(
 
   
   
-// ✅ Ear wax removal custom rule (block Mon + Fri, allow Tue–Thu)
+// ✅ Ear wax removal: ONLY Wednesdays
 if (sid === 18) {
-  // JS getDay(): 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri
-  if (dow === 2 || dow === 3 || dow === 4) {
+  // JS getDay(): 3 = Wednesday
+  if (dow === 3) {
     return generateTimeSlots(11, 0, 12, 0, 15);
   }
-  return []; // blocks Mon + Fri (+ Sat/Sun)
+  return []; // all other days blocked
 }
 
   
@@ -1215,13 +1215,14 @@ if (sid === 14 || sid === 16) {
   inPast = inPast || dObj < cutoff;
 }
 
-// ✅ Only disable Mondays and Fridays for Ear wax removal
+// ✅ Ear wax removal: disable all days except Wednesday
 if (sid === 18) {
   const dow = dObj.getDay(); // 0=Sun ... 6=Sat
-  if (dow === 1 || dow === 5) {
-    inPast = true; // disables Mon & Fri
+  if (dow !== 3) {
+    inPast = true; // disable every day that isn't Wednesday
   }
 }
+
 
 
                     let cls = '';
