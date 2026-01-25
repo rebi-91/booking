@@ -199,6 +199,7 @@ import Dashboardstore3 from "../pages/admin/DashboardStore3.tsx";
 import ShopPage from "../pages/shop/ShopPage.tsx";
 import BrandsAZ from "../pages/shop/BrandsAZ.tsx";
 import SpeechToText from "../pages/shop/SpeechToTex.tsx";
+import PharmacyFirst from "../pages/admin/PharmacyFirst.tsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -224,6 +225,10 @@ const router = createBrowserRouter([
       {
         path: "/emergency-supply",
         element: <EmergencySupply />,
+      },
+      {
+        path: "/pharmacy-first",
+        element: <PharmacyFirst />,
       },
       {
         path: "/app",
