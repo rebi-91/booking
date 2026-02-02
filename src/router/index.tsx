@@ -200,7 +200,6 @@ import BrandsAZ from "../pages/shop/BrandsAZ.tsx";
 import SpeechToText from "../pages/shop/SpeechToTex.tsx";
 import PharmacyFirst from "../pages/admin/pharmacy-first/PharmacyFirst.tsx";
 import VideoGenerator from "../pages/admin/VideoGenerator.tsx";
-import { FlowDiagram } from "../pages/admin/pharmacy-first/FlowDiagram.tsx";
 const router = createBrowserRouter([
   {
     path: "/",
