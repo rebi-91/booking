@@ -198,7 +198,7 @@ import Dashboardstore3 from "../pages/admin/DashboardStore3.tsx";
 import ShopPage from "../pages/shop/ShopPage.tsx";
 import BrandsAZ from "../pages/shop/BrandsAZ.tsx";
 import SpeechToText from "../pages/shop/SpeechToTex.tsx";
-import PharmacyFirst from "../pages/admin/pharmacy-first/PharmacyFirst.tsx";
+import PharmacyFirst2 from "../pages/admin/pharmacy-first/PharmacyFirst2.tsx";
 import VideoGenerator from "../pages/admin/VideoGenerator.tsx";
 const router = createBrowserRouter([
   {
@@ -232,7 +232,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/pharmacy-first",
-        element: <PharmacyFirst />,
+        element: <PharmacyFirst2 />,
       },
       
       {
