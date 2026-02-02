@@ -169,7 +169,6 @@ import StudentForm from "../pages/admin/StudentForm.tsx";
 import Animation from "../pages/admin/Animation.tsx";
 import SplineAnimation from "../pages/admin/SplineAnimation.tsx";
 import StudentFee from "../pages/admin/StudentFee.tsx";
-import DashBoard from "../pages/admin/DashBoard.tsx";
 import GradeDashboard from "../pages/admin/GradeDashboard.tsx";
 import StaffAttendance from "../pages/admin/StaffAttendance.tsx";
 //STUDENT
@@ -199,7 +198,9 @@ import Dashboardstore3 from "../pages/admin/DashboardStore3.tsx";
 import ShopPage from "../pages/shop/ShopPage.tsx";
 import BrandsAZ from "../pages/shop/BrandsAZ.tsx";
 import SpeechToText from "../pages/shop/SpeechToTex.tsx";
-import PharmacyFirst from "../pages/admin/PharmacyFirst.tsx";
+import PharmacyFirst from "../pages/admin/pharmacy-first/PharmacyFirst.tsx";
+import VideoGenerator from "../pages/admin/VideoGenerator.tsx";
+import { FlowDiagram } from "../pages/admin/pharmacy-first/FlowDiagram.tsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -223,6 +224,10 @@ const router = createBrowserRouter([
         element: <ServicePage />,
       },
       {
+        path: "/video",
+        element: <VideoGenerator />,
+      },
+      {
         path: "/emergency-supply",
         element: <EmergencySupply />,
       },
@@ -230,6 +235,7 @@ const router = createBrowserRouter([
         path: "/pharmacy-first",
         element: <PharmacyFirst />,
       },
+      
       {
         path: "/app",
         element: <App />,
@@ -317,10 +323,7 @@ const router = createBrowserRouter([
       },
      
       //ADMIN
-      {
-        path: "/dashboard",
-        element: <DashBoard />,
-      },
+     
       {
         path: "/dashboardstore",
         element: <Dashboardstore />,
