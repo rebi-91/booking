@@ -143,7 +143,7 @@ const ITEMS: TravelItem[] = [
   {
     id: 41,
     title: "Anti-malarials",
-    price: "Malarone £40 / Doxycycline £25",
+    price: "Malarone £51.99 / Doxycycline £25",
     doses: "Course length varies",
     description: "Medication to prevent malaria, tailored to your destination and medical history. We'll advise on the best option and course length for your trip.",
     category: "Anti-malarials"

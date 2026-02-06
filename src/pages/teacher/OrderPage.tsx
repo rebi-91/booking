@@ -70,7 +70,7 @@ const sampleServices: Record<number, Service> = {
     38: { id: 38, title: 'Chicken Pox', duration: '20m', address: '114–116 High St, Coleshill, Birmingham B46 3BJ', price: '£80.00' },
     39: { id: 39, title: 'Meningitis B', duration: '20m', address: '114–116 High St, Coleshill, Birmingham B46 3BJ', price: '£140.00' },
     40: { id: 40, title: 'Shingles vaccination (Zostavax)', duration: '20m', address: '114–116 High St, Coleshill, Birmingham B46 3BJ', price: '£200.00' },
-    41: { id: 41, title: 'Anti-malarials', duration: '20m', address: '114–116 High St, Coleshill, Birmingham B46 3BJ', price: 'Malarone £40 / Doxycycline £25' },
+    41: { id: 41, title: 'Anti-malarials', duration: '20m', address: '114–116 High St, Coleshill, Birmingham B46 3BJ', price: 'Malarone £51.99 / Doxycycline £25' },
     42: { id: 42, title: 'HPV', duration: '20m', address: '114–116 High St, Coleshill, Birmingham B46 3BJ', price: 'Gardasil-9 – £184.50/dose, £362 (2 doses), £540 (3 doses)' },
     43: { id: 43, title: 'Dengue Fever (2 doses)', duration: '20m', address: '114–116 High St, Coleshill, Birmingham B46 3BJ', price: 'Qdenga - £130 per dose' },
   };

@@ -392,7 +392,7 @@ const sampleServices: Record<number, Service> = {
     title: 'Anti-malarials',  
     duration: '20m',  
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',  
-    price: 'Malarone £40 / Doxycycline £25',  
+    price: 'Malarone £51.99 / Doxycycline £25',  
   },  
   42: {  
     id: 42,  
