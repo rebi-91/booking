@@ -1,61 +1,74 @@
-
-// import React from 'react';
-// import { useMediaQuery } from 'react-responsive';
-// import HeaderDesktop from './HeaderDesktop';
-// import HeaderMobile from './HeaderMobile';
-
-// const Header: React.FC = () => {
-//   const isDesktop = useMediaQuery({ minWidth: 768 });
-//   return isDesktop ? <HeaderDesktop /> : <HeaderMobile />;
-// };
-
-// export default Header;
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './Head.css';
 
-const ICON_HAMBURGER =
-  'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//menu-2.png';
-const ICON_CLOSE =
-  'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//close-2.png';
-const ICON_PHONE =
-  'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//phone.png';
-const ICON_CHEVRON =
-  'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//chevron.png';
-const ICON_BACK =
-  'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//back-arrow.png';
-  const ICON_LOGO =
-  'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//coleshill.jpg';
+import ICON_PHONE from '../assets/phone.png';
+import ICON_HAMBURGER from '../assets/hamburger.png';
+import ICON_CLOSE from '../assets/close.png';
+import ICON_LOGO from '../assets/logo.png';
 
+/* ─── Inline SVG icons ───────────────────────────── */
 
-  const dropdownData: Record<string, string[]> = {
-    'Browse Services': [
-      'All Services',
-      'Travel Clinic',
-      'Private Treatments',
-      'NHS Treatments',
-      'Pharmacy First',
-    ],
-    'Weight Loss': ['Wegovy', 'Mounjaro'],
-    'Travel Vaccinations': [
-      'Chicken pox',
-      'Cholera (2 doses – special cases)',
-      'Dengue Fever',
-      'Diphtheria, Tetanus and Polio',
-      'Hepatitis A (2 doses)',
-      'Hepatitis B (3 doses)',
-      'HPV',
-      'Japanese Encephalitis',
-      'Meningitis ACWY (1 dose – for Hajj/Umrah)',
-      'Meningitis B',
-      'Rabies (3 doses)',
-      'Shingles (Zostavax)',
-      'Typhoid (1 dose or orally)',
-      'Yellow fever',
-    ],
-  };
-  
- const browseSubMenuData: Record<string, string[]> = {
+const ICON_CHEVRON_RIGHT = (
+  <svg
+    width="16"
+    height="16"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    viewBox="0 0 24 24"
+  >
+    <polyline points="9,18 15,12 9,6" />
+  </svg>
+);
+
+const ICON_BACK = (
+  <svg
+    width="18"
+    height="18"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    viewBox="0 0 24 24"
+  >
+    <polyline points="15,18 9,12 15,6" />
+  </svg>
+);
+
+/* ─── Menu Data ───────────────────────────── */
+
+const dropdownData: Record<string, string[]> = {
+  'Browse Services': [
+    'All Services',
+    'Travel Clinic',
+    'Private Treatments',
+    'NHS Treatments',
+    'Pharmacy First',
+  ],
+  'Weight Loss': ['Wegovy', 'Mounjaro'],
+  'Travel Vaccinations': [
+    'Chicken pox',
+    'Cholera (2 doses – special cases)',
+    'Dengue Fever',
+    'Diphtheria, Tetanus and Polio',
+    'Hepatitis A (2 doses)',
+    'Hepatitis B (3 doses)',
+    'HPV',
+    'Japanese Encephalitis',
+    'Meningitis ACWY (1 dose – for Hajj/Umrah)',
+    'Meningitis B',
+    'Rabies (3 doses)',
+    'Shingles (Zostavax)',
+    'Typhoid (1 dose or orally)',
+    'Yellow fever',
+  ],
+};
+
+const browseSubMenuData: Record<string, string[]> = {
   'Private Treatments': [
     'Microsuction Earwax Removal',
     'Weight Loss Clinic',
@@ -92,190 +105,187 @@ const ICON_BACK =
 };
 
 const ROUTE_MAP: Record<string, string> = {
-  // top-level
   'All Services': '/services',
   'Travel Clinic': '/book/3',
   'Private Treatments': '/private-treatments',
   'NHS Treatments': '/nhs-treatments',
   'Pharmacy First': '/pharmacy-first',
-  'Weight loss management': '/weight-loss-management',
-  // weight-loss
-  'Wegovy': '/wegovy',
-  'Mounjaro': '/mounjaro',
-
-  // core services
-  'Altitude sickness': '/book/1',
-  'Sore throat': '/book/2',
-  'Travel Consultation': '/book/3',
-  'Travel vaccine': '/book/4',
-  'Uncomplicated UTI (Women)': '/book/5',
-  'Vitamin B12 Injection': '/book/6',
-  'Impetigo': '/book/7',
-  'Infected insect bite': '/book/8',
-  'Period Delay': '/book/90',
-  'Period Pain': '/book/89',
-  'Private Flu Jab': '/book/10',
-  'Shingles': '/book/44',
-  'Oral Contraception': '/oral-contraceptives',
-  'Oral Thrush': '/book/28',
-  'Hay Fever (Fexofenadine or Dymista)': '/book/29',
-  'Flu Vaccination': '/book/14',
-  'Blood Pressure Check': '/book/15',
-  'COVID-19 Vaccination': '/book/16',
-  'Yellow fever': '/book/17',
-  'Ear wax removal': '/book/18',
-  'Earache': '/book/19',
-  'Erectile dysfunction': '/book/20',
-  'Sinusitis': '/book/21',
-  'Acid Reflux': '/book/22',
-  'Pain Relief (Naproxen)': '/book/23',
-  'Male Pattern Baldness (Androgenic Alopecia)': '/book/24',
-  'Female Hirsutism in Women': '/book/25',
-  'Jet Lag': '/book/26',
-  'Traveller’s Diarrhoea': '/book/9',
-
-  // travel vaccinations (matching dropdownData exactly)
-  'Chicken pox': '/book/38',
-  'Cholera (2 doses – special cases)': '/book/36',
-  'Dengue Fever': '/book/43',
-  'Diphtheria, Tetanus and Polio': '/book/30',
-  'Hepatitis A (2 doses)': '/book/31',
-  'Hepatitis B (3 doses)': '/book/32',
-  'HPV': '/book/42',
-  'Japanese Encephalitis': '/book/37',
-  'Meningitis ACWY (1 dose – for Hajj/Umrah)': '/book/35',
-  'Meningitis B': '/book/39',
-  'Rabies (3 doses)': '/book/34',
-  'Shingles (Zostavax)': '/book/40',
-  'Typhoid (1 dose or orally)': '/book/33',
-  // note: RSV (#54) should correspond to a real service id if added
-
+  Wegovy: '/wegovy',
+  Mounjaro: '/mounjaro',
+  Contact: '/contact',
+  Login: '/login',
+  'Emergency Supply': '/emergency-supply',
 };
-  
 
-function slugify(s:string){
-  return s
+/* ─── Helpers ───────────────────────────── */
+
+function slugify(text: string) {
+  return text
     .toLowerCase()
-    .replace(/[()]/g,'')
-    .replace(/[^a-z0-9]+/g,'-')
-    .replace(/^-+|-+$/g,'');
+    .replace(/[()]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
-export default function Header(){
-  const [open,setOpen] = useState(false);
-  const [lvl1,setLvl1] = useState<string|null>(null);
-  const [lvl2,setLvl2] = useState<string|null>(null);
+/* ─── Component ───────────────────────────── */
+
+export default function Header() {
+  const [open, setOpen] = useState(false);
+  const [lvl1, setLvl1] = useState<string | null>(null);
+  const [lvl2, setLvl2] = useState<string | null>(null);
+
   const nav = useNavigate();
 
-  const closeAll = ()=>{
+  const closeAll = () => {
     setOpen(false);
     setLvl1(null);
     setLvl2(null);
   };
-  const goTo = (label:string)=>{
+
+  const goTo = (label: string) => {
     closeAll();
-    const to = ROUTE_MAP[label] ?? '/'+slugify(label);
-    if(to.startsWith('#')) window.location.hash = to.slice(1);
-    else nav(to);
+
+    const route = ROUTE_MAP[label] ?? '/' + slugify(label);
+    nav(route);
   };
 
   return (
     <header className="header-bar d-flex align-items-center">
+      {/* Logo */}
       <Link to="/" onClick={closeAll}>
-        <img src={ICON_LOGO} alt="Logo" className="logo ms-2 header-logo"/>
+        <img
+          src={ICON_LOGO}
+          alt="Coleshill Pharmacy"
+          className="header-logo"
+          style={{
+            display: 'block',
+            height: 52,
+            width: 'auto',
+            objectFit: 'contain',
+          }}
+        />
       </Link>
-      <a href="tel:01634404142" className="phone-link">
-        <img src={ICON_PHONE} alt="Call us" className="phone-icon"/>
+
+      {/* Phone */}
+      <a href="tel:01634404142" className="phone-link" aria-label="Call us">
+        <img
+          src={ICON_PHONE}
+          alt="Call us"
+          style={{
+            width: 24,
+            height: 24,
+            objectFit: 'contain',
+            display: 'block',
+          }}
+        />
       </a>
-      <div className="flex-grow-1"></div>
+
+      <div className="flex-grow-1" />
+
+      {/* Hamburger / Close */}
       <button
-        className="btn p-0 menu-button"
-        onClick={()=>setOpen(o=>!o)}
-        aria-label={open?'Close menu':'Open menu'}
+        className="menu-button"
+        onClick={() => setOpen((prev) => !prev)}
+        aria-label={open ? 'Close menu' : 'Open menu'}
+        type="button"
       >
         <img
-          src={open?ICON_CLOSE:ICON_HAMBURGER}
-          alt=""
-          className="hamburger-icon"
+          src={open ? ICON_CLOSE : ICON_HAMBURGER}
+          alt={open ? 'Close menu' : 'Open menu'}
+          style={{
+            width: 28,
+            height: 28,
+            objectFit: 'contain',
+            display: 'block',
+          }}
         />
       </button>
 
-
+      {/* Drawer */}
       {open && (
         <div className="drawer">
-          {/* level2 submenu */}
+          {/* Level 2 */}
           {lvl2 && (
             <ul className="list-unstyled px-3">
-              <li className="mb-2 back" onClick={()=>setLvl2(null)}>
-                <img src={ICON_BACK} alt="Back" className="me-2"/> {lvl2}
+              <li className="back" onClick={() => setLvl2(null)}>
+                {ICON_BACK}
+                <span className="ms-2">{lvl2}</span>
               </li>
-              {browseSubMenuData[lvl2].map(item=>{
-                const disabled = (lvl2==='NHS Treatments' && item==='COVID-19 Vaccination')
-                              || (lvl2==='Travel Vaccinations' && item==='Yellow fever');
+
+              {browseSubMenuData[lvl2].map((item) => (
+                <li
+                  key={item}
+                  className="item"
+                  onClick={() => goTo(item)}
+                >
+                  <span>{item}</span>
+                  {ICON_CHEVRON_RIGHT}
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {/* Level 1 */}
+          {!lvl2 && lvl1 && (
+            <ul className="list-unstyled px-3">
+              <li className="back" onClick={() => setLvl1(null)}>
+                {ICON_BACK}
+                <span className="ms-2">{lvl1}</span>
+              </li>
+
+              {dropdownData[lvl1].map((item) => {
+                const hasSub = !!browseSubMenuData[item];
+
                 return (
                   <li
                     key={item}
-                    className={`item ${disabled?'disabled':''}`}
-                    onClick={()=>!disabled&&goTo(item)}
+                    className="item"
+                    onClick={() =>
+                      hasSub ? setLvl2(item) : goTo(item)
+                    }
                   >
                     <span>{item}</span>
-                    {!disabled && <img src={ICON_CHEVRON} alt=">" className="chevron"/>}
+                    {ICON_CHEVRON_RIGHT}
                   </li>
                 );
               })}
             </ul>
           )}
 
-          {/* level1 submenu */}
-          {!lvl2 && lvl1 && (
-            <ul className="list-unstyled px-3">
-              <li className="mb-2 back" onClick={()=>setLvl1(null)}>
-                <img src={ICON_BACK} alt="Back" className="me-2"/> {lvl1}
-              </li>
-              {dropdownData[lvl1].map(opt=>{
-                const hasSub = !!browseSubMenuData[opt];
-                const disabled = opt==='Yellow fever';
-                return (
-                  <li
-                    key={opt}
-                    className={`item ${disabled?'disabled':''}`}
-                    onClick={()=>{
-                      if(hasSub) setLvl2(opt);
-                      else if(!disabled) goTo(opt);
-                    }}
-                  >
-                    <span>{opt}</span>
-                    {!disabled && <img src={ICON_CHEVRON} alt=">" className="chevron"/>}
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-
-          {/* root menu */}
+          {/* Root */}
           {!lvl1 && !lvl2 && (
             <ul className="list-unstyled px-3">
-              {Object.keys(dropdownData).map(menu=>(
-                <li key={menu}
-                    className="item root"
-                    onClick={()=>setLvl1(menu)}
-                >{menu}</li>
+              {Object.keys(dropdownData).map((item) => (
+                <li
+                  key={item}
+                  className="item root"
+                  onClick={() => setLvl1(item)}
+                >
+                  <span>{item}</span>
+                  {ICON_CHEVRON_RIGHT}
+                </li>
               ))}
-              {['Microsuction Earwax Removal','Emergency Supply','Contact']
-                .map(it=>(
-                  <li key={it} className="item alt" onClick={()=>goTo(it)}>
-                    {it}
-                  </li>
-                ))
-              }
-              {['Login']
-                .map(it=>(
-                  <li key={it} className="item alt1" onClick={()=>goTo(it)}>
-                    {it}
-                  </li>
-                ))
-              }
-             
+
+              {[
+                'Microsuction Earwax Removal',
+                'Emergency Supply',
+                'Contact',
+              ].map((item) => (
+                <li
+                  key={item}
+                  className="item alt"
+                  onClick={() => goTo(item)}
+                >
+                  {item}
+                </li>
+              ))}
+
+              <li
+                className="item alt1"
+                onClick={() => goTo('Login')}
+              >
+                Login
+              </li>
             </ul>
           )}
         </div>
