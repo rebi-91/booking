@@ -449,6 +449,13 @@ const covidvaccine = [
     img:
     'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/101404/2-EtcvQ5-J.webp',
   },
+  {
+    title: 'Private COVID-19 Vaccination',
+    link: '/book/45',
+    sub: 'Private COVID-19 Vaccination - £75 per dose',
+    img:
+    'https://aylestonepharmacy.co.uk/wp-content/uploads/2025/10/senior-male-patient-getting-vaccinated-coronavirus-scaled.jpg',
+  },
  
 ];
 

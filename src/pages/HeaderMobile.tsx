@@ -379,6 +379,7 @@ const ROUTE_MAP: Record<string, string> = {
   'Flu Vaccination': '/book/14',
   'Blood Pressure Check': '/book/15',
   'COVID-19 Vaccination': '/book/16',
+  'Private COVID-19 Vaccination': '/book/45x',
   'Yellow fever': '/book/17',
   'Ear wax removal': '/book/18',
   'Earache': '/book/19',

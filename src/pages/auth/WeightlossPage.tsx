@@ -1,12 +1,10 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../Header';
 import './WeightlossPage.css';
 
-// Colors
-const MAIN_TEXT_COLOR = 'rgb(28, 43, 57)';
-const ACCENT_COLOR    = '#00D364';
-const DARK_BG         = '#0F1637';
+// Brand tokens
+const DARK_BG = '#0F1637';
 const MAI_TEXT_COLOR = 'rgb(14, 75, 141)';
 
 const timelineSteps = [
@@ -29,6 +27,7 @@ const timelineSteps = [
       'With continued support from your coach, adopt healthier lifestyle habits to help maintain weight loss.',
   },
 ];
+
 // Chevron icon
 const ICON_CHEVRON =
   'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//chevron.png';
@@ -71,9 +70,12 @@ const faqItems = [
   },
 ];
 
+// Each product now carries an explicit `route` so clicks land on the right page.
 const weightLossProducts = [
   {
     title: 'Wegovy',
+    tagline: 'Once-weekly injection',
+    route: '/wegovy',
     img:
       'https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2F100%2Fproducts%2FlO0TFZ73tv0D9H5.webp&w=1080&q=75',
     bullets: [
@@ -85,6 +87,8 @@ const weightLossProducts = [
   },
   {
     title: 'Mounjaro',
+    tagline: 'Dual-action GLP-1 / GIP',
+    route: '/mounjaro',
     img:
       'https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2F100%2Fproducts%2FDZDc21uYIxEas7T.webp&w=1080&q=75',
     bullets: [
@@ -96,8 +100,9 @@ const weightLossProducts = [
   },
   {
     title: 'Orlistat',
-    // TODO: replace with your actual product image
-    img: 'https://yourmedicals.co.uk/cdn/shop/files/Untitleddesign_24.png?v=1722501684',
+    tagline: 'Daily oral capsule',
+    route: '/orlistat',
+    img: 'https://pharmacyservice.co.uk/wp-content/uploads/pharmacy_mentor/importImages/orlistat-120mg-2.jpeg',
     bullets: [
       'Helps weight loss by reducing dietary fat absorption',
       'Best results alongside a reduced-fat, calorie-controlled diet',
@@ -125,137 +130,179 @@ const benefits = [
   },
 ];
 
-
-
-const slugify = (str: string) =>
-  str
-    .toLowerCase()
-    .replace(/[()]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-
 const WeightlossPage: React.FC = () => {
   const navigate = useNavigate();
+
+  // Controlled accordion (replaces the imperative DOM-toggling logic)
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const toggleFaq = (idx: number) =>
+    setOpenFaq((prev) => (prev === idx ? null : idx));
+
+  const goToProduct = (route: string) => navigate(route);
+
+  // Keyboard activation for the clickable cards (a11y)
+  const onCardKey =
+    (route: string) => (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        goToProduct(route);
+      }
+    };
 
   return (
     <>
       <Header />
 
-      {/* ===============================
-          BREADCRUMB / PAGE PATH
-         =============================== */}
-      {/* <div className="breadcrumbwrapper">
-        <div className="container">
-          <nav className="page-path">
-            <Link to="/">Home</Link>
-            <span className="sep">›</span>
-            <Link to="/services">Services</Link>
-            <span className="sep">›</span>
-            <span className="current">Weight Loss Clinic</span>
-          </nav>
-         
-        </div>
-      </div> */}
-      {/* =============================== */}
-
       <main className="pt-header weightloss-page">
-      <div className="container titlebar">
-      <h1 className="page-title page-title--top-left">
-            Breakthrough weight-loss medication<br />
-            for long-term results
-          </h1>
-          </div>
-        {/* Hero / Intro */}
-        <section className="container hero-section">
-          <div className="hero-content">
-            <ul className="hero-bullets">
-              <li>Clinically proven weight loss of up to 22%*</li>
-              <li>Scientifically backed programme</li>
-              <li>Continuous clinical care</li>
-            </ul>
-            <button
-              className="btn-accent"
-              onClick={() => navigate('/book/12')}
-            >
-              Book Your Free Consultation
-            </button>
-          </div>
-          <div className="hero-image">
-            <img
-              src="https://gpcdcgwgkciyogknekwp.supabase.co/storage/v1/object/public/pharmacy/weightclinic.jpg"
-              alt="Patient example"
-            />
+        {/* ============== HERO ============== */}
+        <section className="wl-hero">
+          <div className="wl-hero__bg" aria-hidden="true" />
+          <div className="container wl-hero__inner">
+            <div className="wl-hero__content">
+              <span className="wl-eyebrow">Coleshill Pharmacy · Weight Loss Clinic</span>
+              <h1 className="wl-hero__title">
+                Breakthrough weight-loss medication
+                <span className="wl-hero__title-accent"> for long-term results</span>
+              </h1>
+              <p className="wl-hero__lede">
+                A clinically-led programme combining prescribed medication with
+                ongoing pharmacist support — built around your lifestyle.
+              </p>
+              <ul className="wl-hero__bullets">
+                <li>Clinically proven weight loss of up to 22%*</li>
+                <li>Scientifically backed programme</li>
+                <li>Continuous clinical care</li>
+              </ul>
+              <div className="wl-hero__cta">
+                <button
+                  className="btn-accent"
+                  onClick={() => navigate('/book/12')}
+                >
+                  Book your free consultation
+                </button>
+                <a href="#products" className="btn-ghost">
+                  Explore treatments 
+                </a>
+              </div>
+            </div>
+            <div className="wl-hero__media">
+              <div className="wl-hero__media-frame">
+                <img
+                  src="https://gpcdcgwgkciyogknekwp.supabase.co/storage/v1/object/public/pharmacy/weightclinic.jpg"
+                  alt="Patient consultation at Coleshill Pharmacy"
+                />
+              </div>
+              <div className="wl-hero__badge">
+                <strong>Up to 22%*</strong>
+                <span>average weight reduction</span>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* About / FAQ */}
-        <section className="container about-faq">
-          <h2>About Weight Loss Clinic</h2>
-          <p>
-            Our weight loss clinic is here to support you on your journey to a
-            healthier you. We offer Weight loss management alongside friendly
-            advice to help you manage your weight safely. Together, we’ll
-            create a plan that fits your needs and works with your lifestyle.
-          </p>
+        {/* ============== ABOUT + FAQ ============== */}
+        <section className="container wl-section about-faq">
+          <div className="wl-section__head">
+            <span className="wl-kicker">About</span>
+            <h2>About our weight loss clinic</h2>
+            <p className="wl-section__lede">
+              Friendly, professional support for your weight-loss journey.
+              We’ll create a plan that fits your needs and works with your
+              lifestyle.
+            </p>
+          </div>
 
           <div className="accordion" id="weightLossFaq">
-            {faqItems.map((item, idx) => (
-              <div key={idx} className="accordion-item">
-                <h3
-                  className={`accordion-header${idx === 0 ? ' open' : ''}`}
-                  onClick={(e) => {
-                    const header = e.currentTarget;
-                    header.classList.toggle('open');
-                    const caret = header.querySelector('.accordion-caret') as HTMLElement;
-                    caret?.classList.toggle('rotated');
-                    const body = header.nextElementSibling as HTMLElement;
-                    body.classList.toggle('show');
-                  }}
+            {faqItems.map((item, idx) => {
+              const isOpen = openFaq === idx;
+              return (
+                <div
+                  key={idx}
+                  className={`accordion-item${isOpen ? ' is-open' : ''}`}
                 >
-                  <span className="accordion-question">{item.question}</span>
-                  <img
-                    src={ICON_CHEVRON}
-                    alt="Toggle"
-                    className={`accordion-caret${idx === 0 ? ' rotated' : ''}`}
-                  />
-                </h3>
-                <div className={`accordion-body${idx === 0 ? ' show' : ''}`}>
-                  {item.answer}
+                  <button
+                    type="button"
+                    className={`accordion-header${isOpen ? ' open' : ''}`}
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-body-${idx}`}
+                    onClick={() => toggleFaq(idx)}
+                  >
+                    <span className="accordion-question">{item.question}</span>
+                    <img
+                      src={ICON_CHEVRON}
+                      alt=""
+                      aria-hidden="true"
+                      className={`accordion-caret${isOpen ? ' rotated' : ''}`}
+                    />
+                  </button>
+                  <div
+                    id={`faq-body-${idx}`}
+                    className={`accordion-body${isOpen ? ' show' : ''}`}
+                    role="region"
+                  >
+                    <div className="accordion-body__inner">{item.answer}</div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
 
-        {/* Weight Loss Products */}
-        <section className="container products-grid">
-          <h2>
-            Weight loss clinic in <span className="accent">Coleshill</span>
-          </h2>
+        {/* ============== PRODUCTS ============== */}
+        <section id="products" className="container wl-section products-grid">
+          <div className="wl-section__head">
+            <span className="wl-kicker">Treatments</span>
+            <h2>
+              Weight loss clinic in <span className="accent">Coleshill</span>
+            </h2>
+            <p className="wl-section__lede">
+              Choose a treatment to learn more. All options include a
+              consultation and ongoing pharmacist support.
+            </p>
+          </div>
+
           <div className="cards-grid">
-            {weightLossProducts.map((prod, idx) => (
-              <div key={idx} className="product-card">
+            {weightLossProducts.map((prod) => (
+              <div
+                key={prod.title}
+                className="product-card2"
+                role="link"
+                tabIndex={0}
+                aria-label={`Learn more about ${prod.title}`}
+                onClick={() => goToProduct(prod.route)}
+                onKeyDown={onCardKey(prod.route)}
+              >
                 <div className="product-image-container">
                   <img
                     src={prod.img}
                     alt={prod.title}
                     className="product-image"
+                    loading="lazy"
                   />
+                  <span className="product-pill">{prod.tagline}</span>
                 </div>
                 <div className="product-body">
                   <h5 className="product-title">{prod.title}</h5>
                   <ul className="product-bullets">
                     {prod.bullets.map((b, i) => (
                       <li key={i}>
-                        <span className="bullet-icon-small">►</span> {b}
+                        <span className="bullet-icon-small" aria-hidden="true">
+                          ✓
+                        </span>{' '}
+                        {b}
                       </li>
                     ))}
                   </ul>
                   <button
+                    type="button"
                     className="btn-outline-primary"
-                    onClick={() => navigate(`/${slugify(prod.title)}`)}
+                    onClick={(e) => {
+                      // prevent the outer card handler from double-firing
+                      e.stopPropagation();
+                      goToProduct(prod.route);
+                    }}
                   >
-                    Find out more
+                    Find out more 
                   </button>
                 </div>
               </div>
@@ -263,14 +310,16 @@ const WeightlossPage: React.FC = () => {
           </div>
         </section>
 
-        {/* Science-backed Section */}
-        <section className="container science-backed">
-        <div className="benefitsTitle">
-          <h2>Weight loss, backed by science</h2>
+        {/* ============== SCIENCE-BACKED ============== */}
+        <section className="container wl-section science-backed">
+          <div className="benefitsTitle wl-section__head">
+            <span className="wl-kicker">Why it works</span>
+            <h2>Weight loss, backed by science</h2>
           </div>
           <div className="cards-grid benefits-grid">
             {benefits.map((benefit, idx) => (
               <div key={idx} className="benefit-card">
+                <span className="benefit-num">0{idx + 1}</span>
                 <h5 className="benefit-title">{benefit.title}</h5>
                 <p className="benefit-text">{benefit.text}</p>
               </div>
@@ -278,140 +327,136 @@ const WeightlossPage: React.FC = () => {
           </div>
         </section>
 
-      {/* Progress Timeline Section */}
-         <section
-          className="container-fluid px-4 py-5"
+        {/* ============== TIMELINE ============== */}
+        <section
+          className="wl-timeline"
           style={{ backgroundColor: DARK_BG, color: '#fff' }}
         >
           <div className="container">
-            <h2
-              style={{
-                fontWeight: 700,
-                fontSize: '2rem',
-                marginBottom: '2rem',
-                textAlign: 'center',
-              }}
-            >
-              The progress you can expect
-            </h2>
+            <div className="wl-section__head wl-section__head--light">
+              <span className="wl-kicker wl-kicker--light">Your journey</span>
+              <h2>The progress you can expect</h2>
+            </div>
 
-            <div className="row gy-4">
+            <div className="timeline-grid">
               {timelineSteps.map((step, idx) => (
-                <div key={idx} className="col-md-4 text-center">
-                  <span
-                    style={{
-                      display: 'inline-block',
-                      backgroundColor: '#fff',
-                      color: DARK_BG,
-                      fontWeight: 700,
-                      borderRadius: '0.5rem',
-                      padding: '0.25rem 0.75rem',
-                      fontSize: '0.875rem',
-                      marginBottom: '0.75rem',
-                    }}
-                  >
-                    {step.label}
-                  </span>
-                  <h4 style={{ fontWeight: 600, marginBottom: '0.5rem' }}>
-                    {step.title}
-                  </h4>
-                  <p
-                    style={{
-                      lineHeight: 1.6,
-                      maxWidth: '300px',
-                      margin: '0 auto',
-                    }}
-                  >
-                    {step.text}
-                  </p>
+                <div key={idx} className="timeline-step">
+                  <span className="timeline-label">{step.label}</span>
+                  <h4 className="timeline-title">{step.title}</h4>
+                  <p className="timeline-text">{step.text}</p>
                 </div>
               ))}
             </div>
           </div>
-         </section>
+        </section>
 
-
-        {/* Introduction / Importance Section */}
-        <section className="intro-section">
-          <h2 className="subsection-heading">
-            Introduction to weight loss support at Coleshill Pharmacy
-          </h2>
+        {/* ============== INTRO / IMPORTANCE ============== */}
+        <section className="container wl-section intro-section">
+          <div className="wl-section__head">
+            <span className="wl-kicker">Our approach</span>
+            <h2 className="subsection-heading">
+              Introduction to weight loss support at Coleshill Pharmacy
+            </h2>
+          </div>
           <div className="intro-text-wrapper">
             <p>
-              Maintaining a healthy weight can have a positive impact on every aspect
-              of your life. Coleshill Pharmacy is here to help you discover the best
-              path toward weight loss success.
+              Maintaining a healthy weight can have a positive impact on every
+              aspect of your life. Coleshill Pharmacy is here to help you
+              discover the best path toward weight loss success.
             </p>
             <p>
               We proudly serve individuals who seek professional, ongoing
               guidance and trustworthy support.
             </p>
             <p>
-              At Coleshill Pharmacy, our commitment extends beyond prescriptions. We
-              offer ongoing support, progress tracking, and personal recommendations
-              that adapt to your life. By combining professional expertise with a
-              friendly atmosphere, we help you feel empowered at every stage and
-              growth of your weight loss experience.
+              At Coleshill Pharmacy, our commitment extends beyond
+              prescriptions. We offer ongoing support, progress tracking, and
+              personal recommendations that adapt to your life. By combining
+              professional expertise with a friendly atmosphere, we help you
+              feel empowered at every stage of your weight-loss experience.
             </p>
 
-            <h3 className="subsection-heading">
+            <h3 className="subsection-heading2">
               Understanding the importance of achieving a healthy weight
             </h3>
             <p>
-              Excess weight can increase your risk of serious health issues such as
-              diabetes and heart disease. By focusing on healthy habits, you can
-              lower these risks. A balanced approach to eating, regular physical
-              activity, and suitable medications all contribute to a stronger body
-              and an improved overall sense of wellbeing.
+              Excess weight can increase your risk of serious health issues
+              such as diabetes and heart disease. By focusing on healthy
+              habits, you can lower these risks. A balanced approach to eating,
+              regular physical activity, and suitable medications all
+              contribute to a stronger body and improved overall wellbeing.
             </p>
             <p>
-              Our clinic provides resources that fit your unique situation, ensuring
-              you stay fully informed and motivated.
+              Our clinic provides resources that fit your unique situation,
+              ensuring you stay fully informed and motivated.
             </p>
             <p>
-              Alongside enhancing your physical health, a healthy weight can also
-              boost mental wellbeing. It often leads to improved self-esteem,
-              greater confidence, and an overall sense of balance in life.
+              Alongside enhancing your physical health, a healthy weight can
+              also boost mental wellbeing — improved self-esteem, greater
+              confidence, and an overall sense of balance in life.
             </p>
           </div>
         </section>
 
-        {/* Find Us */}
-        <section id="find-us" className="container py-5 find-us">
-          <h2 style={{ color: MAI_TEXT_COLOR, fontWeight: 700 }}>Find us</h2>
-          <div className="row align-items-center mt-4">
-            <div className="col-md-6">
-              <p>Contact us for travel vaccination, ear wax removal and a wide range of NHS or private services we offer.</p>
-              <p><strong>Phone:</strong> 01675 466014</p>
-              <p><strong>Email:</strong> coleshillpharmacy@gmail.com</p>
-              <p><strong>Address:</strong> 114–116 High St, Coleshill, Birmingham B46 3BJ</p>
+        {/* ============== FIND US ============== */}
+        <section id="find-us" className="container wl-section find-us">
+          <div className="wl-section__head">
+            <span className="wl-kicker">Visit</span>
+            <h2 style={{ color: MAI_TEXT_COLOR, fontWeight: 700 }}>Find us</h2>
+          </div>
+          <div className="find-us__grid">
+            <div className="find-us__info">
               <p>
-                <strong>Hours:</strong><br/>
-                Monday–Friday 8:30 am–6 pm<br/>
-                Saturday 9 am–5:30 pm<br/>
-                Sunday Closed
+                Contact us for travel vaccination, ear wax removal, and a wide
+                range of NHS or private services we offer.
               </p>
+              <ul className="find-us__list">
+                <li>
+                  <strong>Phone</strong>
+                  <a href="tel:01675466014">01675 466014</a>
+                </li>
+                <li>
+                  <strong>Email</strong>
+                  <a href="mailto:coleshillpharmacy@gmail.com">
+                    coleshillpharmacy@gmail.com
+                  </a>
+                </li>
+                <li>
+                  <strong>Address</strong>
+                  <span>114–116 High St, Coleshill, Birmingham B46 3BJ</span>
+                </li>
+                <li>
+                  <strong>Hours</strong>
+                  <span>
+                    Monday–Friday 8:30 am – 6 pm
+                    <br />
+                    Saturday 9 am – 5:30 pm
+                    <br />
+                    Sunday Closed
+                  </span>
+                </li>
+              </ul>
             </div>
-            <div className="col-md-6">
+            <div className="find-us__map">
               <iframe
                 title="Coleshill Pharmacy Location"
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2483.123456789!2d-1.7890123!3d52.5654321!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48776789abcdef12:0x3456789abcdef!2s114-116%20High%20St,%20Coleshill%20B46%203BJ,%20UK!5e0!3m2!1sen!2suk!4v1623456789012"
                 width="100%"
-                height="300"
-                style={{ border: 0, borderRadius: '0.5rem', marginBottom: '30px' }}
+                height="360"
+                style={{ border: 0, borderRadius: '0.75rem' }}
                 allowFullScreen
                 loading="lazy"
               />
             </div>
           </div>
         </section>
-
       </main>
     </>
   );
 };
 
 export default WeightlossPage;
+
 
 // // src/pages/auth/WeightlossPage.tsx
 // import React from 'react';

@@ -19,7 +19,7 @@ const NAV_LINKS: Record<string,string> = {
 };
 
 const HERO_CARD_LINKS: Record<string,string> = {
-  'Weight loss clinic': '/weight-loss-clinic',
+  'Ear Piercing': '/book/46',
   'Travel Clinic': '/travel-clinic',
   'Ear Wax Removal': '/microsuction-earwax-removal',
 };
@@ -36,17 +36,17 @@ const popularServices = [
   },
   {
     title: 'Ear Wax Removal',
-    link: '/microsuction-earwax-removal',
+    link: '/book/18',
     sub: 'Safe microsuction for clear, comfortable ears.',
     img:
-    'https://clearclinics.co.uk/wp-content/uploads/2023/10/earwax-removal-1024x561.jpg',
+    'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/123156/AHHct1yZUR.webp',
   },
   {
     title: 'Travel Vaccinations',
     link: '/travel-clinic',
     sub: 'Comprehensive vaccine service for your trip.',
     img:
-    'https://clinic-digital.lon1.cdn.digitaloceanspaces.com/100/530057/yyrgMObVYh.webp',
+    'https://focus.independent.ie/thumbor/kZpypGnMeOe4CqXsAfQrkN28nCk=/0x8:1500x835/731x411/prod-mh-ireland/058221aa-c2c3-11ed-8d5b-0210609a3fe2.jpg',
   },
   {
     title: 'Vitamin B12 Injection',
@@ -85,35 +85,16 @@ const covidvaccine = [
     img:
     'https://lead-services-agency.fra1.cdn.digitaloceanspaces.com/4/101404/2-EtcvQ5-J.webp',
   },
+  {
+    title: 'Private COVID-19 Vaccination',
+    link: '/book/45',
+    sub: 'Private COVID-19 Vaccination - £75 per dose',
+    img:
+    'https://aylestonepharmacy.co.uk/wp-content/uploads/2025/10/senior-male-patient-getting-vaccinated-coronavirus-scaled.jpg',
+  },
  
 ];
 
-// const VACCINATIONS = [
-//   {
-//     title: 'Chickenpox',
-//     link: '/book/31',
-//     img:
-//       'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fvaccines%2Fchickenpox.webp&w=1080&q=75',
-//   },
-//   {
-//     title: 'Hepatitis A',
-//     link: '/book/24',
-//     img:
-//       'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fvaccines%2Fhepatitis.webp&w=1080&q=75',
-//   },
-//   {
-//     title: 'Typhoid',
-//     link: '/book/26',
-//     img:
-//       'https://ysm-res.cloudinary.com/image/upload/ar_16:9,c_fill,dpr_3.0,f_auto,g_faces:auto,q_auto:eco,w_500/v1/yms/prod/d01914a4-5add-47e4-ba61-8681278f830a',
-//   },
-//   {
-//     title: 'Yellow Fever',
-//     link: '/book/4',
-//     img:
-//       'https://www.leamingtontravelclinic.co.uk/wp-content/uploads/2023/08/Yellow_fever2.jpg',
-//   },
-// ];
 
 const pharmacyFirst = [
   {
@@ -213,17 +194,17 @@ export default function HomePageDesktop() {
   {/* Big featured card on the left */}
   <div
     className="card featured-card"
-    onClick={() => navigate(HERO_CARD_LINKS['Weight loss clinic'])}
+    onClick={() => navigate(HERO_CARD_LINKS['Ear Piercing'])}
   >
     <div className="card-image">
       <img
-        src="https://gpcdcgwgkciyogknekwp.supabase.co/storage/v1/object/public/pharmacy/weightclinic.jpg"
-        alt="Weight loss clinic"
+        src="https://media.istockphoto.com/id/1500832940/photo/pharmacist-uses-a-specialized-piercing-gun-to-create-a-new-earlobe-piercing.jpg?s=612x612&w=0&k=20&c=xd0ka7W4LjBrgcc7otBcS4UbbwXFEzAycc08GfZ_kfo="
+        alt="Ear Piercing"
       />
       <div className="card-overlay"></div>
     </div>
     <div className="card-footer">
-      <h4>Weight loss clinic</h4>
+      <h4>Ear Piercing</h4>
       <FontAwesomeIcon icon={faChevronRight} />
     </div>
   </div>
@@ -233,7 +214,7 @@ export default function HomePageDesktop() {
     {['Travel Clinic', 'Ear Wax Removal'].map((key) => {
       const imgUrl = key === 'Ear Wax Removal'
         ? 'https://clearclinics.co.uk/wp-content/uploads/2023/10/earwax-removal-1024x561.jpg'
-        : 'https://www.chathampharmacy.co.uk/_next/image?url=%2Fimages%2Fservices%2Ftravel-clinic.webp&w=1200&q=75';
+        : 'https://focus.independent.ie/thumbor/kZpypGnMeOe4CqXsAfQrkN28nCk=/0x8:1500x835/731x411/prod-mh-ireland/058221aa-c2c3-11ed-8d5b-0210609a3fe2.jpg';
       return (
         <div
           key={key}
