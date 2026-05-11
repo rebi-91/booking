@@ -3379,7 +3379,7 @@ const sampleServices: Record<number, Service> = {
     title: 'Ear Piercing',
     duration: '5m',
     address: '114–116 High St, Coleshill, Birmingham B46 3BJ',
-    price: 'Get your ear pierced for only £30 - both ears for £35',
+    price: 'Get your ear(s) pierced for only £40',
   },
   17: {
     id: 17,
