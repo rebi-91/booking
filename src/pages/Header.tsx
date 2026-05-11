@@ -167,7 +167,7 @@ export default function Header() {
       </Link>
 
       {/* Phone */}
-      <a href="tel:01634404142" className="phone-link" aria-label="Call us">
+      <a href="tel:01675466014" className="phone-link" aria-label="Call us">
         <img
           src={ICON_PHONE}
           alt="Call us"

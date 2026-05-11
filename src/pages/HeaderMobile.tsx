@@ -442,7 +442,7 @@ const HeaderMobile: React.FC = () => {
             className="mobile-logo"
           />
         </Link>
-        <a href="tel:01634404142" className="call-icon">
+        <a href="tel:01675466014" className="call-icon">
           <img src={ICON_PHONE} alt="Call us" />
         </a>
         <div className="flex-fill" />

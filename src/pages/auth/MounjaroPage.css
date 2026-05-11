@@ -841,16 +841,18 @@
 }
 
 .mj-accordion-caret {
-  width: 14px;
-  height: 14px;
-  opacity: 0.5;
-  transition: transform 0.3s ease, opacity 0.2s ease;
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  display: block;
+  object-fit: contain;
   flex-shrink: 0;
+  opacity: 1;
+  transition: transform 0.25s ease;
 }
 
 .mj-accordion-caret.rotated {
   transform: rotate(180deg);
-  opacity: 1;
 }
 
 .mj-accordion-body {
