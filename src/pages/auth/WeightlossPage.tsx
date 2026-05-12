@@ -30,7 +30,7 @@ const timelineSteps = [
 
 // Chevron icon
 const ICON_CHEVRON =
-  'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//chevron.png';
+  'https://gpcdcgwgkciyogknekwp.supabase.co/storage/v1/object/public/booking/ICON_CHEVRON.png';
 
 const faqItems = [
   {

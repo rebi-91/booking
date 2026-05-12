@@ -407,7 +407,7 @@
   transition: transform 0.3s ease, opacity 0.2s ease;
   flex-shrink: 0;
 }
-.accordion-caret.rotated { transform: rotate(180deg); opacity: 1; }
+.accordion-caret.rotated { transform: rotate(90deg); opacity: 1; }
 .accordion-body {
   max-height: 0;
   overflow: hidden;

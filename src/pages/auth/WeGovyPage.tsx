@@ -466,8 +466,9 @@ import './WeGovyPage.css';
 const DARK_BG = '#0F1637';
 const MAI_TEXT_COLOR = 'rgb(14, 75, 141)';
 
+// Chevron icon
 const ICON_CHEVRON =
-  'https://zbcowibbhjynfpkqgupz.supabase.co/storage/v1/object/public/booking//chevron.png';
+  'https://gpcdcgwgkciyogknekwp.supabase.co/storage/v1/object/public/booking/ICON_CHEVRON.png';
 
 const wegovyImage =
   'https://www.chathampharmacy.co.uk/_next/image?url=https%3A%2F%2Fclinic-digital.lon1.cdn.digitaloceanspaces.com%2F100%2Fproducts%2FlO0TFZ73tv0D9H5.webp&w=1080&q=75';
